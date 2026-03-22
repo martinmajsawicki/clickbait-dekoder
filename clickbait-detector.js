@@ -39,6 +39,18 @@ const PATTERNS = [
       { re: /wyniki\s+(naszej\s+)?(sondy|ankiety|badania)/i, snark: '"{0}" — wynik ukryty w nagłówku = wynik banalny. Gdyby był szokujący, byłby w tytule.' },
       { re: /stanowczo\s+(zareagował[aoy]?|odpowiedział[aoy]?)/i, snark: '"{0}" — "stanowczo" = powiedział coś normalnego, ale głośniej.' },
       { re: /\b(hiszpanie|niemcy|anglicy|włosi|francuzi|media)\s+pisz[ąa]\b/i, snark: '"{0}" — zagraniczne media piszą o wszystkim. Pytanie: co piszą? Tytuł tego nie zdradzi.' },
+      { re: /jest\s+(nagranie|zdjęcie|wideo|film|dowód)/i, snark: '"{0}" — jest nagranie, ale nie pokażemy ci go w tytule. Musisz kliknąć. Sprytne, co?' },
+      { re: /nikt\s+się\s+nie\s+spodziewał/i, snark: '"{0}" — spodziewali się. Po prostu nie tak bardzo, jak sugeruje nagłówek.' },
+      { re: /nie\s+wyklucza/i, snark: '"{0}" — "nie wyklucza" = nie potwierdził, nie zaprzeczył, nie powiedział nic konkretnego.' },
+      { re: /garść\s+(porad|uwag|wskazówek|tipów)/i, snark: '"{0}" — garść = 3-5 banalnych porad, które znasz.' },
+    ],
+  },
+  {
+    id: 'question_headline',
+    name: 'Pytajnik w tytule (prawo Betteridge\'a)',
+    weight: 1,
+    rules: [
+      { re: /\?/, snark: '"{0}" — Prawo Betteridge\'a: jeśli nagłówek jest pytaniem, odpowiedź brzmi „nie".' },
     ],
   },
   {
