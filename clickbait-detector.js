@@ -60,7 +60,7 @@ const PATTERNS = [
       { re: /wyniki\s+(naszej\s+)?(sondy|ankiety|badania)/i, snark: '"{0}" — wynik ukryty w nagłówku = wynik banalny. Gdyby był szokujący, byłby w tytule.' },
       { re: /stanowczo\s+(zareagował[aoy]?|odpowiedział[aoy]?)/i, snark: '"{0}" — "stanowczo" = powiedział coś normalnego, ale głośniej.' },
       { re: /\b(hiszpanie|niemcy|anglicy|włosi|francuzi|ukraińcy|rosjanie|amerykanie|brytyjczycy|media)\s+pisz[ąa]\b/i, snark: '"{0}" — zagraniczne media piszą o wszystkim. Pytanie: co piszą? Tytuł tego nie zdradzi.' },
-      { re: /jest\s+(nagranie|zdjęcie|wideo|film|dowód)/i, snark: '"{0}" — jest nagranie, ale nie pokażemy ci go w tytule. Musisz kliknąć. Sprytne, co?' },
+      { re: /jest\s+(nagranie|zdjęcie|wideo|film|dowód|raport|decyzja)/i, snark: '"{0}" — jest, ale tytuł nie mówi JAKA treść. Technika: zapowiedź bez informacji.' },
       { re: /nikt\s+się\s+nie\s+spodziewał/i, snark: '"{0}" — spodziewali się. Po prostu nie tak bardzo, jak sugeruje nagłówek.' },
       { re: /nie\s+wyklucza/i, snark: '"{0}" — "nie wyklucza" = nie potwierdził, nie zaprzeczył, nie powiedział nic konkretnego.' },
       { re: /garść\s+(porad|uwag|wskazówek|tipów)/i, snark: '"{0}" — garść = 3-5 banalnych porad, które znasz.' },
@@ -226,6 +226,8 @@ const PATTERNS = [
       { re: /oto\s+powód/i, snark: '"{0}" — powód jest banalny. Gdyby nie był, stałby w tytule.' },
       { re: /(ważny|prosty|jeden)\s+powód/i, snark: '"{0}" — jaki powód? Tytuł go ukrywa, bo sam w sobie nie jest wystarczająco interesujący.' },
       { re: /nie\s+tak\s+(to\s+)?miał[aoy]?\s+(wyglądać|być|skończyć)/i, snark: '"{0}" — narracja odwróconych oczekiwań. Technika: zasugeruj rozczarowanie, nie pokazuj czym.' },
+      { re: /może\s+zmienić\s+wszystko/i, snark: '"{0}" — "może zmienić wszystko" = nic konkretnego się jeszcze nie stało. Wielka obietnica, zero gwarancji.' },
+      { re: /kradnie\s+show/i, snark: '"{0}" — "kradnie show" = ktoś zwrócił na siebie uwagę. W nagłówku to brzmi jak afera.' },
     ],
   },
   {
@@ -360,6 +362,7 @@ const PATTERNS = [
       { re: /załatwi[łl]?\s+(problem|sprawę|temat)/i, snark: '"{0}" — załatwił problem, którego nie miałeś, dopóki nie przeczytałeś tego tytułu.' },
       { re: /polskiej\s+(marki|sieciówki|firmy)/i, snark: '"{0}" — "polskiej marki" brzmi patriotycznie. Produkt jest normalny.' },
       { re: /skradnie\s+(serce|uwagę)/i, snark: '"{0}" — serce i uwaga zostaną na miejscu.' },
+      { re: /któr[eyą]\s+pokochasz/i, snark: '"{0}" — "pokochasz" to obietnica emocji, której artykuł nie dostarczy.' },
     ],
   },
   {
@@ -544,7 +547,9 @@ const SITE_SELECTORS = {
   'interia.pl': ['a.tile-a', 'a.listitem-a', 'a[class*="tile"]', 'a[class*="news"]', 'h2 a', 'h3 a', 'article a'],
   'pudelek.pl': ['a[class*="tile"]', 'a[class*="article"]', 'h2 a', 'h3 a', 'article a'],
   'fakt.pl': ['a.padded-item-link', 'a.item-link', 'a[class*="item-link"]', 'h2 a', 'h3 a'],
+  'o2.pl': ['a[class*="teaser"]', 'a[class*="wp-text-link"]', 'a[class*="wp-"]', 'h2 a', 'h3 a'],
   'se.pl': ['a[class*="tile"]', 'a[class*="article"]', 'h2 a', 'h3 a', 'article a'],
+  'natemat.pl': ['a.page-link', 'a[class*="page-link"]', 'h2 a', 'h3 a', 'article a'],
   'tvn24.pl': ['a[class*="sc-"]', 'a[class*="link"]', 'h2 a', 'h3 a', 'article a'],
   _default: ['h1 a', 'h2 a', 'h3 a', 'h4 a', 'article a', 'a[data-ga-action]'],
 };
@@ -600,6 +605,7 @@ function processPage() {
     // Strip leading labels (PREMIUM, PILNE, timestamps, category tags, author names)
     text = text.replace(/^(PREMIUM|PILNE|NOWE|NA ŻYWO|TYLKO U NAS|WASZ GŁOS|OPINIA|WYWIAD|KOMENTARZ|WYBORCZA\.PL|WIDEO)\s*/i, '');
     text = text.replace(/^\d{1,2}:\d{2}\s+/, ''); // Strip timestamps (19:14 ...)
+    text = text.replace(/^(Pon|Wt|Śr|Czw|Pt|Sob|Nie|pn|wt|śr|czw|pt|sb|nd)\s+\d{1,2}:\d{2}\s+/i, ''); // naTemat day+time
     text = text.replace(/^\d{1,4}\s+/, ''); // Strip SE.pl numeric prefixes (96 Relacja..., 40 Psychologia...)
     text = text.replace(/^(DUŻO ZDJĘĆ|ZDJĘCIA|MOCNE|WAŻNE|TYLKO U NAS|EXCLUSIVE)\s+/i, ''); // Strip SE/fakt tags
     // Strip author names appended by WP/Onet (e.g. "...tekst Jakub Balcerski")
