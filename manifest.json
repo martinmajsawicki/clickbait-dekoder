@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
   "name": "Clickbait Dekoder",
-  "version": "0.2.0",
-  "description": "Dekoduje clickbaitowe tytuły na polskich portalach. Pokazuje użyte techniki manipulacji i prawdopodobne znaczenie. 16 kategorii wzorców.",
+  "version": "0.3.0",
+  "description": "Dekoduje clickbaitowe tytuły na polskich portalach. Kontekstowe komentarze w stylu New Yorkera. 17 kategorii wzorców.",
   "permissions": [],
   "content_scripts": [
     {
