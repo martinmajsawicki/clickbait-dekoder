@@ -127,4 +127,4 @@ Pelna historia i metodologia: [METHODOLOGY.md](METHODOLOGY.md)
 
 ## Licencja
 
-[MIT](LICENSE) — Marcin Majsawicki, 2026
+[MIT](LICENSE) — Marcin Maj Sawicki, 2026
