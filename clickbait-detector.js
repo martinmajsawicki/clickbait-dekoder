@@ -75,7 +75,8 @@ const PATTERNS = [
         re: /\?/,
         // Skip: open Qs (kto/co/gdzie/kiedy/jak/ile/z kim — answer is never "no"),
         // conditional Qs ("Widzisz X?"), price Qs ("X zł?"), service Qs
-        exclude: /\b(kto|co|gdzie|kiedy|jak|ile|jaki[me]?|któr[yae]|z\s+kim|czym|komu|dlaczego|skąd|dokąd)\b.*\?|o\s+której|transmisja|zł\s*\?|tys\.\s*zł/i,
+        // Skip: open Qs, alternative Qs ("X, Y czy Z?"), price Qs
+        exclude: /\b(kto|co|gdzie|kiedy|jak|ile|jaki[me]?|któr[yae]|z\s+kim|czym|komu|dlaczego|skąd|dokąd)\b.*\?|\w+,\s+\w+\s+czy\s+\w+.*\?|o\s+której|transmisja|zł\s*\?|tys\.\s*zł/i,
         snark: '"{0}" — Prawo Betteridge\'a: jeśli nagłówek jest pytaniem, odpowiedź brzmi „nie".',
       },
     ],
@@ -201,7 +202,7 @@ const PATTERNS = [
       { re: /nagły\s+(zwrot|koniec|finał)/i, snark: '"{0}" — tak nagły, że redakcja zdążyła napisać artykuł.' },
       { re: /\bnagle\s+(wyjawił|powiedział|zdradził|ogłosił|pokazał|zrobił|zmienił)/i, snark: '"{0}" — "nagle" to clickbaitowy adrenalina-booster. Pewnie planował to od tygodnia.' },
       { re: /piekło\s+trwało/i, snark: '"{0}" — w clickbaicie "piekło" = "nieprzyjemna sytuacja".' },
-      { re: /dramat/i, snark: '"{0}" — słowo-wzmacniacz. Czasem uzasadnione, ale redakcje używają go też przy banalnych sytuacjach.' },
+      { re: /dramat/i, snark: '"{0}" — sprawdź: czy tytuł mówi KOGO dotyczy i CO się stało? Jeśli tak — uzasadnione. Jeśli ukrywa — clickbait.' },
       { re: /są\s+konsekwencje/i, snark: '"{0}" — konsekwencje pewnie oznaczają: ktoś napisał oświadczenie.' },
       { re: /jest\s+(reakcja|odpowiedź|komentarz)/i, snark: '"{0}" — tytuł mówi ŻE jest reakcja, ale nie JAKA. Technika: zapowiedz wydarzenie, ukryj treść.' },
       { re: /to się działo/i, snark: '"{0}" — działo się to, co się zwykle dzieje.' },
