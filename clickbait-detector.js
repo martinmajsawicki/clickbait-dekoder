@@ -25,7 +25,7 @@ const PATTERNS = [
       { re: /ujawniono/i, snark: '"{0}" — ujawniono coś, co prawdopodobnie i tak wszyscy wiedzieli.' },
       { re: /ujawni[ła]\s+(kulisy|szczegóły|prawdę)/i, snark: '"{0}" — za kulisami zwykle są kolejne kulisy, a za nimi — nuda.' },
       { re: /opublikował[aoy]?\s+(nagranie|zdjęci[ae]|wideo|film)/i, snark: '"{0}" — nagranie pewnie pokazuje dokładnie to, co sobie wyobrażasz.' },
-      { re: /wyszło na jaw/i, snark: '"{0}" — na jaw wyszło coś, co dało się przewidzieć.' },
+      { re: /wyszł[aoey] na jaw/i, snark: '"{0}" — na jaw wyszło coś, co dało się przewidzieć.' },
       { re: /oto\s+prawda/i, snark: '"{0}" — prawda jest zwykle mniej ekscytująca niż tytuł.' },
       { re: /sekretn[yae]/i, snark: '"{0}" — sekret znany redakcji i 500 tysiącom czytelników.' },
       { re: /\b(jego|jej|ich|swój|swoje?go)\s+sekret\b/i, snark: '"{0}" — sekret tak intymny, że trafił do nagłówka tabloidowego portalu.' },
@@ -166,6 +166,10 @@ const PATTERNS = [
       { re: /\bzniknął[aoy]?\b/i, snark: '"{0}" — spokojnie, nikt nie zniknął dosłownie. Pewnie nie strzelił gola albo wyszedł z kadru.' },
       { re: /niezręczn[aąeyo]\s+(sytuacj[aąęi]|moment)/i, snark: '"{0}" — "niezręcznie" = ktoś powiedział coś dziwnego. Publiczność przeżyła.' },
       { re: /mocny\s+(sygnał|przekaz|cios)/i, snark: '"{0}" — "mocny sygnał" bez treści = pusty sygnał. Gdyby był mocny, stałby w tytule.' },
+      { re: /wydał[aoy]\s+się/i, snark: '"{0}" — wydało się coś, co pewnie i tak wszyscy podejrzewali.' },
+      { re: /zawrzało/i, snark: '"{0}" — "zawrzało" w internecie = 20 osób napisało komentarze.' },
+      { re: /bez\s+litości/i, snark: '"{0}" — z litością. Po prostu skrytykował. Ale "skrytykował" nie generuje klików.' },
+      { re: /stracił[aoy]?\s+kontrolę/i, snark: '"{0}" — kontrola pewnie nie zaginęła na długo.' },
     ],
   },
   {
@@ -190,7 +194,7 @@ const PATTERNS = [
     rules: [
       { re: /pęknie\s+ci\s+serce/i, snark: '"{0}" — serce wytrzyma. Treść nie jest aż tak poruszająca.' },
       { re: /zatkało/i, snark: '"{0}" — nikogo nie zatkało. Może lekko zdziwił.' },
-      { re: /łzy/i, snark: '"{0}" — łzy co najwyżej ze znudzenia po kliknięciu.' },
+      { re: /łz[yaomie]/i, snark: '"{0}" — łzy co najwyżej ze znudzenia po kliknięciu.' },
       { re: /ciarki/i, snark: '"{0}" — ciarki od przeciągu, nie od treści.' },
       { re: /wzruszy/i, snark: '"{0}" — wzruszy cię bardziej rachunek za prąd.' },
       { re: /przejmując[yae]/i, snark: '"{0}" — przejmujące dla redakcji szukającej klików.' },
@@ -223,7 +227,7 @@ const PATTERNS = [
     name: 'Ekspresyjne czasowniki',
     weight: 1,
     rules: [
-      { re: /nie\s+(kryje\s+emocji|dowierza|gryzł[aoy]?\s+się\s+w\s+język)/i, snark: '"{0}" — kryje. Wszystko jest pod kontrolą. Po prostu skomentował.' },
+      { re: /nie\s+(kryje\s+(emocji|wściekłości|radości|złości|frustracji|łez|rozczarowania|oburzenia)|dowierza|gryzł[aoy]?\s+się\s+w\s+język)/i, snark: '"{0}" — kryje. Wszystko jest pod kontrolą. Po prostu skomentował.' },
       { re: /ostro\s+(zareagował|skomentował|odpowiedział)/i, snark: '"{0}" — "ostro" w nagłówku = powiedział coś krytycznego normalnym tonem.' },
       { re: /jasno\s+(wyraził\s+się|powiedział|dał\s+do\s+zrozumienia)/i, snark: '"{0}" — jasno, czyli powiedział to, co myślał. Jak każdy dorosły człowiek.' },
       { re: /reaguj[eą]\s+na\s+(słowa|doniesienia|informacje|to)/i, snark: '"{0}" — zareagował. Czyli skomentował. Jak codziennie.' },
@@ -539,6 +543,39 @@ function processPage() {
   console.log(
     `[Clickbait Dekoder] Przeskanowano ${processed.size} tytułów, oznaczono ${count} clickbaitów`
   );
+
+  // === FLOATING SCOREBOARD ===
+  updateScoreboard(processed.size, count);
+}
+
+function updateScoreboard(scanned, detected) {
+  let sb = document.getElementById('cbd-scoreboard');
+  if (!sb) {
+    sb = document.createElement('div');
+    sb.id = 'cbd-scoreboard';
+    sb.innerHTML = `
+      <div class="cbd-sb-header">🔍 CLICKBAIT DEKODER</div>
+      <div class="cbd-sb-stats">
+        <div class="cbd-sb-stat">
+          <span class="cbd-sb-number" id="cbd-sb-detected">0</span>
+          <span class="cbd-sb-label">clickbaitów</span>
+        </div>
+        <div class="cbd-sb-divider"></div>
+        <div class="cbd-sb-stat">
+          <span class="cbd-sb-number cbd-sb-number--dim" id="cbd-sb-scanned">0</span>
+          <span class="cbd-sb-label">tytułów</span>
+        </div>
+      </div>
+      <div class="cbd-sb-pct" id="cbd-sb-pct"></div>
+    `;
+    document.body.appendChild(sb);
+  }
+  document.getElementById('cbd-sb-detected').textContent = detected;
+  document.getElementById('cbd-sb-scanned').textContent = scanned;
+  const pct = scanned > 0 ? Math.round((detected / scanned) * 100) : 0;
+  document.getElementById('cbd-sb-pct').textContent = pct > 0
+    ? `${pct}% tytułów to clickbait`
+    : 'Czysto — brak clickbaitu';
 }
 
 // Uruchom po załadowaniu strony
