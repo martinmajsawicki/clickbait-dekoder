@@ -54,8 +54,8 @@ const PATTERNS = [
     rules: [
       {
         re: /\?/,
-        // Skip service questions (o której, gdzie oglądać, jak dojechać, ile kosztuje)
-        exclude: /o\s+której|gdzie\s+ogl[aą]da[ćc]|jak\s+dojechat?|ile\s+kosztuje|transmisja|kiedy\s+(gra|mecz|start)/i,
+        // Skip: service Qs, conditional Qs ("Widzisz X?", "Masz X?"), price Qs ("X zł?"), how-to Qs
+        exclude: /o\s+której|gdzie\s+ogl[aą]da[ćc]|jak\s+dojechat?|ile\s+kosztuje|transmisja|kiedy\s+(gra|mecz|start)|widzisz\s|masz\s|robisz\s|znasz\s|czujesz\s|wiesz[, ]|jak\s+(zrobić|dbać|zadbać|przygotować|wybrać|naprawić|gotować|prać)|co\s+(zrobić|jeść|pić|kupić|wybrać)\s|zł\s*\?|tys\.\s*zł/i,
         snark: '"{0}" — Prawo Betteridge\'a: jeśli nagłówek jest pytaniem, odpowiedź brzmi „nie".',
       },
     ],
