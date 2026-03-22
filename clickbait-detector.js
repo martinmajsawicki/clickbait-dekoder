@@ -38,6 +38,7 @@ const PATTERNS = [
       { re: /co\s+(zrobił[aoy]?|powiedział[aoy]?|stało się)\s+potem/i, snark: '"{0}" — potem stało się coś zupełnie przewidywalnego.' },
       { re: /nie\s+uwierzysz/i, snark: '"{0}" — uwierzysz. I pożałujesz kliknięcia.' },
       { re: /będziecie\s+(zdziwieni|zaskoczeni|w\s+szoku)/i, snark: '"{0}" — nie będziecie. Ale redakcja liczy, że klikniecie żeby sprawdzić.' },
+      { re: /nie\s+(widzieliście|widziałeś|widziałaś)/i, snark: '"{0}" — widzieliście. Albo jest normalnie. Ale "normalnie" nie generuje klików.' },
       { re: /nie\s+mog[ąa]\s+uwierzyć/i, snark: '"{0}" — mogą. Po prostu clickbait potrzebuje hiperbolii.' },
       { re: /to\s+nie\s+żart/i, snark: '"{0}" — skoro musisz zapewnić, że to nie żart, treść pewnie jest na granicy banalności.' },
       { re: /\btak\s+(wyglądaj[ąa]|wygląda)\b/i, snark: '"{0}" — wyglądają normalnie. Ale "wyglądają normalnie" nie generuje kliknięć.' },
@@ -247,6 +248,7 @@ const PATTERNS = [
       { re: /przejmując[yae]/i, snark: '"{0}" — przejmujące dla redakcji szukającej klików.' },
       { re: /(płakał[aoy]?|rozpłakał[aoy]?\s+się)\s+jak/i, snark: '"{0}" — technika: zamiast powiedzieć CO się stało, redakcja mówi JAK ktoś reagował. Emocja zastępuje informację.' },
       { re: /poruszając[yae]\s+(słow|histori|gest|scen)/i, snark: '"{0}" — redakcja mówi ci co masz czuć. Technika: emocja przed faktami.' },
+      { re: /mroź[iąa]\s+krew/i, snark: '"{0}" — technika: emocja fizyczna (krew, ciarki, dreszcze) zamiast opisu zdarzenia.' },
     ],
   },
   {
@@ -522,7 +524,7 @@ const SITE_SELECTORS = {
   'pudelek.pl': ['a[class*="tile"]', 'a[class*="article"]', 'h2 a', 'h3 a', 'article a'],
   'fakt.pl': ['a.padded-item-link', 'a.item-link', 'a[class*="item-link"]', 'h2 a', 'h3 a'],
   'se.pl': ['a[class*="tile"]', 'a[class*="article"]', 'h2 a', 'h3 a', 'article a'],
-  'tvn24.pl': ['a[class*="link"]', 'h2 a', 'h3 a', 'article a'],
+  'tvn24.pl': ['a[class*="sc-"]', 'a[class*="link"]', 'h2 a', 'h3 a', 'article a'],
   _default: ['h1 a', 'h2 a', 'h3 a', 'h4 a', 'article a', 'a[data-ga-action]'],
 };
 
