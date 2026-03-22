@@ -346,6 +346,7 @@ const PATTERNS = [
     name: 'KRZYK w tytule',
     weight: 1,
     rules: [
+      { re: /[a-ząćęłńóśźż]\s+[A-ZĄĆĘŁŃÓŚŹŻ]{4,}\s+[a-ząćęłńóśźż]/, snark: 'CAPS w środku zdania — redakcja KRZYCZY jednym słowem, bo treść nie krzyczy sama.' },
       { re: /[A-ZĄĆĘŁŃÓŚŹŻ]{10,}/, snark: 'CAPS LOCK w tytule — krzyk zastępuje treść. Im głośniej tytuł krzyczy, tym ciszej jest w artykule.' },
       { re: /!{2,}/, snark: 'Podwójne wykrzykniki!! — jeden nie wystarczył, bo treść nie jest wystarczająco ekscytująca.' },
       { re: /\bMAMY\s+(ZŁOTO|MEDAL|MISTRZA)/i, snark: '"{0}" — entuzjazm caps-lockiem. Informacja zmieściłaby się w jednym zdaniu bez wykrzykników.' },
