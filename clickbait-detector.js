@@ -6,6 +6,9 @@
  *     Tooltip pokazuje DOKŁADNIE które słowo uruchomiło detekcję.
  */
 
+// === GUARD AGAINST RE-ENTRY ===
+let _isProcessing = false;
+
 // === WZORCE CLICKBAITOWE ===
 // Każdy regex ma swój `snark` — komentarz wyświetlany z wykrytym fragmentem.
 // {0} w snark zostanie zastąpione dopasowanym fragmentem tekstu.
@@ -624,7 +627,6 @@ if (document.readyState === 'loading') {
 }
 
 // Obserwuj dynamicznie ładowaną treść (infinite scroll)
-let _isProcessing = false;
 const observer = new MutationObserver((mutations) => {
   if (_isProcessing) return; // Prevent re-entry from our own DOM changes
   let hasNewContent = false;
