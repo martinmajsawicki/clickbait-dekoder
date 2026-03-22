@@ -35,6 +35,10 @@ const PATTERNS = [
       { re: /wyjawił[aoy]?/i, snark: '"{0}" — wyjawił coś, co pewnie jest normalne. Gdyby było szokujące, napisaliby co.' },
       { re: /nie\s+(zgadniecie|zgadniesz)/i, snark: '"{0}" — zgadniesz. Albo ci będzie obojętne. W obu przypadkach — nie klikaj.' },
       { re: /kulisy\s+(rozwodu|afery|skandalu|sprawy|związku|rozstania|konfliktu)/i, snark: '"{0}" — za kulisami jest to samo co przed nimi, tylko bez makijażu.' },
+      { re: /najnowsz[eay]\s+(wieści|informacj[eai])/i, snark: '"{0}" — gdyby wieści były dobre, napisaliby jakie. Ukryta wiadomość = brak wiadomości.' },
+      { re: /wyniki\s+(naszej\s+)?(sondy|ankiety|badania)/i, snark: '"{0}" — wynik ukryty w nagłówku = wynik banalny. Gdyby był szokujący, byłby w tytule.' },
+      { re: /stanowczo\s+(zareagował[aoy]?|odpowiedział[aoy]?)/i, snark: '"{0}" — "stanowczo" = powiedział coś normalnego, ale głośniej.' },
+      { re: /\b(hiszpanie|niemcy|anglicy|włosi|francuzi|media)\s+pisz[ąa]\b/i, snark: '"{0}" — zagraniczne media piszą o wszystkim. Pytanie: co piszą? Tytuł tego nie zdradzi.' },
     ],
   },
   {
@@ -138,6 +142,10 @@ const PATTERNS = [
       { re: /to się działo/i, snark: '"{0}" — działo się to, co się zwykle dzieje.' },
       { re: /potem\s+było\s+(tylko\s+)?(gorzej|lepiej)/i, snark: '"{0}" — potem było tak, jak można było przewidzieć.' },
       { re: /wszystko\s+(jasne|się\s+wyjaśniło)/i, snark: '"{0}" — jasne było od początku, ale clickbait potrzebował napięcia.' },
+      { re: /zapadł[aoy]\s+(cisza|milczenie)/i, snark: '"{0}" — cisza = nikt nic nie powiedział. Nagłówek z braku wiadomości.' },
+      { re: /\bzniknął[aoy]?\b/i, snark: '"{0}" — spokojnie, nikt nie zniknął dosłownie. Pewnie nie strzelił gola albo wyszedł z kadru.' },
+      { re: /niezręczn[aąeyo]\s+(sytuacj[aąęi]|moment)/i, snark: '"{0}" — "niezręcznie" = ktoś powiedział coś dziwnego. Publiczność przeżyła.' },
+      { re: /mocny\s+(sygnał|przekaz|cios)/i, snark: '"{0}" — "mocny sygnał" bez treści = pusty sygnał. Gdyby był mocny, stałby w tytule.' },
     ],
   },
   {
