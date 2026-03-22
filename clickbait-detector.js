@@ -32,6 +32,8 @@ const PATTERNS = [
       { re: /co\s+(zrobił[aoy]?|powiedział[aoy]?|stało się)\s+potem/i, snark: '"{0}" — potem stało się coś zupełnie przewidywalnego.' },
       { re: /nie\s+uwierzysz/i, snark: '"{0}" — uwierzysz. I pożałujesz kliknięcia.' },
       { re: /wdarł[aoy]?\s+się/i, snark: '"{0}" — ktoś wszedł gdzieś, gdzie go nie zaproszono. To cała historia.' },
+      { re: /wyjawił[aoy]?/i, snark: '"{0}" — wyjawił coś, co pewnie jest normalne. Gdyby było szokujące, napisaliby co.' },
+      { re: /nie\s+(zgadniecie|zgadniesz)/i, snark: '"{0}" — zgadniesz. Albo ci będzie obojętne. W obu przypadkach — nie klikaj.' },
       { re: /kulisy\s+(rozwodu|afery|skandalu|sprawy|związku|rozstania|konfliktu)/i, snark: '"{0}" — za kulisami jest to samo co przed nimi, tylko bez makijażu.' },
     ],
   },
@@ -128,6 +130,7 @@ const PATTERNS = [
       { re: /zaczęło się\s+(niewinnie|normalnie|zwyczajnie)/i, snark: '"{0}" — i pewnie tak się skończyło, tylko z większą liczbą kliknięć.' },
       { re: /\bale\s+potem\b/i, snark: '"{0}" — potem stało się coś przewidywalnego.' },
       { re: /nagły\s+(zwrot|koniec|finał)/i, snark: '"{0}" — tak nagły, że redakcja zdążyła napisać artykuł.' },
+      { re: /\bnagle\s+(wyjawił|powiedział|zdradził|ogłosił|pokazał|zrobił|zmienił)/i, snark: '"{0}" — "nagle" to clickbaitowy adrenalina-booster. Pewnie planował to od tygodnia.' },
       { re: /piekło\s+trwało/i, snark: '"{0}" — w clickbaicie "piekło" = "nieprzyjemna sytuacja".' },
       { re: /dramat/i, snark: '"{0}" — dramat w nagłówku: ktoś miał ciężki dzień.' },
       { re: /są\s+konsekwencje/i, snark: '"{0}" — konsekwencje pewnie oznaczają: ktoś napisał oświadczenie.' },
@@ -149,6 +152,7 @@ const PATTERNS = [
       { re: /robi\s+szał/i, snark: '"{0}" — szał w clickbaicie = umiarkowane zainteresowanie.' },
       { re: /bez\s+szans/i, snark: '"{0}" — z szansami. Po prostu mniejszymi.' },
       { re: /wściekli/i, snark: '"{0}" — zirytowani. Niekoniecznie wściekli.' },
+      { re: /podzielił[aoy]?\s+\d/i, snark: '"{0}" — podzieliło, czyli jedni kliknęli A, drudzy B. To nie debata — to quiz.' },
     ],
   },
   {
@@ -221,6 +225,7 @@ const PATTERNS = [
     rules: [
       { re: /nie\s+(znałeś|wiedziałeś|spodziewałeś)/i, snark: '"{0}" — znałeś. Albo nie potrzebujesz wiedzieć. W obu przypadkach — nie klikaj.' },
       { re: /większość\s+(ludzi|osób|polaków)\s+nie\s+wie/i, snark: '"{0}" — większość wie. Ale clickbait liczy, że czujesz się wyjątkowy.' },
+      { re: /mało\s+kto\s+(zna|wie|pamięta|słyszał)/i, snark: '"{0}" — mało kto, czyli więcej osób niż myślisz. Ale "wielu zna" to nie nagłówek.' },
       { re: /wiesz,?\s*(gdzie|co|jak|ile|dlaczego)/i, snark: '"{0}" — tak, wiesz. Albo nie, i nadal przeżyjesz.' },
     ],
   },
