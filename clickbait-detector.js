@@ -37,11 +37,14 @@ const PATTERNS = [
       { re: /takie\s+są\s+(jej|jego|ich)\s+(warunki|zasady|wymagania)/i, snark: '"{0}" — jakie warunki? Tytuł nie zdradza, bo wtedy nie klikniesz.' },
       { re: /co\s+(zrobił[aoy]?|powiedział[aoy]?|stało się)\s+potem/i, snark: '"{0}" — potem stało się coś zupełnie przewidywalnego.' },
       { re: /nie\s+uwierzysz/i, snark: '"{0}" — uwierzysz. I pożałujesz kliknięcia.' },
-      { re: /będziecie\s+(zdziwieni|zaskoczeni|w\s+szoku)/i, snark: '"{0}" — nie będziecie. Ale redakcja liczy, że klikniecie żeby sprawdzić.' },
+      { re: /będziecie\s+(zdziwieni|zaskoczeni|w\s+szoku|pod\s+wrażeniem)/i, snark: '"{0}" — nie będziecie. Ale redakcja liczy, że klikniecie żeby sprawdzić.' },
       { re: /nie\s+(widzieliście|widziałeś|widziałaś)/i, snark: '"{0}" — widzieliście. Albo jest normalnie. Ale "normalnie" nie generuje klików.' },
       { re: /nie\s+mog[ąa]\s+uwierzyć/i, snark: '"{0}" — mogą. Po prostu clickbait potrzebuje hiperbolii.' },
       { re: /to\s+nie\s+żart/i, snark: '"{0}" — skoro musisz zapewnić, że to nie żart, treść pewnie jest na granicy banalności.' },
       { re: /\btak\s+(wyglądaj[ąa]|wygląda)\b/i, snark: '"{0}" — wyglądają normalnie. Ale "wyglądają normalnie" nie generuje kliknięć.' },
+      { re: /\btak\s+(zdobył|zrobiła?|osiągnął|wygrał|zarobił)/i, snark: '"{0}" — JAK? Tytuł nie mówi. Technika: ukryj metodę, sprzedaj obietnicę.' },
+      { re: /wiele\s+mówi\s+o/i, snark: '"{0}" — "wiele mówi" = redakcja sugeruje głębsze znaczenie. Artykuł powie: nic szczególnego.' },
+      { re: /mówi[ąa]\s+sam[eay]\s+za\s+siebie/i, snark: '"{0}" — "mówią same za siebie" = redakcja chce żebyś kliknął i sam ocenił. Clickbait-outsourcing.' },
       { re: /jak\s+(wtedy|kiedyś|dawniej)\s+wyglądał/i, snark: '"{0}" — wyglądali jak ludzie w danej epoce. Szok.' },
       { re: /(spójrzcie|patrzcie|zobaczcie),?\s+(jak|co|na)/i, snark: '"{0}" — spójrzcie: wygląda normalnie. Ale "wygląda normalnie" to nie nagłówek.' },
       { re: /policzyli\s+(ile|jak)/i, snark: '"{0}" — policzyli. Ale wynik jest zbyt nudny, żeby zmieścić się w tytule.' },
@@ -169,7 +172,11 @@ const PATTERNS = [
     name: 'Wyrwany cytat',
     weight: 0, // Sam cudzysłów nie uruchamia badge'a — potrzebuje drugiego trafienia
     rules: [
-      { re: /[""„""].{3,60}[""„""]/, snark: '{0} — brzmi dramatycznie wyrwane z kontekstu. W pełnej rozmowie to zdanie pewnie było o niczym.' },
+      {
+        re: /[""„""].{3,60}[""„""]/,
+        exclude: /Taniec z gwiazdami|The Voice|MasterChef|Mam talent|Big Brother|Hotel Paradise|Rolnik szuka|Nasz nowy dom|Kuchenne rewolucje|Top Model|Bake Off/i,
+        snark: '{0} — brzmi dramatycznie wyrwane z kontekstu. W pełnej rozmowie to zdanie pewnie było o niczym.',
+      },
     ],
   },
   {
@@ -249,6 +256,8 @@ const PATTERNS = [
       { re: /(płakał[aoy]?|rozpłakał[aoy]?\s+się)\s+jak/i, snark: '"{0}" — technika: zamiast powiedzieć CO się stało, redakcja mówi JAK ktoś reagował. Emocja zastępuje informację.' },
       { re: /poruszając[yae]\s+(słow|histori|gest|scen)/i, snark: '"{0}" — redakcja mówi ci co masz czuć. Technika: emocja przed faktami.' },
       { re: /mroź[iąa]\s+krew/i, snark: '"{0}" — technika: emocja fizyczna (krew, ciarki, dreszcze) zamiast opisu zdarzenia.' },
+      { re: /wyciskaj?[ąa]\s+łzy/i, snark: '"{0}" — redakcja obiecuje emocje. Technika: sprzedaj płacz zamiast treści.' },
+      { re: /na\s+potęgę/i, snark: '"{0}" — "na potęgę" = wzmacniacz bez informacji. Technika: dodaj intensywność, ukryj szczegóły.' },
     ],
   },
   {
@@ -288,6 +297,7 @@ const PATTERNS = [
       { re: /trzęsie\s+rynkiem/i, snark: '"{0}" — rynek nawet nie drgnął.' },
       { re: /wskazał\s+(błędy|problemy)/i, snark: '"{0}" — wskazał, czyli powiedział co mu się nie podoba. Normalka.' },
       { re: /nie\s+przebierał[aoy]?\s+w\s+słowach/i, snark: '"{0}" — przebierał. Ale jednym nieparlamentarnym.' },
+      { re: /bez\s+ogródek/i, snark: '"{0}" — "bez ogródek" = powiedział normalnie. Ale "powiedział normalnie" to nie nagłówek.' },
     ],
   },
   {
@@ -574,6 +584,8 @@ function processPage() {
     // Strip leading labels (PREMIUM, PILNE, timestamps, category tags, author names)
     text = text.replace(/^(PREMIUM|PILNE|NOWE|NA ŻYWO|TYLKO U NAS|WASZ GŁOS|OPINIA|WYWIAD|KOMENTARZ|WYBORCZA\.PL|WIDEO)\s*/i, '');
     text = text.replace(/^\d{1,2}:\d{2}\s+/, ''); // Strip timestamps (19:14 ...)
+    text = text.replace(/^\d{1,4}\s+/, ''); // Strip SE.pl numeric prefixes (96 Relacja..., 40 Psychologia...)
+    text = text.replace(/^(DUŻO ZDJĘĆ|ZDJĘCIA|MOCNE|WAŻNE|TYLKO U NAS|EXCLUSIVE)\s+/i, ''); // Strip SE/fakt tags
     // Strip author names appended by WP/Onet (e.g. "...tekst Jakub Balcerski")
     text = text.replace(/\s+(Obserwuj|Obserwuj autorów).*$/i, '');
     text = text.replace(/\s+[A-ZĄĆĘŁŃÓŚŹŻ][a-ząćęłńóśźż]+\s+[A-ZĄĆĘŁŃÓŚŹŻ][a-ząćęłńóśźż]+([-][A-ZĄĆĘŁŃÓŚŹŻ][a-ząćęłńóśźż]+)?$/,'');
