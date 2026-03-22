@@ -303,6 +303,7 @@ const PATTERNS = [
       { re: /za\s+grosze/i, snark: '"{0}" — za normalne pieniądze. Ale "za normalne pieniądze" to nie nagłówek.' },
       { re: /w\s+świetnych\s+cenach/i, snark: '"{0}" — ceny są normalne. "Świetne" robi za clickbait.' },
       { re: /czyści\s+magazyny/i, snark: '"{0}" — wyprzedają niesprzedane zapasy. To nie okazja — to logistyka.' },
+      { re: /kwot[ay]\s+(mog[ąa]\s+)?(dziwić|zaskoczyć|szokować)/i, snark: '"{0}" — kwoty nikogo nie zaskoczą. Gdyby były szokujące, podaliby je w tytule.' },
     ],
   },
   {
@@ -336,6 +337,15 @@ const PATTERNS = [
       { re: /[A-ZĄĆĘŁŃÓŚŹŻ]{10,}/, snark: 'CAPS LOCK w tytule — krzyk zastępuje treść. Im głośniej tytuł krzyczy, tym ciszej jest w artykule.' },
       { re: /!{2,}/, snark: 'Podwójne wykrzykniki!! — jeden nie wystarczył, bo treść nie jest wystarczająco ekscytująca.' },
       { re: /\bMAMY\s+(ZŁOTO|MEDAL|MISTRZA)/i, snark: '"{0}" — entuzjazm caps-lockiem. Informacja zmieściłaby się w jednym zdaniu bez wykrzykników.' },
+    ],
+  },
+  {
+    id: 'cliffhanger',
+    name: 'Cliffhanger / niedokończenie',
+    weight: 1,
+    rules: [
+      { re: /\.{3}\s*$/, snark: '"..." — wielokropek na końcu = redakcja celowo urwała zdanie. Reszta jest nudna, dlatego jej nie napisali.' },
+      { re: /miał[aoy]?\s+być\s+(zwykły|normalny|spokojny)/i, snark: '"{0}" — miał być zwykły, ale okazał się... nadal zwykły. Tylko z nagłówkiem.' },
     ],
   },
 ];
@@ -483,6 +493,10 @@ const SITE_SELECTORS = {
     'h3 a',
     'article a',
   ],
+  'interia.pl': ['a[class*="tile"]', 'a[class*="news"]', 'a[class*="article"]', 'h2 a', 'h3 a', 'article a'],
+  'pudelek.pl': ['a[class*="tile"]', 'a[class*="article"]', 'h2 a', 'h3 a', 'article a'],
+  'fakt.pl': ['a[class*="tile"]', 'a[class*="article"]', 'h2 a', 'h3 a', 'article a'],
+  'se.pl': ['a[class*="tile"]', 'a[class*="article"]', 'h2 a', 'h3 a', 'article a'],
   'tvn24.pl': ['a[class*="link"]', 'h2 a', 'h3 a', 'article a'],
   _default: ['h1 a', 'h2 a', 'h3 a', 'h4 a', 'article a', 'a[data-ga-action]'],
 };
