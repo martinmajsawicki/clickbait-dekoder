@@ -589,7 +589,7 @@ function processPage() {
     if (/^(REKLAMA|HOROSKOPY|PROGRAM TV|POGODA)\b/i.test(text)) continue;
 
     // Detect analytical/opinion section tags BEFORE stripping (reduces false positives)
-    const isAnalytical = /Strefa\s+wojn|Dylematy|Analiza|Opinia|\[OPINIA\]|\[ANALIZA\]|\[KOMENTARZ\]|Przyszłość\s+\w+\s+fregat/i.test(text);
+    const isAnalytical = /Strefa\s+wojn|Dylematy|Analiz[aę]|Opini[aę]|Ekonomi[aę]|Wywiad|Komentarz|Felieton|Debata|Raport|\[OPINIA\]|\[ANALIZA\]|\[KOMENTARZ\]|\[WYWIAD\]|\[RAPORT\]|\[DEBATA\]/i.test(text);
 
     // Strip leading labels (PREMIUM, PILNE, timestamps, category tags, author names)
     text = text.replace(/^(PREMIUM|PILNE|NOWE|NA ŻYWO|TYLKO U NAS|WASZ GŁOS|OPINIA|WYWIAD|KOMENTARZ|WYBORCZA\.PL|WIDEO)\s*/i, '');
