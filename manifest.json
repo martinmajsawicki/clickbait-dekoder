@@ -1,0 +1,37 @@
+{
+  "manifest_version": 3,
+  "name": "Clickbait Dekoder",
+  "version": "0.2.0",
+  "description": "Dekoduje clickbaitowe tytuły na polskich portalach. Pokazuje użyte techniki manipulacji i prawdopodobne znaczenie. 16 kategorii wzorców.",
+  "permissions": [],
+  "content_scripts": [
+    {
+      "matches": [
+        "*://*.gazeta.pl/*",
+        "*://*.onet.pl/*",
+        "*://*.wp.pl/*",
+        "*://*.pudelek.pl/*",
+        "*://*.fakt.pl/*",
+        "*://*.se.pl/*",
+        "*://*.pomponik.pl/*",
+        "*://*.o2.pl/*",
+        "*://*.interia.pl/*",
+        "*://*.tvn24.pl/*",
+        "*://*.dziendobry.tvn.pl/*",
+        "*://*.plotek.pl/*",
+        "*://*.sport.pl/*",
+        "*://*.money.pl/*",
+        "*://*.natemat.pl/*",
+        "*://*.noizz.pl/*",
+        "*://*.polsatnews.pl/*"
+      ],
+      "js": ["clickbait-detector.js"],
+      "css": ["styles.css"],
+      "run_at": "document_idle"
+    }
+  ],
+  "icons": {
+    "48": "icon48.png",
+    "128": "icon128.png"
+  }
+}
