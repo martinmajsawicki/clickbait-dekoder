@@ -52,7 +52,12 @@ const PATTERNS = [
     name: 'Pytajnik w tytule (prawo Betteridge\'a)',
     weight: 1,
     rules: [
-      { re: /\?/, snark: '"{0}" — Prawo Betteridge\'a: jeśli nagłówek jest pytaniem, odpowiedź brzmi „nie".' },
+      {
+        re: /\?/,
+        // Skip service questions (o której, gdzie oglądać, jak dojechać, ile kosztuje)
+        exclude: /o\s+której|gdzie\s+ogl[aą]da[ćc]|jak\s+dojechat?|ile\s+kosztuje|transmisja|kiedy\s+(gra|mecz|start)/i,
+        snark: '"{0}" — Prawo Betteridge\'a: jeśli nagłówek jest pytaniem, odpowiedź brzmi „nie".',
+      },
     ],
   },
   {
@@ -310,7 +315,7 @@ function analyzeHeadline(text) {
   for (const pattern of PATTERNS) {
     for (const rule of pattern.rules) {
       const match = text.match(rule.re);
-      if (match) {
+      if (match && !(rule.exclude && rule.exclude.test(text))) {
         const matchedText = match[0];
         const snark = rule.snark.replace('{0}', matchedText);
         matches.push({
@@ -485,6 +490,8 @@ function processPage() {
     if (processed.has(text)) continue;
     if (el.closest('nav, footer, .menu, .sidebar-nav')) continue;
     if (text.length < 30 && !/[.!?""]/.test(text)) continue;
+    // Skip subscription/promo banners — not articles
+    if (/oferta\s+prenumerat|prenumerata\s+cyfrowa|sprawdź\s+ofertę|kup\s+teraz/i.test(text)) continue;
 
     processed.add(text);
 
