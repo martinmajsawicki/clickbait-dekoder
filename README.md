@@ -29,13 +29,13 @@ Tooltip:
 ## Jak dziala
 
 1. **Skanowanie DOM** — po zaladowaniu strony wtyczka przeszukuje elementy linkow i naglowkow, uzywajac selektorow specyficznych dla kazdego portalu (a takze zestawu domyslnego)
-2. **Dopasowanie regex** — kazdy tytul (20-250 znakow) jest testowany przeciwko 180 wzorcom regexowym w 19 kategoriach
+2. **Dopasowanie regex** — kazdy tytul (20-250 znakow) jest testowany przeciwko 185 wzorcom regexowym w 19 kategoriach
 3. **Scoring** — kazda trafiona kategoria dodaje swoja wage (1 lub 2) do wyniku; maksymalny wynik to 10
 4. **Badge + tooltip** — przy wykrytym clickbaicie pojawia sie kolorowy badge (CB 1-10), a po najechaniu myszka — tooltip z nazwa kategorii, dopasowanym fragmentem tekstu i zlosliwym komentarzem
 5. **Scoreboard** — plywajacy panel w prawym dolnym rogu strony pokazuje liczbe wykrytych clickbaitow, liczbe przeskanowanych tytulow i procent clickbaitu na stronie
 6. **MutationObserver** — wtyczka obserwuje dynamicznie ladowana tresc (infinite scroll) i automatycznie skanuje nowe elementy
 
-## 19 kategorii wzorcow (180 regexow)
+## 19 kategorii wzorcow (185 regexow)
 
 | # | Kategoria | Waga | Liczba regexow | Przyklad triggera |
 |---|---|---|---|---|
@@ -91,6 +91,21 @@ Wtyczka uzywa pattern matchingu (regex), nie AI. To swiadomy wybor:
 - **Szybka** — skan calej strony <10ms
 - **Transparentna** — kazdy wzorzec mozna przeczytac i zrozumiec
 - **Deterministyczna** — ten sam tytul = ten sam wynik
+
+## Czego nie wykrywa (ograniczenia regex)
+
+Regex swietnie lapie **frazy-sygnaly** ("oto co", "nie uwierzysz", "sensacja"). Ale nie lapie **clickbaitu narracyjnego** — czyli tytulow, ktore buduja napiecie samym ukladem zdan, bez uzycia typowych slow-kluczy.
+
+Przyklady clickbaitow, ktorych wtyczka NIE wykryje:
+
+| Tytul | Dlaczego clickbait | Dlaczego regex nie lapie |
+|---|---|---|
+| "Mial rodzicow obcokrajowcow. Do niedawna nazywal sie inaczej" | Suspens narracyjny — ukrywa pointe | Brak slowa-klucza, cala manipulacja w strukturze zdan |
+| "6 szt. na klienta. Limit konieczny. Kupuja kartonami. 2 dni i koniec" | Urgency — krotkie zdania buduja panik | Zaden pojedynczy fragment nie jest clickbaitowy |
+| "Lokal dawal klientkom do zrozumienia: Za tania torebka, u nas nie jesz" | Clickbait klasowy/spoleczny — budzi oburzenie | Manipulacja jest w tresci, nie w slowie |
+| "Pedofil gwalcil pasierbice, matka patrzyla. Jest wyrok" | Szok trescia, nie forma | Tresc jest faktycznie szokujaca — nie da sie odroznic od clickbaitu |
+
+Do wykrywania takich tytulow potrzebne jest **AI** (analiza intencji, nie fraz). To planowane rozszerzenie — opcjonalny tryb AI on-hover.
 
 ## Struktura plikow
 

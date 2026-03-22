@@ -40,6 +40,7 @@ const PATTERNS = [
       { re: /to\s+nie\s+żart/i, snark: '"{0}" — skoro musisz zapewnić, że to nie żart, treść pewnie jest na granicy banalności.' },
       { re: /\btak\s+(wyglądaj[ąa]|wygląda)\b/i, snark: '"{0}" — wyglądają normalnie. Ale "wyglądają normalnie" nie generuje kliknięć.' },
       { re: /jak\s+(wtedy|kiedyś|dawniej)\s+wyglądał/i, snark: '"{0}" — wyglądali jak ludzie w danej epoce. Szok.' },
+      { re: /(spójrzcie|patrzcie|zobaczcie),?\s+(jak|co|na)/i, snark: '"{0}" — spójrzcie: wygląda normalnie. Ale "wygląda normalnie" to nie nagłówek.' },
       { re: /policzyli\s+(ile|jak)/i, snark: '"{0}" — policzyli. Ale wynik jest zbyt nudny, żeby zmieścić się w tytule.' },
       { re: /wdarł[aoy]?\s+się/i, snark: '"{0}" — ktoś wszedł gdzieś, gdzie go nie zaproszono. To cała historia.' },
       { re: /wyjawił[aoy]?/i, snark: '"{0}" — wyjawił coś, co pewnie jest normalne. Gdyby było szokujące, napisaliby co.' },
@@ -115,6 +116,8 @@ const PATTERNS = [
       { re: /\bwstrząs(nęł[aoy]?|ając[yae])\b/i, snark: '"{0}" — wstrząśnięte zostały głównie klawisze redaktora.' },
       { re: /fataln[yae]/i, snark: '"{0}" — fatalne w nagłówku = złe w rzeczywistości. Ale "złe" nie klika się tak dobrze.' },
       { re: /koszmarny?[ae]?/i, snark: '"{0}" — koszmar to sen. Na jawie to "nieprzyjemne zdarzenie".' },
+      { re: /niezwykł[yae]/i, snark: '"{0}" — zwykłe. Ale "zwykłe" nie przyciąga kliknięć.' },
+      { re: /robi\s+wrażenie/i, snark: '"{0}" — robi wrażenie na redakcji. Czytelnik oceni sam — jeśli kliknie.' },
     ],
   },
   {
@@ -220,7 +223,7 @@ const PATTERNS = [
       { re: /zatkało/i, snark: '"{0}" — nikogo nie zatkało. Może lekko zdziwił.' },
       { re: /łz[yaomie]/i, snark: '"{0}" — łzy co najwyżej ze znudzenia po kliknięciu.' },
       { re: /ciarki/i, snark: '"{0}" — ciarki od przeciągu, nie od treści.' },
-      { re: /wzruszy/i, snark: '"{0}" — wzruszy cię bardziej rachunek za prąd.' },
+      { re: /wzrusz/i, snark: '"{0}" — wzruszy cię bardziej rachunek za prąd.' },
       { re: /przejmując[yae]/i, snark: '"{0}" — przejmujące dla redakcji szukającej klików.' },
     ],
   },
@@ -252,6 +255,8 @@ const PATTERNS = [
     weight: 1,
     rules: [
       { re: /nie\s+(kryje\s+(emocji|wściekłości|radości|złości|frustracji|łez|rozczarowania|oburzenia)|dowierza|gryzł[aoy]?\s+się\s+w\s+język)/i, snark: '"{0}" — kryje. Wszystko jest pod kontrolą. Po prostu skomentował.' },
+      { re: /mówi\s+wprost/i, snark: '"{0}" — "mówi wprost" = powiedział to, co każdy mówi. Ale "wprost" brzmi odważnie.' },
+      { re: /zabrał[aoy]?\s+głos/i, snark: '"{0}" — zabrał głos, czyli skomentował. Jak codziennie. Ale "zabrał głos" brzmi jak wystąpienie historyczne.' },
       { re: /ostro\s+(zareagował|skomentował|odpowiedział)/i, snark: '"{0}" — "ostro" w nagłówku = powiedział coś krytycznego normalnym tonem.' },
       { re: /jasno\s+(wyraził\s+się|powiedział|dał\s+do\s+zrozumienia)/i, snark: '"{0}" — jasno, czyli powiedział to, co myślał. Jak każdy dorosły człowiek.' },
       { re: /reaguj[eą]\s+na\s+(słowa|doniesienia|informacje|to)/i, snark: '"{0}" — zareagował. Czyli skomentował. Jak codziennie.' },
@@ -517,9 +522,13 @@ function processPage() {
 
   for (const el of sortedElements) {
     if (el.querySelector('.cbd-badge')) continue;
+    // Skip WP navigation tiles, ads, and section headers
+    if (el.closest('[class*="header-services"], [class*="header-tile"]')) continue;
 
     let text = el.textContent?.trim().replace(/\s+/g, ' ');
     if (!text || text.length < 20 || text.length > 250) continue;
+    // Skip WP internal promos and section navigation
+    if (/^(REKLAMA|HOROSKOPY|PROGRAM TV|POGODA)\b/i.test(text)) continue;
 
     // Strip leading/trailing labels (PREMIUM, PILNE, category tags, author names)
     text = text.replace(/^(PREMIUM|PILNE|NOWE|NA ŻYWO|TYLKO U NAS|WASZ GŁOS|OPINIA|WYWIAD|KOMENTARZ|WYBORCZA\.PL)\s*/i, '');
