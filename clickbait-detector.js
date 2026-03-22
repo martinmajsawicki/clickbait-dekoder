@@ -580,6 +580,8 @@ function processPage() {
 
   for (const el of sortedElements) {
     if (el.querySelector('.cbd-badge')) continue;
+    // Skip elements that are primarily images (no meaningful text)
+    if (el.querySelector('img') && el.textContent.trim().replace(/\s+/g,' ').length < 30) continue;
     // Skip WP navigation tiles, ads, and section headers
     if (el.closest('[class*="header-services"], [class*="header-tile"]')) continue;
 
