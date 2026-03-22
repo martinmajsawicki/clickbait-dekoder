@@ -393,11 +393,14 @@ const PATTERNS = [
 
 // === ANALIZA TYTUŁU ===
 
-function analyzeHeadline(text) {
+function analyzeHeadline(text, opts = {}) {
   const matches = [];
   let totalScore = 0;
 
   for (const pattern of PATTERNS) {
+    // Skip question detection for analytical/opinion articles
+    if (opts.isAnalytical && pattern.id === 'question_headline') continue;
+
     for (const rule of pattern.rules) {
       const match = text.match(rule.re);
       if (match && !(rule.exclude && rule.exclude.test(text))) {
@@ -585,6 +588,9 @@ function processPage() {
     // Skip WP internal promos and section navigation
     if (/^(REKLAMA|HOROSKOPY|PROGRAM TV|POGODA)\b/i.test(text)) continue;
 
+    // Detect analytical/opinion section tags BEFORE stripping (reduces false positives)
+    const isAnalytical = /Strefa\s+wojn|Dylematy|Analiza|Opinia|\[OPINIA\]|\[ANALIZA\]|\[KOMENTARZ\]|Przyszłość\s+\w+\s+fregat/i.test(text);
+
     // Strip leading labels (PREMIUM, PILNE, timestamps, category tags, author names)
     text = text.replace(/^(PREMIUM|PILNE|NOWE|NA ŻYWO|TYLKO U NAS|WASZ GŁOS|OPINIA|WYWIAD|KOMENTARZ|WYBORCZA\.PL|WIDEO)\s*/i, '');
     text = text.replace(/^\d{1,2}:\d{2}\s+/, ''); // Strip timestamps (19:14 ...)
@@ -606,7 +612,7 @@ function processPage() {
 
     processed.add(text);
 
-    const analysis = analyzeHeadline(text);
+    const analysis = analyzeHeadline(text, { isAnalytical });
     if (!analysis.isClickbait) continue;
 
     const badge = createBadge(analysis);
