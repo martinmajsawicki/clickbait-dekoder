@@ -508,7 +508,7 @@ const SITE_SELECTORS = {
   ],
   'interia.pl': ['a.tile-a', 'a.listitem-a', 'a[class*="tile"]', 'a[class*="news"]', 'h2 a', 'h3 a', 'article a'],
   'pudelek.pl': ['a[class*="tile"]', 'a[class*="article"]', 'h2 a', 'h3 a', 'article a'],
-  'fakt.pl': ['a[class*="tile"]', 'a[class*="article"]', 'h2 a', 'h3 a', 'article a'],
+  'fakt.pl': ['a.padded-item-link', 'a.item-link', 'a[class*="item-link"]', 'h2 a', 'h3 a'],
   'se.pl': ['a[class*="tile"]', 'a[class*="article"]', 'h2 a', 'h3 a', 'article a'],
   'tvn24.pl': ['a[class*="link"]', 'h2 a', 'h3 a', 'article a'],
   _default: ['h1 a', 'h2 a', 'h3 a', 'h4 a', 'article a', 'a[data-ga-action]'],
@@ -557,8 +557,9 @@ function processPage() {
     // Skip WP internal promos and section navigation
     if (/^(REKLAMA|HOROSKOPY|PROGRAM TV|POGODA)\b/i.test(text)) continue;
 
-    // Strip leading/trailing labels (PREMIUM, PILNE, category tags, author names)
-    text = text.replace(/^(PREMIUM|PILNE|NOWE|NA ŻYWO|TYLKO U NAS|WASZ GŁOS|OPINIA|WYWIAD|KOMENTARZ|WYBORCZA\.PL)\s*/i, '');
+    // Strip leading labels (PREMIUM, PILNE, timestamps, category tags, author names)
+    text = text.replace(/^(PREMIUM|PILNE|NOWE|NA ŻYWO|TYLKO U NAS|WASZ GŁOS|OPINIA|WYWIAD|KOMENTARZ|WYBORCZA\.PL|WIDEO)\s*/i, '');
+    text = text.replace(/^\d{1,2}:\d{2}\s+/, ''); // Strip timestamps (19:14 ...)
     // Strip author names appended by WP/Onet (e.g. "...tekst Jakub Balcerski")
     text = text.replace(/\s+(Obserwuj|Obserwuj autorów).*$/i, '');
     text = text.replace(/\s+[A-ZĄĆĘŁŃÓŚŹŻ][a-ząćęłńóśźż]+\s+[A-ZĄĆĘŁŃÓŚŹŻ][a-ząćęłńóśźż]+([-][A-ZĄĆĘŁŃÓŚŹŻ][a-ząćęłńóśźż]+)?$/,'');
