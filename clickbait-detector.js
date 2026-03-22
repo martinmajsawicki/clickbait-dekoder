@@ -1,296 +1,246 @@
 /**
- * Clickbait Dekoder v2 — content script
- * Skanuje tytuły na polskich portalach, wykrywa techniki clickbaitowe,
- * dodaje badge ze score'em i tooltip z dekodowaniem.
+ * Clickbait Dekoder v3 — content script
  *
- * v2: Rozszerzone wzorce po analizie gazeta.pl (22.03.2026)
- *     Dodano: obietnica szoku, prowokacja, wyzwanie, ekspresyjne czasowniki,
- *     "kulisy", "reaguje na", superlatywy stopnia najwyższego, CAPS/wykrzykniki,
- *     niedopowiedziana pointa, "opublikował nagranie"
+ * v3: Kontekstowe komentarze — każdy wykryty fragment dostaje
+ *     spersonalizowany, złośliwy komentarz w stylu New Yorkera.
+ *     Tooltip pokazuje DOKŁADNIE które słowo uruchomiło detekcję.
  */
 
 // === WZORCE CLICKBAITOWE ===
+// Każdy regex ma swój `snark` — komentarz wyświetlany z wykrytym fragmentem.
+// {0} w snark zostanie zastąpione dopasowanym fragmentem tekstu.
 
 const PATTERNS = [
   {
     id: 'hidden_answer',
     name: 'Ukryta odpowiedź',
-    decode: 'Gdyby odpowiedź była sensacyjna, byłaby w tytule.',
-    patterns: [
-      /oto,?\s*(co|jak|dlaczego|kto)/i,
-      /sprawdź,?\s*(co|jak|dlaczego)/i,
-      /dowiedz się/i,
-      /jest\s+(nagranie|wideo|film|zdjęcie)/i,
-      /wiadomo,?\s*(co|jak|kto|ile)/i,
-      /znamy\s+(szczegóły|powód|przyczynę)/i,
-      /ujawniono/i,
-      /ujawni[ła]\s+(kulisy|szczegóły|prawdę)/i,
-      /opublikował[aoy]?\s+(nagranie|zdjęci[ae]|wideo|film)/i,
-      /wyszło na jaw/i,
-      /oto\s+prawda/i,
-      /sekretn[yae]/i,
-      /ta?jemnic[aąeę]/i,
-      /co\s+(zrobił[aoy]?|powiedział[aoy]?|stało się)\s+potem/i,
-      /nie\s+uwierzysz/i,
-      /wdarł[aoy]?\s+się/i,
-      /kulisy\s+(rozwodu|afery|skandalu|sprawy|związku|rozstania|konfliktu)/i,
-    ],
     weight: 2,
+    rules: [
+      { re: /oto,?\s*(co|jak|dlaczego|kto)\b/i, snark: '"{0}" — pewnie coś zupełnie zwyczajnego. "Oto" rzadko poprzedza rewolucję.' },
+      { re: /sprawdź,?\s*(co|jak|dlaczego)/i, snark: '"{0}" — sprawdzili za ciebie. Odpowiedź: nic nadzwyczajnego.' },
+      { re: /dowiedz się/i, snark: '"{0}" — dowiesz się, że nie warto było się dowiadywać.' },
+      { re: /jest\s+(nagranie|wideo|film|zdjęcie)/i, snark: '"{0}" — nagranie istnieje. Sensacja? Zwykle nie.' },
+      { re: /wiadomo/i, snark: '"{0}" — jeśli byłoby naprawdę ważne, napisaliby CO wiadomo.' },
+      { re: /znamy\s+(szczegóły|powód|przyczynę)/i, snark: '"{0}" — gdyby szczegóły były ciekawe, byłyby w tytule.' },
+      { re: /ujawniono/i, snark: '"{0}" — ujawniono coś, co prawdopodobnie i tak wszyscy wiedzieli.' },
+      { re: /ujawni[ła]\s+(kulisy|szczegóły|prawdę)/i, snark: '"{0}" — za kulisami zwykle są kolejne kulisy, a za nimi — nuda.' },
+      { re: /opublikował[aoy]?\s+(nagranie|zdjęci[ae]|wideo|film)/i, snark: '"{0}" — nagranie pewnie pokazuje dokładnie to, co sobie wyobrażasz.' },
+      { re: /wyszło na jaw/i, snark: '"{0}" — na jaw wyszło coś, co dało się przewidzieć.' },
+      { re: /oto\s+prawda/i, snark: '"{0}" — prawda jest zwykle mniej ekscytująca niż tytuł.' },
+      { re: /sekretn[yae]/i, snark: '"{0}" — sekret znany redakcji i 500 tysiącom czytelników.' },
+      { re: /ta?jemnic[aąeę]/i, snark: '"{0}" — tajemnica tak dobrze strzeżona, że jest w nagłówku.' },
+      { re: /co\s+(zrobił[aoy]?|powiedział[aoy]?|stało się)\s+potem/i, snark: '"{0}" — potem stało się coś zupełnie przewidywalnego.' },
+      { re: /nie\s+uwierzysz/i, snark: '"{0}" — uwierzysz. I pożałujesz kliknięcia.' },
+      { re: /wdarł[aoy]?\s+się/i, snark: '"{0}" — ktoś wszedł gdzieś, gdzie go nie zaproszono. To cała historia.' },
+      { re: /kulisy\s+(rozwodu|afery|skandalu|sprawy|związku|rozstania|konfliktu)/i, snark: '"{0}" — za kulisami jest to samo co przed nimi, tylko bez makijażu.' },
+    ],
   },
   {
     id: 'superlative',
     name: 'Superlativ / przesada',
-    decode: 'Odejmij 95% dramaturgii. "Szokujące" = "lekko zaskakujące".',
-    patterns: [
-      /\bHIT\b/,
-      /szok(ujące?|ował[aoy])?/i,
-      /niesamowit[yae]/i,
-      /niewiarygodne?/i,
-      /przełomow[yae]/i,
-      /rewolucyjn[yae]/i,
-      /fenomenaln[yae]/i,
-      /kosmiczn[yae]/i,
-      /brutaln[yae]/i,
-      /skandaliczn[yae]/i,
-      /sensacyjn[yae]/i,
-      /fundamentaln[yae]/i,
-      /wulgar[ny]/i,
-      /dramatyczn[yae]/i,
-      /nieludzk[ie]/i,
-      /jak\s+marzenie/i,
-      /bije\s+(na\s+głowę|konkurencję|rekordy)/i,
-      /na\s+łopatki/i,
-      /jak\s+nigdy/i,
-      /absolutn[yae]/i,
-      /totaln[yae]/i,
-      /epic[kc]/i,
-      /miazga/i,
-      /masakra/i,
-      /demolka/i,
-      /pogrom/i,
-      /kapitaln[yae]/i,
-      /rekordow[yae]/i,
-      /najlepsz[yae]/i,
-      /najgorsz[yae]/i,
-      /największ[yae]/i,
-      /pierwszy\s+raz/i,
-      /największ[yae]\s+eliminacj/i,
-    ],
     weight: 1,
+    rules: [
+      { re: /\bHIT\b/, snark: '"HIT" — w tłumaczeniu z clickbaitowego: "produkt, który istnieje".' },
+      { re: /szok(ujące?|ował[aoy])?/i, snark: '"{0}" — w tłumaczeniu: "lekko zaskakujące, jeśli masz bardzo nudne życie".' },
+      { re: /niesamowit[yae]/i, snark: '"{0}" — całkiem samowitne, gdy się okaże.' },
+      { re: /niewiarygodne?/i, snark: '"{0}" — wiarygodne i raczej przyziemne.' },
+      { re: /przełomow[yae]/i, snark: '"{0}" — przełom tak duży, że jutro nikt nie będzie pamiętał.' },
+      { re: /rewolucyjn[yae]/i, snark: '"{0}" — rewolucja, po której nic się nie zmieni.' },
+      { re: /kosmiczn[yae]/i, snark: '"{0}" — na ziemi. Zdecydowanie na ziemi.' },
+      { re: /brutaln[yae]/i, snark: '"{0}" — w clickbaicie "brutalne" oznacza "nieprzyjemne".' },
+      { re: /skandaliczn[yae]/i, snark: '"{0}" — skandal tak duży, że zmieścił się w jednym kliknięciu.' },
+      { re: /sensacyjn[yae]/i, snark: '"{0}" — sensacja o trwałości jednego cyklu informacyjnego.' },
+      { re: /fundamentaln[yae]/i, snark: '"{0}" — fundamentalna jak każda zmiana, o której zapomnisz za tydzień.' },
+      { re: /wulgar[ny]/i, snark: '"{0}" — ktoś powiedział coś nieprzyjemnego. News o 11:00.' },
+      { re: /dramatyczn[yae]/i, snark: '"{0}" — dramat w tym kontekście = ktoś się zdenerwował.' },
+      { re: /nieludzk[ie]/i, snark: '"{0}" — ludzkie, po prostu nieprzyjemne.' },
+      { re: /jak\s+marzenie/i, snark: '"{0}" — marzenie, z którego budzisz się po kliknięciu.' },
+      { re: /bije\s+(na\s+głowę|konkurencję|rekordy)/i, snark: '"{0}" — nikogo nie bije. Sprzedaje się umiarkowanie.' },
+      { re: /na\s+łopatki/i, snark: '"{0}" — łopatki nie ucierpiały.' },
+      { re: /jak\s+nigdy/i, snark: '"{0}" — jak zawsze, tylko z wykrzyknikiem.' },
+      { re: /miazga/i, snark: '"{0}" — w rzeczywistości: normalny wynik sportowy.' },
+      { re: /masakra/i, snark: '"{0}" — nie dosłownie. Na szczęście.' },
+      { re: /demolka/i, snark: '"{0}" — ktoś wygrał pewniej niż zwykle.' },
+      { re: /kapitaln[yae]/i, snark: '"{0}" — w tłumaczeniu: "całkiem niezłe".' },
+      { re: /rekordow[yae]/i, snark: '"{0}" — rekord, który przetrwa do następnego rekordu.' },
+      { re: /najlepsz[yae]/i, snark: '"{0}" — najlepszy w kategorii, o której za chwilę zapomnisz.' },
+      { re: /najgorsz[yae]/i, snark: '"{0}" — najgorszy według kryteriów autora artykułu.' },
+      { re: /największ[yae]/i, snark: '"{0}" — największy do następnego największego.' },
+      { re: /pierwszy\s+raz/i, snark: '"{0}" — tak, kiedyś wszystko jest po raz pierwszy.' },
+    ],
   },
   {
     id: 'shock_promise',
     name: 'Obietnica szoku',
-    decode: '"Aż się wierzyć nie chce" = chce się wierzyć, i tak zrobisz po kliknięciu.',
-    patterns: [
-      /aż\s+się\s+(wierzyć\s+nie\s+chce|nie\s+chce\s+wierzyć)/i,
-      /trudno\s+uwierzyć/i,
-      /nikt\s+się\s+nie\s+spodziewał/i,
-      /tego\s+się\s+nie\s+spodziewał/i,
-      /nie\s+(do\s+wiary|do\s+uwierzenia)/i,
-      /nie\s+dowierza/i,
-      /wprost\s+nie\s+mogli\s+uwierzyć/i,
-      /zaskakując[yae]\s+(wynik|zwrot|odkrycie|decyzja)/i,
-    ],
     weight: 2,
+    rules: [
+      { re: /aż\s+się\s+(wierzyć\s+nie\s+chce|nie\s+chce\s+wierzyć)/i, snark: '"{0}" — chce się wierzyć. I uwierzysz. Bo treść jest normalna.' },
+      { re: /trudno\s+uwierzyć/i, snark: '"{0}" — łatwo uwierzyć, bo to banał.' },
+      { re: /nikt\s+się\s+nie\s+spodziewał/i, snark: '"{0}" — wielu się spodziewało. Redakcja po prostu liczy na twoją niewiedzę.' },
+      { re: /tego\s+się\s+nie\s+spodziewał/i, snark: '"{0}" — spodziewał się. Każdy się spodziewał.' },
+      { re: /nie\s+(do\s+wiary|do\s+uwierzenia)/i, snark: '"{0}" — jak najbardziej do wiary. Po prostu niezbyt ciekawe.' },
+      { re: /nie\s+dowierza/i, snark: '"{0}" — dowierza, po prostu tak się mówi w nagłówkach.' },
+      { re: /zaskakując[yae]\s+(wynik|zwrot|odkrycie|decyzja)/i, snark: '"{0}" — zaskakujące dla kogoś, kto nie śledził tematu.' },
+    ],
   },
   {
     id: 'demonstrative',
     name: 'Zaimek wskazujący',
-    decode: 'Zamień "ten trik" na konkretną nazwę. Nie da się? Bo nie warto.',
-    patterns: [
-      /\b(ten|ta|to|te|ci|tym|tych|tego|tej)\s+(prosty|jeden|jedyny|nowy|niesamowity|szokujący|genialny)/i,
-      /\bten\s+(trik|sposób|preparat|produkt|model|film|serial|artykuł|sprzęt|samochód)/i,
-      /\bta\s+(metoda|dieta|sztuczka|marka|kobieta|gwiazda)/i,
-      /\bto\s+(zmieni|pomoże|sprawi|rozwiąże|uratuje)/i,
-      /tych\s+(aut|osób|ludzi|miast|telefonów)/i,
-    ],
     weight: 2,
+    rules: [
+      { re: /\b(ten|ta|to|te)\s+(prosty|jeden|jedyny|nowy|niesamowity|szokujący|genialny)/i, snark: '"{0}" — gdyby trik był genialny, napisaliby jaki. Nie napisali.' },
+      { re: /\bten\s+(trik|sposób|preparat|produkt|model|film|serial|artykuł|sprzęt|samochód)/i, snark: '"{0}" — "ten" zamiast nazwy = nazwa jest rozczarowująca.' },
+      { re: /\bta\s+(metoda|dieta|sztuczka|marka|kobieta|gwiazda)/i, snark: '"{0}" — "ta" zamiast nazwy, bo nazwa nie przyciągnęłaby kliknięcia.' },
+      { re: /\bto\s+(zmieni|pomoże|sprawi|rozwiąże|uratuje)/i, snark: '"{0}" — nie zmieni. Ale kliknięcie wygeneruje odsłonę reklamy.' },
+      { re: /tych\s+(aut|osób|ludzi|miast|telefonów)/i, snark: '"{0}" — "tych" to clickbaitowy odpowiednik mgły — kryje banalność.' },
+    ],
   },
   {
     id: 'quote_bait',
     name: 'Wyrwany cytat',
-    decode: 'W pełnym kontekście brzmi zupełnie zwyczajnie.',
-    patterns: [
-      /[""„"].{3,60}["""]/,
-      /przejmując[yae]\s+słow[aoy]/i,
-      /mocne\s+słow[aoy]/i,
-      /gorzkie?\s+słow[aoy]/i,
-      /wyznał[aoy]?/i,
-      /zdradził[aoy]?\s+(co|jak|że)/i,
-    ],
     weight: 1,
+    rules: [
+      { re: /[""„""].{3,60}[""„""]/, snark: 'Cytat w tytule — wyrwany z kontekstu brzmi dramatycznie. W pełnej rozmowie pewnie brzmiał zwyczajnie.' },
+      { re: /przejmując[yae]\s+słow[aoy]/i, snark: '"{0}" — przejmujące dla redakcji. Dla czytelnika: normalna wypowiedź.' },
+      { re: /mocne\s+słow[aoy]/i, snark: '"{0}" — mocne jak kawa rozpuszczalna. Nie espresso.' },
+      { re: /gorzkie?\s+słow[aoy]/i, snark: '"{0}" — gorzkie, czyli ktoś powiedział coś krytycznego. Zdarza się.' },
+      { re: /wyznał[aoy]?/i, snark: '"{0}" — wyznał coś, co wszyscy i tak wiedzieli.' },
+      { re: /zdradził[aoy]?\s+(co|jak|że)/i, snark: '"{0}" — zdradził, ale tajemnicą poliszynela.' },
+    ],
   },
   {
     id: 'serial_drama',
     name: 'Dramaturgia serialu',
-    decode: 'Połącz zdania bez pauzy. Brzmi nudno? Bo jest nudne.',
-    patterns: [
-      /zaczęło się\s+(niewinnie|normalnie|zwyczajnie)/i,
-      /\bale\s+potem\b/i,
-      /nagły\s+(zwrot|koniec|finał)/i,
-      /piekło\s+trwało/i,
-      /koszmar\s/i,
-      /dramat[yua]?\b/i,
-      /\.{3}\s*$/,
-      /—\s*(i|ale|a)\s/,
-      /są\s+konsekwencje/i,
-      /jest\s+(reakcja|odpowiedź|komentarz)/i,
-      /to się działo/i,
-      /a\s+tu\s+nagle/i,
-      /i\s+wtedy/i,
-      /potem\s+było\s+(tylko\s+)?(gorzej|lepiej)/i,
-      /wszystko\s+(jasne|się\s+wyjaśniło)/i,
-    ],
     weight: 1,
+    rules: [
+      { re: /zaczęło się\s+(niewinnie|normalnie|zwyczajnie)/i, snark: '"{0}" — i pewnie tak się skończyło, tylko z większą liczbą kliknięć.' },
+      { re: /\bale\s+potem\b/i, snark: '"{0}" — potem stało się coś przewidywalnego.' },
+      { re: /nagły\s+(zwrot|koniec|finał)/i, snark: '"{0}" — tak nagły, że redakcja zdążyła napisać artykuł.' },
+      { re: /piekło\s+trwało/i, snark: '"{0}" — w clickbaicie "piekło" = "nieprzyjemna sytuacja".' },
+      { re: /dramat/i, snark: '"{0}" — dramat w nagłówku: ktoś miał ciężki dzień.' },
+      { re: /są\s+konsekwencje/i, snark: '"{0}" — konsekwencje pewnie oznaczają: ktoś napisał oświadczenie.' },
+      { re: /jest\s+(reakcja|odpowiedź|komentarz)/i, snark: '"{0}" — jest komentarz. Ktoś skomentował coś. To cała historia.' },
+      { re: /to się działo/i, snark: '"{0}" — działo się to, co się zwykle dzieje.' },
+      { re: /potem\s+było\s+(tylko\s+)?(gorzej|lepiej)/i, snark: '"{0}" — potem było tak, jak można było przewidzieć.' },
+      { re: /wszystko\s+(jasne|się\s+wyjaśniło)/i, snark: '"{0}" — jasne było od początku, ale clickbait potrzebował napięcia.' },
+    ],
   },
   {
     id: 'collective',
     name: '"Polacy oszaleli"',
-    decode: 'Zamień na "kilka tysięcy osób kupiło/zrobiło". Nadal chcesz kliknąć?',
-    patterns: [
-      /polacy\s+(oszaleli|nie\s+mogą|pokochali|wybierają|odkryli)/i,
-      /internet\s+(oszalał|eksplodował|huczy)/i,
-      /wszyscy\s+(mówią|chcą|robią)/i,
-      /cała\s+(polska|europa|branża|sieć)/i,
-      /robi\s+szał/i,
-      /hitem?\s+(jest|stał|został)/i,
-      /podbij[aą]\s+(rynek|internet|sieć)/i,
-      /bez\s+szans/i,
-      /wściekli/i,
-    ],
     weight: 2,
+    rules: [
+      { re: /polacy\s+(oszaleli|nie\s+mogą|pokochali|wybierają|odkryli)/i, snark: '"{0}" — zamień na "kilka osób z Radomia przeczytało artykuł". Nadal chcesz kliknąć?' },
+      { re: /internet\s+(oszalał|eksplodował|huczy)/i, snark: '"{0}" — internet sobie spokojnie istnieje. Trzy osoby coś udostępniły.' },
+      { re: /wszyscy\s+(mówią|chcą|robią)/i, snark: '"{0}" — "wszyscy" = redakcja i troje znajomych autora.' },
+      { re: /cała\s+(polska|europa|branża|sieć)/i, snark: '"{0}" — nie cała. Fragment. Mały fragment.' },
+      { re: /robi\s+szał/i, snark: '"{0}" — szał w clickbaicie = umiarkowane zainteresowanie.' },
+      { re: /bez\s+szans/i, snark: '"{0}" — z szansami. Po prostu mniejszymi.' },
+      { re: /wściekli/i, snark: '"{0}" — zirytowani. Niekoniecznie wściekli.' },
+    ],
   },
   {
     id: 'emotional_blackmail',
     name: 'Emocjonalny szantaż',
-    decode: 'Gdy tytuł mówi ci co masz czuć — właśnie przyznał, że sam tego nie wywoła.',
-    patterns: [
-      /pęknie\s+ci\s+serce/i,
-      /zatkało\s+(nas|mnie|ich)/i,
-      /łzy\s+(w\s+oczach|same|cisną)/i,
-      /nie\s+powstrzymasz\s+(łez|śmiechu|emocji)/i,
-      /twoja\s+reakcja/i,
-      /będziesz\s+(płakać|śmiać|zaskoczony)/i,
-      /wzruszy\s+(cię|każdego)/i,
-      /zmrozi\s+ci\s+krew/i,
-      /ciarki/i,
-      /przejmując[yae]/i,
-    ],
     weight: 2,
+    rules: [
+      { re: /pęknie\s+ci\s+serce/i, snark: '"{0}" — serce wytrzyma. Treść nie jest aż tak poruszająca.' },
+      { re: /zatkało/i, snark: '"{0}" — nikogo nie zatkało. Może lekko zdziwił.' },
+      { re: /łzy/i, snark: '"{0}" — łzy co najwyżej ze znudzenia po kliknięciu.' },
+      { re: /ciarki/i, snark: '"{0}" — ciarki od przeciągu, nie od treści.' },
+      { re: /wzruszy/i, snark: '"{0}" — wzruszy cię bardziej rachunek za prąd.' },
+      { re: /przejmując[yae]/i, snark: '"{0}" — przejmujące dla redakcji szukającej klików.' },
+    ],
   },
   {
     id: 'challenge',
     name: 'Wyzwanie / rywalizacja',
-    decode: 'Dasz radę. Albo nie. W obu przypadkach nie dowiesz się niczego nowego.',
-    patterns: [
-      /a\s+ty\s+(na\s+ile|ile|jak|co)\s/i,
-      /a\s+ty\??$/i,
-      /ile\s+(dasz\s+radę|wytrzymasz)/i,
-      /sprawdź\s+(czy\s+dasz\s+radę|swoją\s+wiedzę|się)/i,
-      /większość\s+(odpada|nie\s+zdaje|nie\s+wie)/i,
-      /tylko\s+(mistrz|geniusz|znawca|ekspert)\s/i,
-      /quiz/i,
-    ],
     weight: 1,
+    rules: [
+      { re: /a\s+ty\s+(na\s+ile|ile|jak|co)\s/i, snark: '"{0}" — nie, nie musisz udowadniać niczego portalowi informacyjnemu.' },
+      { re: /a\s+ty\??$/i, snark: '"{0}" — "a ty?" to clickbaitowy ekwiwalent łapania za rękaw.' },
+      { re: /większość\s+(odpada|nie\s+zdaje|nie\s+wie)/i, snark: '"{0}" — większość nie odpada. Quiz jest łatwy. Ale klikniesz, żeby to udowodnić.' },
+      { re: /tylko\s+(mistrz|geniusz|znawca|ekspert)\s/i, snark: '"{0}" — nie tylko mistrz. Każdy, kto umie czytać.' },
+      { re: /quiz/i, snark: '"Quiz" — mechanizm gamifikacji. Odpowiesz na 10 pytań, obejrzysz 10 reklam.' },
+    ],
   },
   {
     id: 'provocation',
     name: 'Prowokacja / wciąganie',
-    decode: 'Pewnie nie znasz. I pewnie ci to nie przeszkadza.',
-    patterns: [
-      /z\s+pewnością\s+(go|ją|ich|je)\s+(znacie|pamiętacie|kojarzycie)/i,
-      /na\s+pewno\s+(widziałeś|słyszałeś|znasz|pamiętasz)/i,
-      /każdy\s+(to\s+)?zna/i,
-      /kojarzy(sz|cie)\??/i,
-      /pamiętasz\s+(go|ją|to|ten)/i,
-    ],
     weight: 1,
+    rules: [
+      { re: /z\s+pewnością\s+(go|ją|ich|je)\s+(znacie|pamiętacie|kojarzycie)/i, snark: '"{0}" — nie znasz. I nie musisz. Ale clickbait liczy na twoje ego.' },
+      { re: /na\s+pewno\s+(widziałeś|słyszałeś|znasz|pamiętasz)/i, snark: '"{0}" — na pewno nie pamiętasz. I to w porządku.' },
+      { re: /pamiętasz\s+(go|ją|to|ten)/i, snark: '"{0}" — nie pamiętasz. Clickbait liczy na twoje poczucie winy.' },
+    ],
   },
   {
     id: 'expressive_verbs',
     name: 'Ekspresyjne czasowniki',
-    decode: 'Ktoś normalnie skomentował sytuację. Nic nadzwyczajnego.',
-    patterns: [
-      /nie\s+(kryje\s+emocji|dowierza|gryzł[aoy]?\s+się\s+w\s+język)/i,
-      /ostro\s+(zareagował|skomentował|odpowiedział)/i,
-      /jasno\s+(wyraził\s+się|powiedział|dał\s+do\s+zrozumienia)/i,
-      /reaguj[eą]\s+na\s+(słowa|doniesienia|informacje|to)/i,
-      /grozi\s+palcem/i,
-      /trzęsie\s+rynkiem/i,
-      /wskazał\s+(błędy|problemy)/i,
-      /nie\s+przebierał[aoy]?\s+w\s+słowach/i,
-    ],
     weight: 1,
+    rules: [
+      { re: /nie\s+(kryje\s+emocji|dowierza|gryzł[aoy]?\s+się\s+w\s+język)/i, snark: '"{0}" — kryje. Wszystko jest pod kontrolą. Po prostu skomentował.' },
+      { re: /ostro\s+(zareagował|skomentował|odpowiedział)/i, snark: '"{0}" — "ostro" w nagłówku = powiedział coś krytycznego normalnym tonem.' },
+      { re: /jasno\s+(wyraził\s+się|powiedział|dał\s+do\s+zrozumienia)/i, snark: '"{0}" — jasno, czyli powiedział to, co myślał. Jak każdy dorosły człowiek.' },
+      { re: /reaguj[eą]\s+na\s+(słowa|doniesienia|informacje|to)/i, snark: '"{0}" — zareagował. Czyli skomentował. Jak codziennie.' },
+      { re: /grozi\s+palcem/i, snark: '"{0}" — grozi palcem = wydał oświadczenie prasowe.' },
+      { re: /trzęsie\s+rynkiem/i, snark: '"{0}" — rynek nawet nie drgnął.' },
+      { re: /wskazał\s+(błędy|problemy)/i, snark: '"{0}" — wskazał, czyli powiedział co mu się nie podoba. Normalka.' },
+      { re: /nie\s+przebierał[aoy]?\s+w\s+słowach/i, snark: '"{0}" — przebierał. Ale jednym nieparlamentarnym.' },
+    ],
   },
   {
     id: 'underpromise',
     name: 'Niedopowiedziana pointa',
-    decode: 'Ukryty szczegół jest pewnie banalny. Gdyby nie był — napisaliby go w tytule.',
-    patterns: [
-      /prosty\s+(błąd|trik|sposób|powód)/i,
-      /jeden\s+(szczegół|detal|element|powód|krok)/i,
-      /drobny\s+(detal|szczegół)/i,
-      /mały\s+(krok|ruch)/i,
-      /zgubił\s+go/i,
-      /na\s+co\s+je\s+stać/i,
-      /pokazał[aoy],?\s+na\s+co/i,
-      /udowodnił[aoy]/i,
-      /dał[aoy]\s+do\s+myślenia/i,
-    ],
     weight: 1,
+    rules: [
+      { re: /prosty\s+(błąd|trik|sposób|powód)/i, snark: '"{0}" — jeśli jest tak prosty, czemu nie jest w tytule? Bo nie jest ciekawy.' },
+      { re: /jeden\s+(szczegół|detal|element|powód|krok)/i, snark: '"{0}" — jeden szczegół, który nie zmieścił się w tytule, bo jest banalny.' },
+      { re: /na\s+co\s+(je|go|ją|ich)\s+stać/i, snark: '"{0}" — stać ich na normalne rzeczy. Ale clickbait potrzebuje tajemnicy.' },
+      { re: /pokazał[aoy],?\s+na\s+co/i, snark: '"{0}" — pokazali to, co zwykle pokazują w swojej pracy.' },
+      { re: /dał[aoy]\s+do\s+myślenia/i, snark: '"{0}" — dał do myślenia redakcji, że warto napisać clickbait.' },
+      { re: /zgubił[aoy]?\s+go/i, snark: '"{0}" — gubił go szczegół tak prosty, że nie wart artykułu.' },
+    ],
   },
   {
     id: 'knowledge_question',
     name: 'Kwestionowanie wiedzy',
-    decode: 'Znałeś. Albo nie potrzebujesz wiedzieć.',
-    patterns: [
-      /nie\s+(znałeś|wiedziałeś|spodziewałeś)/i,
-      /większość\s+(ludzi|osób|polaków)\s+nie\s+wie/i,
-      /wciąż\s+robisz\s+to\s+źle/i,
-      /popełniasz\s+ten\s+błąd/i,
-      /wiesz,?\s*(gdzie|co|jak|ile|dlaczego)/i,
-    ],
     weight: 1,
+    rules: [
+      { re: /nie\s+(znałeś|wiedziałeś|spodziewałeś)/i, snark: '"{0}" — znałeś. Albo nie potrzebujesz wiedzieć. W obu przypadkach — nie klikaj.' },
+      { re: /większość\s+(ludzi|osób|polaków)\s+nie\s+wie/i, snark: '"{0}" — większość wie. Ale clickbait liczy, że czujesz się wyjątkowy.' },
+      { re: /wiesz,?\s*(gdzie|co|jak|ile|dlaczego)/i, snark: '"{0}" — tak, wiesz. Albo nie, i nadal przeżyjesz.' },
+    ],
   },
   {
     id: 'price_tease',
     name: 'Ukryta cena/kwota',
-    decode: 'Kwota jest albo oczywista, albo nieciekawa.',
-    patterns: [
-      /kwota\s+\d-cyfrowa/i,
-      /a\s+(cena|ile\s+kosztuje)\??/i,
-      /miło\s+się\s+zaskoczysz/i,
-      /tyle\s+(kosztuje|kosztowało|zapłacił|zapłaciła)/i,
-      /za\s+grosze/i,
-      /za\s+bezcen/i,
-      /taniej\s+nawet\s+o/i,
-    ],
     weight: 1,
+    rules: [
+      { re: /kwota\s+\d-cyfrowa/i, snark: '"{0}" — gdyby kwota była szokująca, podaliby ją. Nie podali, bo nie jest.' },
+      { re: /a\s+(cena|ile\s+kosztuje)\??/i, snark: '"{0}" — cena jest normalna. Gdyby nie była, byłaby w tytule.' },
+      { re: /miło\s+się\s+zaskoczysz/i, snark: '"{0}" — nie zaskoczysz się. Cena jest taka jak w każdym sklepie.' },
+      { re: /tyle\s+(kosztuje|kosztowało|zapłacił|zapłaciła)/i, snark: '"{0}" — tyle, ile można było przewidzieć.' },
+    ],
   },
   {
     id: 'celebrity_peek',
     name: 'Celebryci jako przynęta',
-    decode: 'Znana osoba zrobiła coś normalnego. News bo znana, nie bo coś się stało.',
-    patterns: [
-      /gwiazd[aąy]\s+(pokazała|zdradziła|zaskoczyła|wyznała)/i,
-      /celebryt/i,
-      /znana\s+(aktorka|piosenkarka|gwiazda|modelka|prezenterka)/i,
-      /fotoreporter(zy)?\s+przyłapali/i,
-      /paparazzi/i,
-    ],
     weight: 1,
+    rules: [
+      { re: /gwiazd[aąy]\s+(pokazała|zdradziła|zaskoczyła|wyznała)/i, snark: '"{0}" — gwiazda zrobiła coś normalnego. News, bo znana.' },
+      { re: /celebryt/i, snark: '"{0}" — celebryta w nagłówku = brak prawdziwego newsa.' },
+    ],
   },
   {
     id: 'caps_exclaim',
     name: 'KRZYK w tytule',
-    decode: 'Caps lock i wykrzykniki zastępują brak treści.',
-    patterns: [
-      /[A-ZĄĆĘŁŃÓŚŹŻ]{10,}/,
-      /!{2,}/,
-      /\bMAMY\s+(ZŁOTO|MEDAL|MISTRZA)/i,
-    ],
     weight: 1,
+    rules: [
+      { re: /[A-ZĄĆĘŁŃÓŚŹŻ]{10,}/, snark: 'CAPS LOCK w tytule — krzyk zastępuje treść. Im głośniej tytuł krzyczy, tym ciszej jest w artykule.' },
+      { re: /!{2,}/, snark: 'Podwójne wykrzykniki!! — jeden nie wystarczył, bo treść nie jest wystarczająco ekscytująca.' },
+      { re: /\bMAMY\s+(ZŁOTO|MEDAL|MISTRZA)/i, snark: '"{0}" — entuzjazm caps-lockiem. Informacja zmieściłaby się w jednym zdaniu bez wykrzykników.' },
+    ],
   },
 ];
 
@@ -301,11 +251,18 @@ function analyzeHeadline(text) {
   let totalScore = 0;
 
   for (const pattern of PATTERNS) {
-    for (const regex of pattern.patterns) {
-      if (regex.test(text)) {
-        matches.push(pattern);
+    for (const rule of pattern.rules) {
+      const match = text.match(rule.re);
+      if (match) {
+        const matchedText = match[0];
+        const snark = rule.snark.replace('{0}', matchedText);
+        matches.push({
+          name: pattern.name,
+          snark,
+          matchedText,
+        });
         totalScore += pattern.weight;
-        break;
+        break; // One match per category
       }
     }
   }
@@ -347,29 +304,27 @@ function buildTooltipElement(analysis) {
   header.appendChild(numberSpan);
   tooltip.appendChild(header);
 
-  const subtitle = document.createElement('div');
-  subtitle.className = 'cbd-tooltip-subtitle';
-  subtitle.textContent = 'Techniki manipulacji:';
-  tooltip.appendChild(subtitle);
-
   const list = document.createElement('ul');
   list.className = 'cbd-tooltip-list';
 
   for (const match of analysis.matches) {
     const li = document.createElement('li');
-    const b = document.createElement('b');
-    b.textContent = match.name;
-    li.appendChild(b);
-    li.appendChild(document.createTextNode(': ' + match.decode));
+
+    const categorySpan = document.createElement('span');
+    categorySpan.className = 'cbd-category';
+    categorySpan.textContent = match.name;
+    li.appendChild(categorySpan);
+
+    li.appendChild(document.createElement('br'));
+
+    const snarkSpan = document.createElement('span');
+    snarkSpan.className = 'cbd-snark';
+    snarkSpan.textContent = match.snark;
+    li.appendChild(snarkSpan);
+
     list.appendChild(li);
   }
   tooltip.appendChild(list);
-
-  const footer = document.createElement('div');
-  footer.className = 'cbd-tooltip-footer';
-  footer.textContent =
-    'Dekodowanie: odpowiedź jest prawdopodobnie bardziej banalna niż sugeruje tytuł.';
-  tooltip.appendChild(footer);
 
   return tooltip;
 }
@@ -470,7 +425,6 @@ function processPage() {
 
     if (processed.has(text)) continue;
     if (el.closest('nav, footer, .menu, .sidebar-nav')) continue;
-    // Skip short nav-like links
     if (text.length < 30 && !/[.!?""]/.test(text)) continue;
 
     processed.add(text);

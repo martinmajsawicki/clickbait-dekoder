@@ -120,7 +120,7 @@
 }
 
 .cbd-tooltip-list li {
-  padding: 4px 0;
+  padding: 8px 0;
   font-size: 12.5px;
   line-height: 1.5;
   border-bottom: 1px solid #2a2a3e;
@@ -130,15 +130,21 @@
   border-bottom: none;
 }
 
-.cbd-tooltip-list li b {
+/* v3: category label + snark comment */
+.cbd-category {
+  display: inline-block;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
   color: #fbbf24;
-  font-weight: 600;
+  margin-bottom: 2px;
 }
 
-.cbd-tooltip-footer {
-  font-size: 11px;
-  color: #666;
+.cbd-snark {
+  display: block;
+  font-size: 12.5px;
+  color: #d1d5db;
   font-style: italic;
-  padding-top: 8px;
-  border-top: 1px solid #333;
+  line-height: 1.5;
 }
