@@ -122,6 +122,7 @@ const PATTERNS = [
       { re: /zachwyca[jąe]?/i, snark: '"{0}" — zachwyca redakcję. Czytelnik oceni sam, jeśli kliknie.' },
       { re: /rozpal[ąi]\s+(zmysły|wyobraźnię)/i, snark: '"{0}" — zmysły zostaną nietknięte. To reklama, nie romans.' },
       { re: /niebywał[eayo]/i, snark: '"{0}" — bywałe. Po prostu rzadko opisywane.' },
+      { re: /absolutnie\s+(unikatow|wyjątkow|niezwykł|jedyn)/i, snark: '"{0}" — "absolutnie" to wzmacniacz, który nie dodaje informacji. Bez niego zdanie mówi to samo.' },
       { re: /bez\s*precedens/i, snark: '"{0}" — precedens pewnie istnieje, ale "z precedensem" to nie nagłówek.' },
       { re: /historyczn[yae]/i, snark: '"{0}" — historyczne jak każdy wtorek, jeśli wystarczająco się postarasz.' },
       { re: /katastrofaln[yae]/i, snark: '"{0}" — w clickbaicie katastrofa zaczyna się od 3% spadku.' },
