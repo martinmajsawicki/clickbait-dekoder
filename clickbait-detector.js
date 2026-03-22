@@ -548,16 +548,29 @@ function processPage() {
     wrapper.appendChild(badge);
     wrapper.appendChild(tooltip);
 
-    el.insertBefore(wrapper, el.firstChild);
+    // Insert badge: prefer before the element (sibling) if parent allows,
+    // otherwise inside (firstChild). Sibling placement avoids overflow:hidden issues.
+    const parent = el.parentElement;
+    if (parent && parent.tagName !== 'BODY' && !parent.closest('nav, footer')) {
+      wrapper.style.display = 'inline-block';
+      wrapper.style.marginBottom = '4px';
+      parent.insertBefore(wrapper, el);
+    } else {
+      el.insertBefore(wrapper, el.firstChild);
+    }
     count++;
   }
 
+  // Count ALL badges on page (not just this run — MutationObserver re-runs skip already-badged)
+  const totalBadges = document.querySelectorAll('.cbd-badge').length;
+  const totalScanned = Math.max(processed.size, totalBadges);
+
   console.log(
-    `[Clickbait Dekoder] Przeskanowano ${processed.size} tytułów, oznaczono ${count} clickbaitów`
+    `[Clickbait Dekoder] Przeskanowano ${totalScanned} tytułów, oznaczono ${totalBadges} clickbaitów (ten przebieg: +${count})`
   );
 
   // === FLOATING SCOREBOARD ===
-  updateScoreboard(processed.size, count);
+  updateScoreboard(totalScanned, totalBadges);
 }
 
 function updateScoreboard(scanned, detected) {
