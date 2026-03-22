@@ -520,12 +520,84 @@ Score: CB 6 (collective 2 + hidden_answer 2 + demonstrative 2)
 
 ### Plan na kolejne audyty
 
-- [ ] Dodać kategorię: wielokropek jako cliffhanger (`\.\.\.$`)
-- [ ] Rozważyć kategorię: "before/after" narracja ("Miał być zwykły dzień")
-- [ ] Rozszerzyć price_tease o "kwoty mogą dziwić/zaskoczyć"
-- [ ] Przetestować na tvn24.pl i interia.pl
+- [x] Dodać kategorię: wielokropek jako cliffhanger (`\.\.\.$`) — DONE v0.4
+- [x] Rozważyć kategorię: "before/after" narracja ("Miał być zwykły dzień") — DONE v0.4
+- [x] Rozszerzyć price_tease o "kwoty mogą dziwić/zaskoczyć" — DONE v0.4
+- [x] Przetestować na interia.pl — DONE, 50/263 = 19%
+- [x] Przetestować na pudelek.pl — DONE, paradoks: niski clickbait
+- [x] Przetestować na fakt.pl — DONE, klasyczny tabloid
+- [ ] Przetestować na tvn24.pl
 - [ ] Zmierzyć recall (ile clickbaitów omija detekcję) ręcznym audytem 100 tytułów
+- [ ] Dodać selektory SE.pl po testach
 
 ---
 
-*Dokument żywy. Następny audyt planowany po rozszerzeniu bazy wzorców.*
+## Audyt runda 2 (22 marca 2026, wieczór) — interia.pl, pudelek.pl, fakt.pl
+
+### interia.pl — 50/263 = 19%
+
+**Profil**: Portal informacyjny z sekcjami premium. Styl clickbaitu zbliżony do onet.pl — dużo pytajników, cytatów wyrwanych z kontekstu, superlativów sportowych. Specyfika: prefiksy "NA ŻYWO" i znaczniki czasu (18:42, 17:54) w tytułach.
+
+**Wykryte (przykłady z trafnymi snarkami):**
+- CB 2 "Idzie gwałtowne załamanie pogody. **Wiadomo**, kiedy zaatakuje chłód" → ukryta odpowiedź ✅
+- CB 1 "**Fatalna** sytuacja Widzewa" → superlativ ✅
+- CB 1 "Dramat zaczął się podczas czwartej doby" → dramaturgia ✅
+- CB 2 "Polacy **oszaleli** na punkcie tej muzyki" → zbiorowość ✅
+
+**Pominięte clickbaity → nowe wzorce dodane:**
+- "Iran zapowiada **bezprecedensowe**" → naprawiony regex (jedno słowo)
+- "**Deklasacja** w Poznaniu" → dodane `deklasacja`
+- "**Kompromitujące** pół godziny" → dodane `kompromitujące`
+- "**Skandal**. Papież domaga się" → dodane `\bskandal\b` (rzeczownik)
+- "**Zdradza kulisy**" → dodane (bez dopełniacza)
+- "Nie ma już **złudzeń**" → dodane
+
+**False positives**: brak (19% to niski recall, ale wysoka precyzja)
+
+### pudelek.pl — paradoks niskiego clickbaitu
+
+**Profil**: Tabloid plotkarski. Paradoksalnie **mało clickbaitu** w klasycznym sensie — tytuły są tak długie i opisowe, że ujawniają całą treść.
+
+**Kluczowe odkrycie**: Pudelek nie ukrywa odpowiedzi. Zamiast "Gwiazda zrobiła COŚ. Nie uwierzysz!" pisze "Julia Wieniawa i jej NOWY CHŁOPAK bawili się razem na urodzinowej balandze przyjaciółki artystki (FOTO)". To nie clickbait — to kompletna wiadomość.
+
+**Techniki Pudelka (nie-clickbaitowe ale stylowe):**
+- CAPS na emocjonalnych słowach: "NOWY CHŁOPAK", "ODMIENIONE", "OKRADA"
+- Nawiasy z typem contentu: "(FOTO)", "(ZDJĘCIA)", "(WIDEO)"
+- Pytajniki w nawiasach: "(?)" — autoironia redakcji
+
+**Wniosek**: Pudelek to tabloid, ale NIE clickbait portal. Różnica: clickbait ukrywa, tabloid ujawnia.
+
+### fakt.pl — klasyczny tabloid
+
+**Profil**: Tradycyjny tabloid (Axel Springer). Silna narracja emocjonalna, urgency, cliffhangery.
+
+**Typowe chwyty fakt.pl:**
+- Narracja emocjonalna: "Płakał jak mały chłopiec, codziennie myślał o tym jednym błędzie"
+- Ukryta odpowiedź + urgency: "Oto, co stanie się z naszymi rachunkami. Kluczowa data"
+- Wielokropek cliffhanger: "Dzieci spały. Wtedy zapali..."
+- Superlativy: "obrzydliwe zbrodnie", "najlepszy konkurs w historii"
+- "Zaskakujące wyznanie" — klasyczny trigger
+
+**Wniosek**: Fakt.pl dobrze pasuje do istniejących wzorców. Po przeładowaniu rozszerzenia powinien mieć 30-40% detekcji.
+
+---
+
+## Audyt uzupełniający: onet.pl — przypadki zgłoszone przez użytkownika
+
+7 tytułów przesłanych jako screenshoty. Analiza:
+
+| Tytuł | Clickbait? | Akcja |
+|---|---|---|
+| "Była nim oczarowana. Dopóki nie znalazła stosu **tajemniczych** kopert" | TAK | Naprawiono regex `/tajemnic[aąeęzy]/` |
+| "Varga: historia powtarza się na naszych oczach" | NIE — felieton/opinia | Poprawnie bez badge'a |
+| "To, co zobaczyłem, było **odrażające**. Wojna o strój plażowy" | TAK | Dodane `/odrażając[yae]/` |
+| "Wielki talent myśli o wyjeździe. **Takie są jej warunki**" | TAK | Dodane `/takie są (jej\|jego) warunki/` |
+| "Nawrocki nazwany Judaszem. **Jeden cios** zaboli go najmocniej" | TAK | Rozszerzono `/jeden (cios\|błąd\|ruch)/` |
+| "Ruszyły kontrole. **Sypią się** mandaty" | TAK | Dodane `/sypi[ąa] się/` |
+| "**Burza** w sprawie sztabu Świątek" | TAK | Dodane `/\bburza\b/` |
+
+**Wynik**: 6/7 to clickbait, 1/7 poprawnie bez badge'a. Wszystkie naprawione.
+
+---
+
+*Dokument żywy. Ostatnia aktualizacja: 22 marca 2026, 19:00. 201 wzorców, 20 kategorii, 7 portali przetestowanych.*
