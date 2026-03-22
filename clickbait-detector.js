@@ -54,8 +54,9 @@ const PATTERNS = [
     rules: [
       {
         re: /\?/,
-        // Skip: service Qs, conditional Qs ("Widzisz X?", "Masz X?"), price Qs ("X zł?"), how-to Qs
-        exclude: /o\s+której|gdzie\s+ogl[aą]da[ćc]|jak\s+dojechat?|ile\s+kosztuje|transmisja|kiedy\s+(gra|mecz|start)|widzisz\s|masz\s|robisz\s|znasz\s|czujesz\s|wiesz[, ]|jak\s+(zrobić|dbać|zadbać|przygotować|wybrać|naprawić|gotować|prać)|co\s+(zrobić|jeść|pić|kupić|wybrać)\s|zł\s*\?|tys\.\s*zł/i,
+        // Skip: open Qs (kto/co/gdzie/kiedy/jak/ile/z kim — answer is never "no"),
+        // conditional Qs ("Widzisz X?"), price Qs ("X zł?"), service Qs
+        exclude: /\b(kto|co|gdzie|kiedy|jak|ile|jaki[me]?|któr[yae]|z\s+kim|czym|komu|dlaczego|skąd|dokąd)\b.*\?|o\s+której|transmisja|widzisz\s|masz\s|robisz\s|znasz\s|czujesz\s|wiesz[, ]|zł\s*\?|tys\.\s*zł/i,
         snark: '"{0}" — Prawo Betteridge\'a: jeśli nagłówek jest pytaniem, odpowiedź brzmi „nie".',
       },
     ],
@@ -478,15 +479,24 @@ function processPage() {
     }
   }
 
+  // Sort: smallest (leaf) elements first, so parents are processed after children
+  const sortedElements = [...allElements].sort(
+    (a, b) => (a.textContent?.length || 0) - (b.textContent?.length || 0)
+  );
+
   let count = 0;
 
-  for (const el of allElements) {
+  for (const el of sortedElements) {
     if (el.querySelector('.cbd-badge')) continue;
 
     let text = el.textContent?.trim().replace(/\s+/g, ' ');
     if (!text || text.length < 20 || text.length > 250) continue;
 
-    // Strip trailing category labels
+    // Strip leading/trailing labels (PREMIUM, PILNE, category tags, author names)
+    text = text.replace(/^(PREMIUM|PILNE|NOWE|NA ŻYWO|TYLKO U NAS|WASZ GŁOS|OPINIA|WYWIAD|KOMENTARZ|WYBORCZA\.PL)\s*/i, '');
+    // Strip author names appended by WP/Onet (e.g. "...tekst Jakub Balcerski")
+    text = text.replace(/\s+(Obserwuj|Obserwuj autorów).*$/i, '');
+    text = text.replace(/\s+[A-ZĄĆĘŁŃÓŚŹŻ][a-ząćęłńóśźż]+\s+[A-ZĄĆĘŁŃÓŚŹŻ][a-ząćęłńóśźż]+([-][A-ZĄĆĘŁŃÓŚŹŻ][a-ząćęłńóśźż]+)?$/,'');
     text = text.replace(
       /\s+(BIZNES|SPORT|KOBIETA|NEXT|MOTO|FILM|TENIS|PRENUMERATA|MATERIAŁ PROMOCYJNY|MOTO NEWS|OFERTY AVANTI24|OFERTY CZTERY KĄTY|LEKKOATLETYKA|SKOKI NARCIARSKIE|PIŁKA NOŻNA)$/i,
       ''
