@@ -28,6 +28,8 @@ const PATTERNS = [
       { re: /wyszło na jaw/i, snark: '"{0}" — na jaw wyszło coś, co dało się przewidzieć.' },
       { re: /oto\s+prawda/i, snark: '"{0}" — prawda jest zwykle mniej ekscytująca niż tytuł.' },
       { re: /sekretn[yae]/i, snark: '"{0}" — sekret znany redakcji i 500 tysiącom czytelników.' },
+      { re: /\b(jego|jej|ich|swój|swoje?go)\s+sekret\b/i, snark: '"{0}" — sekret tak intymny, że trafił do nagłówka tabloidowego portalu.' },
+      { re: /\bznał[aoy]?\s+(jego|jej|ich)?\s*sekret/i, snark: '"{0}" — znała sekret, a teraz znają go wszyscy — łącznie z tobą, bez klikania.' },
       { re: /ta?jemnic[aąeę]/i, snark: '"{0}" — tajemnica tak dobrze strzeżona, że jest w nagłówku.' },
       { re: /co\s+(zrobił[aoy]?|powiedział[aoy]?|stało się)\s+potem/i, snark: '"{0}" — potem stało się coś zupełnie przewidywalnego.' },
       { re: /nie\s+uwierzysz/i, snark: '"{0}" — uwierzysz. I pożałujesz kliknięcia.' },
@@ -419,6 +421,8 @@ const SITE_SELECTORS = {
     '.sectionTiles__box a',
     '.mostPopular a',
     '.weekendBest a',
+    'a.asideColumn__link',
+    'a[class*="salesModule__article"]',
   ],
   'onet.pl': [
     'a[class*="sectionLink"]',
@@ -474,7 +478,7 @@ function processPage() {
 
     // Strip trailing category labels
     text = text.replace(
-      /\s+(BIZNES|SPORT|KOBIETA|NEXT|MOTO|FILM|TENIS|PRENUMERATA|MATERIAŁ PROMOCYJNY|MOTO NEWS|OFERTY AVANTI24)$/i,
+      /\s+(BIZNES|SPORT|KOBIETA|NEXT|MOTO|FILM|TENIS|PRENUMERATA|MATERIAŁ PROMOCYJNY|MOTO NEWS|OFERTY AVANTI24|OFERTY CZTERY KĄTY|LEKKOATLETYKA|SKOKI NARCIARSKIE|PIŁKA NOŻNA)$/i,
       ''
     );
 

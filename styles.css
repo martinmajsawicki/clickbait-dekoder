@@ -148,3 +148,17 @@
   font-style: italic;
   line-height: 1.5;
 }
+
+/* Compact badge for sidebar / text lists */
+.asideColumn__link .cbd-badge,
+.asideColumn__linksList .cbd-badge {
+  padding: 1px 6px;
+  font-size: 10px;
+  margin-right: 4px;
+}
+
+/* Compact badge for sales/offer modules */
+[class*="salesModule"] .cbd-badge {
+  padding: 2px 8px;
+  font-size: 11px;
+}
