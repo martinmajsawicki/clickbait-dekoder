@@ -8,7 +8,7 @@ Przy kazdym wykrytym clickbaicie dodaje kolorowy badge (CB 1-10) i tooltip, ktor
 
 Tytul: *"Fundamentalna zmiana". Polacy odkryli, jak obnizyc koszty kredytow*
 
-→ Badge: **CB 3** (solidny clickbait)
+> Badge: **CB 3** (solidny clickbait)
 
 Tooltip:
 > **SUPERLATIV**
@@ -26,30 +26,38 @@ Tooltip:
 5. Wskaz folder z plikami wtyczki
 6. Wejdz na dowolny obslugiwany portal
 
-## 16 kategorii wzorcow
+## Jak dziala
 
-| Kategoria | Przyklad triggera | Przyklad snarka |
-|---|---|---|
-| Ukryta odpowiedz | "jest nagranie" | *"jest nagranie" — nagranie istnieje. Sensacja? Zwykle nie.* |
-| Superlativ | "skandaliczne" | *"skandaliczne" — skandal tak duzy, ze zmiescil sie w jednym kliknieciu.* |
-| Obietnica szoku | "az sie wierzyc nie chce" | *Chce sie wierzyc. I uwierzysz. Bo tresc jest normalna.* |
-| Zaimek wskazujacy | "ten preparat" | *"ten" zamiast nazwy = nazwa jest rozczarowujaca.* |
-| Wyrwany cytat | cudzyslow w tytule | *Wyrwany z kontekstu brzmi dramatycznie. W pelnej rozmowie — zwyczajnie.* |
-| Dramaturgia | "sa konsekwencje" | *Konsekwencje pewnie oznaczaja: ktos napisal oswiadczenie.* |
-| Zbiorowosc | "Polacy oszaleli" | *Zamien na "kilka osob z Radomia". Nadal chcesz kliknac?* |
-| Emocjonalny szantaz | "ciarki" | *Ciarki od przeciagu, nie od tresci.* |
-| Wyzwanie | "a ty?" | *Clickbaitowy ekwiwalent lapania za rekaw.* |
-| Prowokacja | "z pewnoscia go znacie" | *Nie znasz. I nie musisz.* |
-| Ekspresyjne czasowniki | "reaguje na" | *Zareagowal. Czyli skomentowal. Jak codziennie.* |
-| Niedopowiedziana pointa | "prosty blad" | *Jesli jest tak prosty, czemu nie jest w tytule?* |
-| Kwestionowanie wiedzy | "nie wiedziales?" | *Wiedziales. Albo nie potrzebujesz wiedziec.* |
-| Ukryta cena | "kwota 3-cyfrowa" | *Gdyby kwota byla szokujaca, podaliby ja.* |
-| Celebryci | "gwiazda pokazala" | *Gwiazda zrobila cos normalnego. News, bo znana.* |
-| KRZYK | CAPS LOCK | *Krzyk zastepuje tresc. Im glosniej, tym ciszej w artykule.* |
+1. **Skanowanie DOM** — po zaladowaniu strony wtyczka przeszukuje elementy linkow i naglowkow, uzywajac selektorow specyficznych dla kazdego portalu (a takze zestawu domyslnego)
+2. **Dopasowanie regex** — kazdy tytul (20-250 znakow) jest testowany przeciwko 169 wzorcom regexowym w 19 kategoriach
+3. **Scoring** — kazda trafiona kategoria dodaje swoja wage (1 lub 2) do wyniku; maksymalny wynik to 10
+4. **Badge + tooltip** — przy wykrytym clickbaicie pojawia sie kolorowy badge (CB 1-10), a po najechaniu myszka — tooltip z nazwa kategorii, dopasowanym fragmentem tekstu i zlosliwym komentarzem
+5. **Scoreboard** — plywajacy panel w prawym dolnym rogu strony pokazuje liczbe wykrytych clickbaitow, liczbe przeskanowanych tytulow i procent clickbaitu na stronie
+6. **MutationObserver** — wtyczka obserwuje dynamicznie ladowana tresc (infinite scroll) i automatycznie skanuje nowe elementy
 
-## Obslugiwane portale
+## 19 kategorii wzorcow (169 regexow)
 
-gazeta.pl, onet.pl, wp.pl, pudelek.pl, fakt.pl, se.pl, pomponik.pl, o2.pl, interia.pl, tvn24.pl, dziendobry.tvn.pl, plotek.pl, sport.pl, money.pl, natemat.pl, noizz.pl, polsatnews.pl
+| # | Kategoria | Waga | Liczba regexow | Przykad triggera |
+|---|---|---|---|---|
+| 1 | Ukryta odpowiedz | 2 | 30 | "oto co", "jest nagranie", "ujawniono", "kulisy", "nikt sie nie spodziewal" |
+| 2 | Pytajnik w tytule (prawo Betteridge'a) | 1 | 1 | Znak `?` w tytule (z wylaczeniami: kto/co/gdzie/kiedy/jak/ile) |
+| 3 | Superlativ / przesada | 1 | 37 | "HIT", "szokujace", "skandaliczne", "miazga", "rekordowe", "historyczne" |
+| 4 | Obietnica szoku | 2 | 7 | "az sie wierzyc nie chce", "trudno uwierzyc", "nie do wiary" |
+| 5 | Zaimek wskazujacy | 2 | 6 | "ten preparat", "ta metoda", "to urzadzenie", "te buty" |
+| 6 | Wyrwany cytat | 0 | 1 | Cudzyslow w tytule (waga 0 — sam nie uruchamia badge'a) |
+| 7 | Cytat jako przyneta | 1 | 5 | "przejmujace slowa", "mocne slowa", "wyznal", "zdradzil co" |
+| 8 | Dramaturgia serialu | 1 | 23 | "ale potem", "sa konsekwencje", "zaczeło sie niewinnie", "zawrzalo", "i sie zaczelo" |
+| 9 | "Polacy oszaleli" | 2 | 8 | "Polacy oszaleli", "internet eksplodowal", "cala Polska", "wszyscy mowia" |
+| 10 | Emocjonalny szantaz | 2 | 6 | "peknie ci serce", "ciarki", "lzy", "wzruszy" |
+| 11 | Wyzwanie / rywalizacja | 1 | 5 | "a ty?", "wiekszosc odpada", "quiz" |
+| 12 | Prowokacja / wciaganie | 1 | 3 | "z pewnoscia go znacie", "na pewno widziales", "pamietasz go" |
+| 13 | Ekspresyjne czasowniki | 1 | 8 | "nie kryje emocji", "ostro zareagowal", "grozi palcem", "trzesie rynkiem" |
+| 14 | Niedopowiedziana pointa | 1 | 6 | "prosty blad", "jeden szczegol", "na co je stac", "dal do myslenia" |
+| 15 | Kwestionowanie wiedzy | 1 | 4 | "nie wiedziales?", "wiekszosc ludzi nie wie", "malo kto zna" |
+| 16 | Ukryta cena/kwota | 1 | 8 | "kwota 3-cyfrowa", "a cena?", "tyle kosztuje", "za grosze" |
+| 17 | Reklama natywna | 1 | 7 | "sprawdza sie", "koniec z", "polskiej marki", "skradnie serce" |
+| 18 | Celebryci jako przyneta | 1 | 2 | "gwiazda pokazala", "celebryta" |
+| 19 | KRZYK w tytule | 1 | 3 | CAPS LOCK (10+ wielkich liter), podwojne wykrzykniki |
 
 ## Skala badge'ow
 
@@ -60,6 +68,22 @@ gazeta.pl, onet.pl, wp.pl, pudelek.pl, fakt.pl, se.pl, pomponik.pl, o2.pl, inter
 | CB 4-5 | czerwony | Ciezki clickbait — wiele technik naraz |
 | CB 6+ | pulsujacy czerwony | Clickbait atomowy |
 
+## Scoreboard
+
+Plywajacy panel w prawym dolnym rogu strony (ciemne tlo, pomaranczowa ramka) pokazuje:
+
+- **Liczbe wykrytych clickbaitow** (duza czerwona cyfra)
+- **Liczbe przeskanowanych tytulow** (szara cyfra)
+- **Procent clickbaitu** na stronie (np. "72% tytulow to clickbait")
+
+Panel aktualizuje sie automatycznie przy kazdym skanie (takze po dolaczeniu nowej tresci przez infinite scroll).
+
+## Obslugiwane portale (17)
+
+gazeta.pl, onet.pl, wp.pl, pudelek.pl, fakt.pl, se.pl, pomponik.pl, o2.pl, interia.pl, tvn24.pl, dziendobry.tvn.pl, plotek.pl, sport.pl, money.pl, natemat.pl, noizz.pl, polsatnews.pl
+
+Portale z dedykowanymi selektorami DOM: **gazeta.pl**, **onet.pl**, **wp.pl**, **tvn24.pl**. Pozostale portale uzywaja selektorow domyslnych (`h1-h4 a`, `article a`, `a[data-ga-action]`).
+
 ## Dlaczego bez AI?
 
 Wtyczka uzywa pattern matchingu (regex), nie AI. To swiadomy wybor:
@@ -67,6 +91,16 @@ Wtyczka uzywa pattern matchingu (regex), nie AI. To swiadomy wybor:
 - **Szybka** — skan calej strony <10ms
 - **Transparentna** — kazdy wzorzec mozna przeczytac i zrozumiec
 - **Deterministyczna** — ten sam tytul = ten sam wynik
+
+## Struktura plikow
+
+| Plik | Opis |
+|---|---|
+| `manifest.json` | Manifest Chrome Extension (v3) |
+| `clickbait-detector.js` | Glowny skrypt — wzorce, analiza, DOM, scoreboard |
+| `styles.css` | Style badge'ow, tooltipow i scoreboardu |
+| `icon48.png` / `icon128.png` | Ikony wtyczki |
+| `METHODOLOGY.md` | Historia projektu i metodologia detekcji |
 
 ## Historia projektu
 

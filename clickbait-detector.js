@@ -483,6 +483,7 @@ function getSelectors() {
 // === GŁÓWNA LOGIKA ===
 
 function processPage() {
+  _isProcessing = true;
   const selectors = getSelectors();
   const processed = new Set();
   const allElements = new Set();
@@ -548,16 +549,18 @@ function processPage() {
     wrapper.appendChild(badge);
     wrapper.appendChild(tooltip);
 
-    // Insert badge: prefer before the element (sibling) if parent allows,
-    // otherwise inside (firstChild). Sibling placement avoids overflow:hidden issues.
-    const parent = el.parentElement;
-    if (parent && parent.tagName !== 'BODY' && !parent.closest('nav, footer')) {
-      wrapper.style.display = 'inline-block';
-      wrapper.style.marginBottom = '4px';
-      parent.insertBefore(wrapper, el);
-    } else {
-      el.insertBefore(wrapper, el.firstChild);
+    // Always insert inside element (firstChild) so querySelector('.cbd-badge')
+    // can detect it on re-runs and skip. Use position:absolute to escape overflow:hidden.
+    const elPosition = window.getComputedStyle(el).position;
+    if (elPosition === 'static') {
+      el.style.position = 'relative';
     }
+    wrapper.style.position = 'absolute';
+    wrapper.style.top = '-8px';
+    wrapper.style.left = '-4px';
+    wrapper.style.display = 'inline-block';
+    wrapper.style.zIndex = '10000';
+    el.insertBefore(wrapper, el.firstChild);
     count++;
   }
 
@@ -571,6 +574,7 @@ function processPage() {
 
   // === FLOATING SCOREBOARD ===
   updateScoreboard(totalScanned, totalBadges);
+  _isProcessing = false;
 }
 
 function updateScoreboard(scanned, detected) {
@@ -611,13 +615,19 @@ if (document.readyState === 'loading') {
 }
 
 // Obserwuj dynamicznie ładowaną treść (infinite scroll)
+let _isProcessing = false;
 const observer = new MutationObserver((mutations) => {
+  if (_isProcessing) return; // Prevent re-entry from our own DOM changes
   let hasNewContent = false;
   for (const mutation of mutations) {
-    if (mutation.addedNodes.length > 0) {
+    for (const node of mutation.addedNodes) {
+      // Skip our own badge/tooltip/scoreboard insertions
+      if (node.nodeType === 1 && (node.classList?.contains('cbd-wrapper') ||
+          node.classList?.contains('cbd-badge') || node.id === 'cbd-scoreboard')) continue;
       hasNewContent = true;
       break;
     }
+    if (hasNewContent) break;
   }
   if (hasNewContent) {
     clearTimeout(observer._debounce);
