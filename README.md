@@ -29,32 +29,32 @@ Tooltip:
 ## Jak dziala
 
 1. **Skanowanie DOM** — po zaladowaniu strony wtyczka przeszukuje elementy linkow i naglowkow, uzywajac selektorow specyficznych dla kazdego portalu (a takze zestawu domyslnego)
-2. **Dopasowanie regex** — kazdy tytul (20-250 znakow) jest testowany przeciwko 169 wzorcom regexowym w 19 kategoriach
+2. **Dopasowanie regex** — kazdy tytul (20-250 znakow) jest testowany przeciwko 180 wzorcom regexowym w 19 kategoriach
 3. **Scoring** — kazda trafiona kategoria dodaje swoja wage (1 lub 2) do wyniku; maksymalny wynik to 10
 4. **Badge + tooltip** — przy wykrytym clickbaicie pojawia sie kolorowy badge (CB 1-10), a po najechaniu myszka — tooltip z nazwa kategorii, dopasowanym fragmentem tekstu i zlosliwym komentarzem
 5. **Scoreboard** — plywajacy panel w prawym dolnym rogu strony pokazuje liczbe wykrytych clickbaitow, liczbe przeskanowanych tytulow i procent clickbaitu na stronie
 6. **MutationObserver** — wtyczka obserwuje dynamicznie ladowana tresc (infinite scroll) i automatycznie skanuje nowe elementy
 
-## 19 kategorii wzorcow (169 regexow)
+## 19 kategorii wzorcow (180 regexow)
 
-| # | Kategoria | Waga | Liczba regexow | Przykad triggera |
+| # | Kategoria | Waga | Liczba regexow | Przyklad triggera |
 |---|---|---|---|---|
-| 1 | Ukryta odpowiedz | 2 | 30 | "oto co", "jest nagranie", "ujawniono", "kulisy", "nikt sie nie spodziewal" |
-| 2 | Pytajnik w tytule (prawo Betteridge'a) | 1 | 1 | Znak `?` w tytule (z wylaczeniami: kto/co/gdzie/kiedy/jak/ile) |
-| 3 | Superlativ / przesada | 1 | 37 | "HIT", "szokujace", "skandaliczne", "miazga", "rekordowe", "historyczne" |
+| 1 | Ukryta odpowiedz | 2 | 36 | "oto co", "jest nagranie", "ujawniono", "kulisy", "nie moga uwierzyc", "tak wygladaja", "policzyli ile", "ostrzega", "zle wiesci" |
+| 2 | Pytajnik w tytule (prawo Betteridge'a) | 1 | 1 | Znak `?` w tytule (tylko pytania zamkniete tak/nie; wylaczone: kto/co/gdzie/kiedy/jak/ile/z kim) |
+| 3 | Superlativ / przesada | 1 | 41 | "HIT", "szokujace", "skandaliczne", "miazga", "rekordowe", "historyczne", "niebywale", "bez precedensu", "fatalne", "koszmarny" |
 | 4 | Obietnica szoku | 2 | 7 | "az sie wierzyc nie chce", "trudno uwierzyc", "nie do wiary" |
 | 5 | Zaimek wskazujacy | 2 | 6 | "ten preparat", "ta metoda", "to urzadzenie", "te buty" |
 | 6 | Wyrwany cytat | 0 | 1 | Cudzyslow w tytule (waga 0 — sam nie uruchamia badge'a) |
 | 7 | Cytat jako przyneta | 1 | 5 | "przejmujace slowa", "mocne slowa", "wyznal", "zdradzil co" |
-| 8 | Dramaturgia serialu | 1 | 23 | "ale potem", "sa konsekwencje", "zaczeło sie niewinnie", "zawrzalo", "i sie zaczelo" |
-| 9 | "Polacy oszaleli" | 2 | 8 | "Polacy oszaleli", "internet eksplodowal", "cala Polska", "wszyscy mowia" |
-| 10 | Emocjonalny szantaz | 2 | 6 | "peknie ci serce", "ciarki", "lzy", "wzruszy" |
+| 8 | Dramaturgia serialu | 1 | 28 | "ale potem", "sa konsekwencje", "zawrzalo", "bez litosci", "wydal wyrok", "odkryl karty", "i wtedy", "oto powod", "stracil kontrole" |
+| 9 | "Polacy oszaleli" | 2 | 9 | "Polacy oszaleli", "internet eksplodowal", "cala Polska", "wszyscy mowia", "rzucili sie" |
+| 10 | Emocjonalny szantaz | 2 | 6 | "peknie ci serce", "ciarki", "lzy/lzami", "wzruszy" |
 | 11 | Wyzwanie / rywalizacja | 1 | 5 | "a ty?", "wiekszosc odpada", "quiz" |
 | 12 | Prowokacja / wciaganie | 1 | 3 | "z pewnoscia go znacie", "na pewno widziales", "pamietasz go" |
-| 13 | Ekspresyjne czasowniki | 1 | 8 | "nie kryje emocji", "ostro zareagowal", "grozi palcem", "trzesie rynkiem" |
+| 13 | Ekspresyjne czasowniki | 1 | 8 | "nie kryje wscieklosci/emocji", "ostro zareagowal", "grozi palcem", "trzesie rynkiem" |
 | 14 | Niedopowiedziana pointa | 1 | 6 | "prosty blad", "jeden szczegol", "na co je stac", "dal do myslenia" |
 | 15 | Kwestionowanie wiedzy | 1 | 4 | "nie wiedziales?", "wiekszosc ludzi nie wie", "malo kto zna" |
-| 16 | Ukryta cena/kwota | 1 | 8 | "kwota 3-cyfrowa", "a cena?", "tyle kosztuje", "za grosze" |
+| 16 | Ukryta cena/kwota | 1 | 8 | "kwota 3-cyfrowa", "a cena?", "tyle kosztuje/otrzymuja/zarabia", "za grosze" |
 | 17 | Reklama natywna | 1 | 7 | "sprawdza sie", "koniec z", "polskiej marki", "skradnie serce" |
 | 18 | Celebryci jako przyneta | 1 | 2 | "gwiazda pokazala", "celebryta" |
 | 19 | KRZYK w tytule | 1 | 3 | CAPS LOCK (10+ wielkich liter), podwojne wykrzykniki |
