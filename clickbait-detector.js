@@ -253,6 +253,8 @@ const PATTERNS = [
       { re: /ciarki/i, snark: '"{0}" — ciarki od przeciągu, nie od treści.' },
       { re: /wzrusz/i, snark: '"{0}" — wzruszy cię bardziej rachunek za prąd.' },
       { re: /przejmując[yae]/i, snark: '"{0}" — przejmujące dla redakcji szukającej klików.' },
+      { re: /nie\s+wytrzymał[aoy]?/i, snark: '"{0}" — "nie wytrzymał" = zareagował emocjonalnie. W nagłówku brzmi jak eksplozja, w artykule — jak komentarz.' },
+      { re: /porażaj[ąa]/i, snark: '"{0}" — "porażają" = redakcja mówi ci co masz czuć. Technika: narzuć emocję zanim pokażesz treść.' },
       { re: /(płakał[aoy]?|rozpłakał[aoy]?\s+się)\s+jak/i, snark: '"{0}" — technika: zamiast powiedzieć CO się stało, redakcja mówi JAK ktoś reagował. Emocja zastępuje informację.' },
       { re: /poruszając[yae]\s+(słow|histori|gest|scen)/i, snark: '"{0}" — redakcja mówi ci co masz czuć. Technika: emocja przed faktami.' },
       { re: /mroź[iąa]\s+krew/i, snark: '"{0}" — technika: emocja fizyczna (krew, ciarki, dreszcze) zamiast opisu zdarzenia.' },
@@ -372,7 +374,7 @@ const PATTERNS = [
     weight: 1,
     rules: [
       { re: /[a-ząćęłńóśźż]\s+[A-ZĄĆĘŁŃÓŚŹŻ]{4,}\s+[a-ząćęłńóśźż]/, snark: 'CAPS w środku zdania — redakcja KRZYCZY jednym słowem, bo treść nie krzyczy sama.' },
-      { re: /[A-ZĄĆĘŁŃÓŚŹŻ]{10,}/, snark: 'CAPS LOCK w tytule — krzyk zastępuje treść. Im głośniej tytuł krzyczy, tym ciszej jest w artykule.' },
+      { re: /[A-ZĄĆĘŁŃÓŚŹŻ]{8,}/, snark: 'CAPS LOCK w tytule — krzyk zastępuje treść. Im głośniej tytuł krzyczy, tym ciszej jest w artykule.' },
       { re: /!{2,}/, snark: 'Podwójne wykrzykniki!! — jeden nie wystarczył, bo treść nie jest wystarczająco ekscytująca.' },
       { re: /\bMAMY\s+(ZŁOTO|MEDAL|MISTRZA)/i, snark: '"{0}" — entuzjazm caps-lockiem. Informacja zmieściłaby się w jednym zdaniu bez wykrzykników.' },
     ],
