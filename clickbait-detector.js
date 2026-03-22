@@ -245,6 +245,8 @@ const PATTERNS = [
       { re: /ciarki/i, snark: '"{0}" — ciarki od przeciągu, nie od treści.' },
       { re: /wzrusz/i, snark: '"{0}" — wzruszy cię bardziej rachunek za prąd.' },
       { re: /przejmując[yae]/i, snark: '"{0}" — przejmujące dla redakcji szukającej klików.' },
+      { re: /(płakał[aoy]?|rozpłakał[aoy]?\s+się)\s+jak/i, snark: '"{0}" — technika: zamiast powiedzieć CO się stało, redakcja mówi JAK ktoś reagował. Emocja zastępuje informację.' },
+      { re: /poruszając[yae]\s+(słow|histori|gest|scen)/i, snark: '"{0}" — redakcja mówi ci co masz czuć. Technika: emocja przed faktami.' },
     ],
   },
   {
@@ -347,6 +349,8 @@ const PATTERNS = [
     rules: [
       { re: /gwiazd[aąy]\s+(pokazała|zdradziła|zaskoczyła|wyznała)/i, snark: '"{0}" — gwiazda zrobiła coś normalnego. News, bo znana.' },
       { re: /celebryt/i, snark: '"{0}" — celebryta w nagłówku = brak prawdziwego newsa.' },
+      { re: /najpiękniejsz[yae]\s+(polka|polska|aktorka|sportsmenka|tenisistka|lekkoatletka|siatkarka|piosenkarka|uczestniczka)/i, snark: '"{0}" — technika: oceń wygląd zamiast osiągnięć. O mężczyźnie by tak nie napisali.' },
+      { re: /najseksowniejsi?[aey]?\s/i, snark: '"{0}" — clickbait obiektyfikujący. Technika: wygląd zamiast treści.' },
     ],
   },
   {
