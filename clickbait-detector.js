@@ -647,6 +647,28 @@ function updateScoreboard(scanned, detected) {
       <div class="cbd-sb-pct" id="cbd-sb-pct"></div>
     `;
     document.body.appendChild(sb);
+
+    // Make scoreboard draggable
+    let isDragging = false, offsetX = 0, offsetY = 0;
+    sb.addEventListener('mousedown', (e) => {
+      isDragging = true;
+      offsetX = e.clientX - sb.getBoundingClientRect().left;
+      offsetY = e.clientY - sb.getBoundingClientRect().top;
+      sb.style.cursor = 'grabbing';
+      e.preventDefault();
+    });
+    document.addEventListener('mousemove', (e) => {
+      if (!isDragging) return;
+      sb.style.left = (e.clientX - offsetX) + 'px';
+      sb.style.top = (e.clientY - offsetY) + 'px';
+      sb.style.right = 'auto';
+      sb.style.bottom = 'auto';
+    });
+    document.addEventListener('mouseup', () => {
+      isDragging = false;
+      sb.style.cursor = 'grab';
+    });
+    sb.style.cursor = 'grab';
   }
   document.getElementById('cbd-sb-detected').textContent = detected;
   document.getElementById('cbd-sb-scanned').textContent = scanned;
