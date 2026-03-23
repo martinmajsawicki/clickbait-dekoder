@@ -1,2 +1,4 @@
 .DS_Store
-audit-tool/
+audit-tool/.env
+audit-tool/node_modules/
+audit-tool/reports/
