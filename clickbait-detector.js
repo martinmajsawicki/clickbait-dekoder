@@ -78,7 +78,7 @@ const PATTERNS = [
         // conditional Qs ("Widzisz X?"), price Qs ("X zł?"), service Qs
         // Skip: open Qs, alternative Qs ("X, Y czy Z?"), price Qs
         exclude: /\b(kto|co|gdzie|kiedy|jak|ile|jaki[me]?|któr[yae]|z\s+kim|czym|komu|dlaczego|skąd|dokąd)\b.*\?|\w+,\s+\w+\s+czy\s+\w+.*\?|o\s+której|transmisja|zł\s*\?|tys\.\s*zł|jest\s+(handlow[aąy]|otwart[eay]|wolna|dniem\s+woln)/i,
-        snark: '"{0}" — Prawo Betteridge\'a: jeśli nagłówek jest pytaniem, odpowiedź brzmi „nie".',
+        snark: '"{0}" — Prawo Betteridge\'a: jeśli nagłówek jest pytaniem, odpowiedź najczęściej brzmi „nie" lub „nie wiadomo".',
       },
     ],
   },
