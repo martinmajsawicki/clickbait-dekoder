@@ -25,7 +25,12 @@
         "*://*.noizz.pl/*",
         "*://*.polsatnews.pl/*",
         "*://*.tvrepublika.pl/*",
-        "*://*.wyborcza.pl/*"
+        "*://*.wyborcza.pl/*",
+        "*://*.radiozet.pl/*",
+        "*://*.tokfm.pl/*",
+        "*://*.rmf24.pl/*",
+        "*://*.polskieradio24.pl/*",
+        "*://*.xyz.pl/*"
       ],
       "js": ["clickbait-detector.js"],
       "css": ["styles.css"],
