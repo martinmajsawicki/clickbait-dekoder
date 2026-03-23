@@ -346,7 +346,7 @@ const PATTERNS = [
       { re: /zaboli/i, snark: '"{0}" — "zaboli" = emocja zamiast informacji. Co zaboli? Tytuł nie powie.' },
       { re: /przeraża\s+(mnie|nas|go|ją)/i, snark: '"{0}" — "przeraża" w cytacie bez wyjaśnienia = emocja zamiast informacji.' },
       { re: /^przerażając/i, snark: '"{0}" — zapowiedź emocji zamiast informacji.' },
-      { re: /bezlitoś[cny]\w*\s+(po\s+)?(powołani|ws\.\s+powołań|o\s+powołani|wobec\s+kadry)/i, snark: '"{0}" — trener podjął decyzję. Ale "trener podjął decyzję" nie budzi emocji.' },
+      { re: /bezlitoś[cny]\w*.{1,40}(powołani|kadry|składu|drużyny)|powołani.{1,40}bezlitoś[cny]/i, snark: '"{0}" — trener podjął decyzję. Ale "trener podjął decyzję" nie budzi emocji.' },
       { re: /puścił[aoy]?\s+nerwy/i, snark: '"{0}" — puściły nerwy = zdenerwował się. Ale "zdenerwował się" nie generuje kliknięć.' },
       { re: /nie\s+wytrzymał[aoy]?/i, snark: '"{0}" — "nie wytrzymał" = zareagował emocjonalnie. W nagłówku brzmi jak eksplozja, w artykule — jak komentarz.' },
       { re: /porażaj[ąa]/i, snark: '"{0}" — "porażają" = redakcja mówi ci co masz czuć. Technika: narzuć emocję zanim pokażesz treść.' },
