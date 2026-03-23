@@ -30,7 +30,9 @@
         "*://*.tokfm.pl/*",
         "*://*.rmf24.pl/*",
         "*://*.polskieradio24.pl/*",
-        "*://*.xyz.pl/*"
+        "*://*.xyz.pl/*",
+        "*://*.nczas.com/*",
+        "*://*.dorzeczy.pl/*"
       ],
       "js": ["clickbait-detector.js"],
       "css": ["styles.css"],

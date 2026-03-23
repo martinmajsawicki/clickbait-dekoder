@@ -588,6 +588,8 @@ const SITE_SELECTORS = {
   'polskieradio24.pl': ['a[class*="article"]', 'a[class*="news"]', 'h2 a', 'h3 a', 'article a'],
   'wyborcza.pl': ['a[class*="entry"]', 'a[class*="article"]', 'a[class*="sc-"]', 'h2 a', 'h3 a', 'article a'],
   'xyz.pl': ['a[class*="article"]', 'a[class*="post"]', 'h2 a', 'h3 a', 'article a'],
+  'nczas.com': ['h3.entry-title a', '.entry-title a', 'h2 a', 'h3 a', 'article a'],
+  'dorzeczy.pl': ['li.bli a', 'li a', 'h2 a', 'h3 a', 'article a'],
   _default: ['h1 a', 'h2 a', 'h3 a', 'h4 a', 'article a', 'a[data-ga-action]'],
 };
 

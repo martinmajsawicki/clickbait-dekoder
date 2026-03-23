@@ -50,6 +50,8 @@ const PORTALS = [
   'https://www.tokfm.pl',
   'https://polskieradio24.pl',
   'https://xyz.pl',
+  'https://nczas.com',
+  'https://dorzeczy.pl',
 ];
 
 const MODEL = 'google/gemini-2.0-flash-001';
