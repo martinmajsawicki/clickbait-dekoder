@@ -412,6 +412,107 @@ function generateReport(portalUrl, items, llmResults) {
   return report;
 }
 
+// === PATTERN STATS (deterministyczny, bez LLM) ===
+
+function generatePatternStats(reports, outDir) {
+  const date = new Date().toISOString().slice(0, 10);
+
+  // 1. Zbierz dane: kategoria × portal × count
+  const catByPortal = {};  // { "Ukryta odpowiedź": { "gazeta.pl": 12, "wp.pl": 5, _total: 17 } }
+  const portalTotals = {}; // { "gazeta.pl": { total: 80, detected: 45 } }
+
+  for (const report of reports) {
+    const portal = report.portal;
+    portalTotals[portal] = {
+      total: report.summary.total_titles,
+      detected: report.summary.detected,
+      rate: report.summary.detection_rate,
+    };
+
+    for (const [cat, count] of Object.entries(report.category_stats || {})) {
+      if (!catByPortal[cat]) catByPortal[cat] = { _total: 0 };
+      catByPortal[cat][portal] = (catByPortal[cat][portal] || 0) + count;
+      catByPortal[cat]._total += count;
+    }
+  }
+
+  // 2. Ranking kategorii (global)
+  const globalRanking = Object.entries(catByPortal)
+    .sort((a, b) => b[1]._total - a[1]._total)
+    .map(([cat, data]) => ({
+      kategoria: cat,
+      total: data._total,
+      portale: Object.entries(data)
+        .filter(([k]) => k !== '_total')
+        .sort((a, b) => b[1] - a[1])
+        .map(([portal, count]) => ({ portal, count })),
+    }));
+
+  // 3. Profil per portal (top 5 technik)
+  const portalProfiles = {};
+  for (const report of reports) {
+    const cats = Object.entries(report.category_stats || {})
+      .sort((a, b) => b[1] - a[1]);
+    portalProfiles[report.portal] = {
+      ...portalTotals[report.portal],
+      top5: cats.slice(0, 5).map(([cat, count]) => ({ kategoria: cat, count })),
+      all_categories: cats.map(([cat, count]) => ({ kategoria: cat, count })),
+    };
+  }
+
+  // 4. Heatmapa: kategoria × portal (TSV)
+  const portals = reports.map(r => r.portal).sort();
+  const categories = globalRanking.map(r => r.kategoria);
+
+  let tsv = 'kategoria\ttotal\t' + portals.join('\t') + '\n';
+  for (const cat of categories) {
+    const data = catByPortal[cat];
+    const row = [
+      cat,
+      data._total,
+      ...portals.map(p => data[p] || 0),
+    ];
+    tsv += row.join('\t') + '\n';
+  }
+
+  // Wiersz podsumowania
+  tsv += '\n--- PODSUMOWANIE PER PORTAL ---\n';
+  tsv += 'portal\ttytułów\twykrytych\t% clickbait\ttop technika\n';
+  for (const p of portals) {
+    const prof = portalProfiles[p];
+    tsv += [p, prof.total, prof.detected, prof.rate, prof.top5[0]?.kategoria || '—'].join('\t') + '\n';
+  }
+
+  // JSON
+  const stats = {
+    date,
+    portals_count: reports.length,
+    total_titles: Object.values(portalTotals).reduce((s, p) => s + p.total, 0),
+    total_detected: Object.values(portalTotals).reduce((s, p) => s + p.detected, 0),
+    global_ranking: globalRanking,
+    portal_profiles: portalProfiles,
+    heatmap: categories.map(cat => ({
+      kategoria: cat,
+      ...Object.fromEntries(portals.map(p => [p, catByPortal[cat]?.[p] || 0])),
+    })),
+  };
+
+  const jsonFile = join(outDir, `pattern-stats-${date}.json`);
+  const tsvFile = join(outDir, `pattern-stats-${date}.tsv`);
+  writeFileSync(jsonFile, JSON.stringify(stats, null, 2));
+  writeFileSync(tsvFile, tsv);
+
+  console.log(`\n📊 STATYSTYKI WZORCÓW:`);
+  console.log('─'.repeat(70));
+  console.log(`Top 10 najczęstszych technik clickbaitu:`);
+  for (const r of globalRanking.slice(0, 10)) {
+    const topPortal = r.portale[0];
+    console.log(`  ${String(r.total).padStart(4)}x  ${r.kategoria.padEnd(35)} (lider: ${topPortal?.portal || '—'})`);
+  }
+  console.log(`\n💾 JSON: ${jsonFile}`);
+  console.log(`💾 TSV:  ${tsvFile}`);
+}
+
 // === MAIN ===
 
 async function main() {
@@ -425,11 +526,14 @@ async function main() {
       const items = await collectTitles(portal);
 
       if (isDry) {
-        // Dry run — just save titles
+        // Dry run — save titles + generate report without LLM
+        const report = generateReport(portal, items, []);
+        allReports.push(report);
         const hostname = new URL(portal).hostname.replace('www.', '');
         const outFile = join(reportsDir, `${hostname}-titles.json`);
         writeFileSync(outFile, JSON.stringify(items, null, 2));
         console.log(`  💾 Zapisano tytuły: ${outFile}`);
+        console.log(`  📊 ${report.summary.detected}/${report.summary.total_titles} wykrytych (${report.summary.detection_rate})`);
         continue;
       }
 
@@ -498,8 +602,8 @@ async function main() {
     }
   }
 
-  // Summary report
-  if (allReports.length > 1) {
+  // Summary report + pattern stats
+  if (allReports.length >= 1) {
     console.log('\n📋 PODSUMOWANIE WSZYSTKICH PORTALI:');
     console.log('─'.repeat(70));
     for (const r of allReports.sort((a, b) => parseInt(b.summary.detection_rate) - parseInt(a.summary.detection_rate))) {
@@ -514,6 +618,9 @@ async function main() {
       ...r.llm_evaluation,
     })), null, 2));
     console.log(`\n💾 Podsumowanie: ${summaryFile}`);
+
+    // === PATTERN STATS — deterministyczny raport statystyczny ===
+    generatePatternStats(allReports, reportsDir);
   }
 }
 
