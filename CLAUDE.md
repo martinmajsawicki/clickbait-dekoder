@@ -46,7 +46,9 @@ gazeta.pl, onet.pl, wp.pl, fakt.pl, interia.pl, se.pl, tvn24.pl, polsatnews.pl, 
 6. Commit + push po kazdym portalu
 
 ## Planowane zadania (backlog)
-- [ ] Naprawic parser JSON w audit.js (strip markdown z odpowiedzi LLM)
+- [x] Naprawic parser JSON w audit.js (strip markdown z odpowiedzi LLM) — DONE
+- [ ] Poprawic prompt LLM o precyzyjna definicje clickbaitu (nie flagowac zywego jezyka)
+- [ ] Poprawic prompt LLM o kryteria oceny snarkow (gramatycznosc, celnosc, pasowanie do tytulu)
 - [ ] Warianty snarkow (3-5 losowych per wzorzec)
 - [ ] Popup z podsumowaniem (klik na ikone rozszerzenia)
 - [ ] Eksport raportu clickbaitu (screenshot/PDF na social media)
