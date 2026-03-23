@@ -23,7 +23,9 @@
         "*://*.money.pl/*",
         "*://*.natemat.pl/*",
         "*://*.noizz.pl/*",
-        "*://*.polsatnews.pl/*"
+        "*://*.polsatnews.pl/*",
+        "*://*.tvrepublika.pl/*",
+        "*://*.wyborcza.pl/*"
       ],
       "js": ["clickbait-detector.js"],
       "css": ["styles.css"],
