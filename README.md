@@ -29,20 +29,20 @@ Tooltip:
 ## Jak dziala
 
 1. **Skanowanie DOM** — po zaladowaniu strony wtyczka przeszukuje elementy linkow i naglowkow, uzywajac selektorow specyficznych dla kazdego portalu (a takze zestawu domyslnego)
-2. **Dopasowanie regex** — kazdy tytul (20-250 znakow) jest testowany przeciwko 252 wzorcom regexowym w 20 kategoriach
+2. **Dopasowanie regex** — kazdy tytul (20-250 znakow) jest testowany przeciwko 268 wzorcom regexowym w 20 kategoriach
 3. **Scoring** — kazda trafiona kategoria dodaje swoja wage (1 lub 2) do wyniku; maksymalny wynik to 10
 4. **Badge na obrazku** — przy wykrytym clickbaicie badge (CB 1-10) jest umieszczany na powiazanym obrazku (jesli istnieje), a nie w tekscie — lepiej widoczny i nie zaburza layoutu
 5. **Tooltip** — po najechaniu na badge pojawia sie tooltip z nazwa kategorii, dopasowanym fragmentem tekstu i zlosliwym komentarzem
 6. **Scoreboard** — plywajacy panel w prawym dolnym rogu strony (przesuwany) pokazuje liczbe wykrytych clickbaitow, liczbe przeskanowanych tytulow i procent clickbaitu na stronie
 7. **MutationObserver** — wtyczka obserwuje dynamicznie ladowana tresc (infinite scroll) i automatycznie skanuje nowe elementy
 
-## 20 kategorii wzorcow (252 regexy)
+## 20 kategorii wzorcow (268 regexow)
 
 | # | Kategoria | Waga | Przyklad triggera |
 |---|---|---|---|
 | 1 | Ukryta odpowiedz | 2 | "oto co", "jest nagranie", "ujawniono", "kulisy", "nie moga uwierzyc", "tak wygladaja", "policzyli ile", "ostrzega", "zle wiesci", "tak dba/zarabia/mieszka" |
 | 2 | Pytajnik w tytule (prawo Betteridge'a) | 1 | Znak `?` w tytule (tylko pytania zamkniete tak/nie; wylaczone: kto/co/gdzie/kiedy/jak/ile/z kim/kogo) |
-| 3 | Superlativ / przesada | 1 | "HIT", "szokujace", "skandaliczne", "miazga", "rekordowe", "historyczne", "niebywale", "bez precedensu", "fatalne", "koszmarny", "deklasacja", "kompromitujace", "skandal", "magiczne", "odrazajace", "straszne", "zgroza", "obrzydliwe" |
+| 3 | Superlativ / przesada | 1 | "HIT", "szokujace", "skandaliczne", "miazga", "rekordowe", "historyczne", "niebywale", "bez precedensu", "fatalne", "koszmarny", "deklasacja", "kompromitujace", "skandal", "magiczne", "odrazajace", "straszne", "zgroza", "obrzydliwe", "uderza w", "szoruje po dnie", "zrownuje z ziemia" |
 | 4 | Obietnica szoku | 2 | "az sie wierzyc nie chce", "trudno uwierzyc", "nie do wiary" |
 | 5 | Zaimek wskazujacy | 2 | "ten preparat", "ta metoda", "to urzadzenie", "te buty", "wyspiarskie panstwo", "pierwszy kraj w Europie" |
 | 6 | Wyrwany cytat | 0 | Cudzyslow w tytule (waga 0 — sam nie uruchamia badge'a; exclude na tytuły programow TV) |
@@ -80,7 +80,7 @@ Plywajacy panel w prawym dolnym rogu strony (ciemne tlo, pomaranczowa ramka) pok
 
 Panel aktualizuje sie automatycznie przy kazdym skanie (takze po dolaczeniu nowej tresci przez infinite scroll).
 
-## Obslugiwane portale (19)
+## Obslugiwane portale (25)
 
 | Portal | Status | % clickbaitu | Profil |
 |---|---|---|---|
@@ -101,8 +101,15 @@ Panel aktualizuje sie automatycznie przy kazdym skanie (takze po dolaczeniu nowe
 | sport.pl | przetestowany | ~33% | Narracja sportowa (po dodaniu wzorcow sportowych) |
 | money.pl | przetestowany | niski CB | Portal analityczny — false positive na naglowkach CAPS naprawiony |
 | noizz.pl | przetestowany | niski CB | Lifestyle/wywiady — malo clickbaitu |
-| tvrepublika.pl | nowy | w trakcie | CB polityczny/geopolityczny, superlativy, ukryte tozsamosci, DOM H2-bez-linkow |
+| tvrepublika.pl | przetestowany | w trakcie | CB polityczny/geopolityczny, superlativy, ukryte tozsamosci, DOM H2-bez-linkow |
 | wyborcza.pl | przetestowany | ~14% | Jakosciowe dziennikarstwo — niski clickbait, poprawka "kogo" w Betteridge |
+| nczas.com | przetestowany | ~6% | Portal prawicowy — niski CB, glownie cliffhangery, WordPress layout |
+| dorzeczy.pl | przetestowany | ~44% | Portal konserwatywny — ciezki quote bait (13x cytat jako przyneta) |
+| radiozet.pl | dodany | — | Portal radiowy |
+| tokfm.pl | dodany | — | Portal radiowy |
+| rmf24.pl | dodany | — | Portal informacyjny/radiowy |
+| polskieradio24.pl | dodany | — | Portal radiowy publiczny |
+| xyz.pl | dodany | — | Portal informacyjny |
 
 Portale z dedykowanymi selektorami DOM: **gazeta.pl**, **onet.pl**, **wp.pl**, **tvn24.pl**, **interia.pl**, **fakt.pl**, **pomponik.pl**, **natemat.pl**, **money.pl**, **noizz.pl**, **tvrepublika.pl**, **dziendobry.tvn.pl** i inne. Kazdy portal ma zestaw selektorow specyficznych + domyslne (`h1-h4 a`, `article a`, `a[data-ga-action]`).
 

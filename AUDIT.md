@@ -1,7 +1,7 @@
 # Clickbait Dekoder v3 — Audyt bazy wzorców i wyników per portal
 
-**Data audytu:** 22 marca 2026
-**Wersja rozszerzenia:** v3 (kontekstowe snarki)
+**Data audytu:** 22–23 marca 2026
+**Wersja rozszerzenia:** v3 → v0.4 (kontekstowe snarki)
 **Autor audytu:** Marcin Majsawicki
 **Status:** Dokument żywy — aktualizowany po każdym audycie
 
@@ -9,7 +9,7 @@
 
 ## Sekcja 1: Baza chwytów clickbaitowych (kompletna)
 
-Rozszerzenie wykrywa **252 wzorce regexowe** pogrupowane w **20 kategorii**. Każdy wzorzec ma przypisany komentarz (snark) w stylu New Yorkera — złośliwy, ale celny.
+Rozszerzenie wykrywa **268 wzorców regexowych** pogrupowanych w **20 kategorii**. Każdy wzorzec ma przypisany komentarz (snark) w stylu New Yorkera — złośliwy, ale celny.
 
 ### Legenda
 
@@ -535,6 +535,13 @@ Score: CB 6 (collective 2 + hidden_answer 2 + demonstrative 2)
 - [x] Przetestować na sport.pl — DONE, 4% → ~33% po dodaniu wzorców sportowych
 - [x] Przetestować na tvrepublika.pl — DONE, CB polityczny/geopolityczny
 - [x] Przetestować na wyborcza.pl — DONE, ~14%
+- [x] Przetestować na nczas.com — DONE, ~6%, głównie cliffhangery
+- [x] Przetestować na dorzeczy.pl — DONE, ~44%, ciężki quote bait (13x)
+- [ ] Przetestować na radiozet.pl
+- [ ] Przetestować na tokfm.pl
+- [ ] Przetestować na rmf24.pl
+- [ ] Przetestować na polskieradio24.pl
+- [ ] Przetestować na xyz.pl
 - [ ] Zmierzyć recall (ile clickbaitów omija detekcję) ręcznym audytem 100 tytułów
 - [x] Dodać selektory SE.pl po testach — DONE
 
@@ -608,7 +615,7 @@ Score: CB 6 (collective 2 + hidden_answer 2 + demonstrative 2)
 
 ---
 
-*Dokument żywy. Ostatnia aktualizacja: 23 marca 2026. 252 wzorce, 20 kategorii, 19 portali obsługiwanych.*
+*Dokument żywy. Ostatnia aktualizacja: 23 marca 2026. 268 wzorców, 20 kategorii, 25 portali obsługiwanych.*
 
 ---
 
@@ -783,3 +790,59 @@ Badge umieszczany na powiązanym obrazku (zamiast w tekście) jest lepiej widocz
 4. **Odmiana polska = koszmar** — każdy tytuł TV ma 7 form odmiany. Regex musi je przewidzieć
 5. **Narracja sportowa ≠ clickbait** — emocjonalny opis meczu to relacja, nie manipulacja
 6. **Badge na obrazku** — umieszczanie badge'a na zdjęciu zamiast w tekście poprawia widoczność
+
+---
+
+## Audyt runda 4 (23 marca 2026) — portale prawicowe/konserwatywne
+
+### nczas.com — 4/68 = ~6%
+
+**Profil**: Portal prawicowy (Najwyższy Czas!). WordPress layout. Bardzo niski clickbait — styl redakcyjny bliższy publicystyce niż tabloidowi.
+
+**Statystyka**: 68 tytułów przeskanowanych, 4 wykryte (~6%).
+
+**Wykryte chwyty (nieliczne):**
+- Cliffhangery (wielokropki) — dominujący typ wśród wykrytych CB
+- Sporadyczne superlativy
+
+**Wniosek**: Bardzo niski poziom clickbaitu. Portal stawia na publicystykę i komentarz, nie na manipulację nagłówkami.
+
+---
+
+### dorzeczy.pl — 24/55 = ~44%
+
+**Profil**: Portal konserwatywny (Do Rzeczy). Wysoki clickbait z dominacją quote baitu.
+
+**Statystyka**: 55 tytułów przeskanowanych, 24 wykryte (~44%).
+
+**Kluczowe odkrycie**: Ciężki quote bait — 13 z 24 wykrytych clickbaitów to cytaty jako przynęta (wyrwane z kontekstu cytaty polityków wzmocnione emocjonalnymi przymiotnikami). To najwyższy wskaźnik quote baitu spośród wszystkich przetestowanych portali.
+
+**Typowe chwyty dorzeczy.pl:**
+- Quote bait: cytaty polityków w cudzysłowie + wzmacniacze ("mocne słowa", "gorzkie słowa")
+- Superlativy polityczne
+- Dramaturgia serialu: "zawrzało", "jest reakcja"
+
+**Odkrycie: hatespeech vs clickbait**: Na portalach politycznych granica między clickbaitem a hatespeechem bywa cienka. Tytuły typu "uderza w [grupę]", "pod butem [kogoś]" mogą być jednocześnie clickbaitem (ukrywają szczegóły) i hatespeechem (demonizują). Detektor wykrywa tylko aspekt clickbaitowy.
+
+**Wniosek**: dorzeczy.pl to portal z wysokim clickbaitem opartym głównie na wyrwanych cytatach politycznych. Styl bliższy tabloidowi politycznemu niż rzetelnej publicystyce.
+
+---
+
+### Nowe wzorce dodane w rundzie 4
+
+Wzorce dodane na podstawie audytu nczas.com i dorzeczy.pl:
+
+| Wzorzec | Kategoria | Przykład |
+|---|---|---|
+| pod butem | superlative | "Polska pod butem UE" |
+| szoruje po dnie | superlative | "Poparcie szoruje po dnie" |
+| doi Polaków | hidden_answer | "To doi Polaków od lat" |
+| zrównuje z ziemią | superlative | "Zrównuje z ziemią politykę rządu" |
+| lecą na Księżyc | superlative | "Ceny lecą na Księżyc" |
+| nowy podatek | price_tease | "Nowy podatek uderzy w..." |
+| nie kryli (odmiana) | expressive_verbs | "Nie kryli oburzenia" (poprawka koniugacji) |
+| obrzydliwe | superlative | "Obrzydliwe zachowanie" |
+| uderza w | superlative | "Uderza w polskie rodziny" |
+| nie usłyszycie | hidden_answer | "Tego nie usłyszycie w mediach" |
+
+**Łączny bilans**: 268 wzorców, 20 kategorii, 25 portali obsługiwanych.
