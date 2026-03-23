@@ -110,6 +110,7 @@ const PATTERNS = [
       { re: /jak\s+nigdy/i, snark: '"{0}" — jak zawsze, tylko z wykrzyknikiem.' },
       { re: /miazga/i, snark: '"{0}" — w rzeczywistości: normalny wynik sportowy.' },
       { re: /miażdży/i, snark: '"{0}" — "miażdży" nawet bez cudzysłowu to clickbait. Pewnie skrytykował, ale "skrytykował" nie klika się tak dobrze.' },
+      { re: /apokalips[aąęy]/i, snark: '"{0}" — apokalipsa to koniec świata. Tu chodzi o coś poważnego, ale nie aż tak.' },
       { re: /masakra/i, snark: '"{0}" — hiperboliczny skrót. Technika: jedno słowo-emocja zamiast opisu sytuacji.' },
       { re: /demolka/i, snark: '"{0}" — ktoś wygrał pewniej niż zwykle.' },
       { re: /[""„]zmiażdżył[aoy]?[""„"]/i, snark: '"{0}" — cudzysłów zdradza, że nawet redakcja wie, że przesadza. Ale kliki się liczą.' },
@@ -175,6 +176,7 @@ const PATTERNS = [
       { re: /\bte\s+(kwietniki|buty|sukienki|spodnie|okulary|słuchawki|produkty)/i, snark: '"{0}" — "te" zamiast marki. Bo marka jest zbyt zwyczajna na nagłówek.' },
       { re: /tych\s+(aut|osób|ludzi|miast|telefonów)/i, snark: '"{0}" — "tych" to clickbaitowy odpowiednik mgły — kryje banalność.' },
       { re: /\b(wyspiarsk[ie]|azjatyck[ie]|europejsk[ie]|afrykańsk[ie]|skandynawsk[ie]|bałkańsk[ie]|południow[oe])\s+(państwo|kraj|miasto|region|wyspa)/i, snark: '"{0}" — ukryli nazwę, bo gdybyś ją znał, nie kliknąłbyś. Pewnie daleko i mało znane.' },
+      { re: /pierwsz[yae]\s+(kraj|miasto|państwo|osoba|firma|bank)\s+(w\s+)?(europie|na\s+świecie|w\s+Polsce)/i, snark: '"{0}" — pierwszy, ale KTÓRY? Gdyby nazwa robiła wrażenie, byłaby w tytule.' },
     ],
   },
   {
@@ -276,6 +278,7 @@ const PATTERNS = [
       { re: /wzrusz/i, snark: '"{0}" — wzruszy cię bardziej rachunek za prąd.' },
       { re: /przejmując[yae]/i, snark: '"{0}" — przejmujące dla redakcji szukającej klików.' },
       { re: /wielkie\s+emocje/i, snark: '"{0}" — wielkie emocje = ktoś się uśmiechnął lub zapłakał. Ale "normalne emocje" to nie nagłówek.' },
+      { re: /puścił[aoy]?\s+nerwy/i, snark: '"{0}" — puściły nerwy = zdenerwował się. Ale "zdenerwował się" nie generuje kliknięć.' },
       { re: /nie\s+wytrzymał[aoy]?/i, snark: '"{0}" — "nie wytrzymał" = zareagował emocjonalnie. W nagłówku brzmi jak eksplozja, w artykule — jak komentarz.' },
       { re: /porażaj[ąa]/i, snark: '"{0}" — "porażają" = redakcja mówi ci co masz czuć. Technika: narzuć emocję zanim pokażesz treść.' },
       { re: /(płakał[aoy]?|rozpłakał[aoy]?\s+się)\s+jak/i, snark: '"{0}" — technika: zamiast powiedzieć CO się stało, redakcja mówi JAK ktoś reagował. Emocja zastępuje informację.' },
