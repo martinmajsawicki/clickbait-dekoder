@@ -37,6 +37,9 @@ const PATTERNS = [
       { re: /takie\s+są\s+(jej|jego|ich)\s+(warunki|zasady|wymagania)/i, snark: '"{0}" — jakie warunki? Tytuł nie zdradza, bo wtedy nie klikniesz.' },
       { re: /co\s+(zrobił[aoy]?|powiedział[aoy]?|stało się)\s+potem/i, snark: '"{0}" — potem stało się coś zupełnie przewidywalnego.' },
       { re: /nie\s+uwierzysz/i, snark: '"{0}" — uwierzysz. I pożałujesz kliknięcia.' },
+      { re: /to\s+(jest\s+)?aż\s+niewiarygodne/i, snark: '"{0}" — niewiarygodne, ale uwierzyli i opublikowali.' },
+      { re: /rzeczywistość\s+może\s+(nas\s+)?zaskoczyć/i, snark: '"{0}" — próbują nas zaskoczyć brakiem informacji w nagłówku.' },
+      { re: /ujawnia\s+(ogrom|skalę|rozmiar)/i, snark: '"{0}" — mogli napisać kto i co, ale wybrali ogólniki.' },
       { re: /będziecie\s+(zdziwieni|zaskoczeni|w\s+szoku|pod\s+wrażeniem)/i, snark: '"{0}" — nie będziecie. Ale redakcja liczy, że klikniecie żeby sprawdzić.' },
       { re: /nie\s+(widzieliście|widziałeś|widziałaś)/i, snark: '"{0}" — widzieliście. Albo jest normalnie. Ale "normalnie" nie generuje klików.' },
       { re: /nie\s+mog[ąa]\s+uwierzyć/i, snark: '"{0}" — mogą. Po prostu clickbait potrzebuje hiperbolii.' },
@@ -463,8 +466,8 @@ const PATTERNS = [
     name: 'KRZYK w tytule',
     weight: 1,
     rules: [
-      { re: /[a-ząćęłńóśźż]\s+[A-ZĄĆĘŁŃÓŚŹŻ]{4,}\s+[a-ząćęłńóśźż]/, snark: 'CAPS w środku zdania — redakcja KRZYCZY jednym słowem, bo treść nie krzyczy sama.' },
-      { re: /[A-ZĄĆĘŁŃÓŚŹŻ]{8,}/, snark: 'CAPS LOCK w tytule — krzyk zastępuje treść. Im głośniej tytuł krzyczy, tym ciszej jest w artykule.' },
+      { re: /[a-ząćęłńóśźż]\s+[A-ZĄĆĘŁŃÓŚŹŻ]{4,}\s+[a-ząćęłńóśźż]/, exclude: /\b(SAFE|NATO|USA|OIDC|JSON|HTML|KRUS|PESEL|BLIK|WIBOR|SWIFT|RODO|GDPR|OECD|BRICS|OPEC)\b/, snark: 'CAPS w środku zdania — redakcja KRZYCZY jednym słowem, bo treść nie krzyczy sama.' },
+      { re: /[A-ZĄĆĘŁŃÓŚŹŻ]{8,}/, exclude: /\[(MIĘDZYMIASTOWA|OPINIA|KOMENTARZ|WYWIAD|ANALIZA|PIĘTER|PRENUMERATA|WYLICZENIA)\]|\b(PRENUMERATA|SPRAWDŹ|MIĘDZYMIASTOWA)\b/, snark: 'CAPS LOCK w tytule — krzyk zastępuje treść. Im głośniej tytuł krzyczy, tym ciszej jest w artykule.' },
       { re: /!{2,}/, snark: 'Podwójne wykrzykniki!! — jeden nie wystarczył, bo treść nie jest wystarczająco ekscytująca.' },
       { re: /\bMAMY\s+(ZŁOTO|MEDAL|MISTRZA)/i, snark: '"{0}" — entuzjazm caps-lockiem. Informacja zmieściłaby się w jednym zdaniu bez wykrzykników.' },
     ],
@@ -752,6 +755,24 @@ function processPage() {
     wrapper.style.display = 'inline';
 
     badge.addEventListener('mouseenter', () => {
+      const rect = badge.getBoundingClientRect();
+      // Position tooltip below badge, clamped to viewport
+      let top = rect.bottom + 6;
+      let left = rect.left;
+      // Clamp right edge
+      if (left + 350 > window.innerWidth) {
+        left = window.innerWidth - 360;
+      }
+      if (left < 10) left = 10;
+      // If below viewport, show above badge
+      if (top + 200 > window.innerHeight) {
+        top = rect.top - 10;
+        tooltip.style.transform = 'translateY(-100%)';
+      } else {
+        tooltip.style.transform = '';
+      }
+      tooltip.style.top = top + 'px';
+      tooltip.style.left = left + 'px';
       tooltip.classList.add('cbd-tooltip--visible');
     });
 
@@ -760,7 +781,8 @@ function processPage() {
     });
 
     wrapper.appendChild(badge);
-    wrapper.appendChild(tooltip);
+    // Append tooltip to body so it escapes overflow:hidden parents
+    document.body.appendChild(tooltip);
 
     // Try to place badge on associated image instead of text
     // Search up to 3 levels up for an img element
