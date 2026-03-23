@@ -175,20 +175,41 @@ async function collectTitles(url) {
     console.log(`  ⚠️ Timeout na ${url}, kontynuuję z tym co załadowano`);
   }
 
-  // Auto-dismiss cookie popups
+  // Auto-dismiss cookie popups (buttons + iframes)
   try {
     await page.evaluate(() => {
-      const btns = document.querySelectorAll('button');
+      // Try buttons first
+      const btns = document.querySelectorAll('button, a[class*="accept"], a[class*="consent"], div[class*="accept"]');
       for (const b of btns) {
         const t = b.textContent.toLowerCase();
-        if (t.includes('odrzuc') || t.includes('reject') || t.includes('przejdź do serwisu')) {
+        if (t.includes('odrzuc') || t.includes('reject') || t.includes('przejdź do serwisu') ||
+            t.includes('akceptuję') || t.includes('zgadzam') || t.includes('accept') ||
+            t.includes('zamknij') || t.includes('rozumiem')) {
           b.click();
           break;
         }
       }
+      // Remove overlay divs that might block content
+      const overlays = document.querySelectorAll('[class*="consent"], [class*="cookie"], [class*="gdpr"], [id*="consent"], [id*="cookie"]');
+      for (const o of overlays) {
+        if (o.style) o.style.display = 'none';
+      }
     });
     await new Promise(r => setTimeout(r, 1000));
   } catch (e) { /* no popup */ }
+
+  // Try CMP iframe (Quantcast, OneTrust, etc.)
+  try {
+    const frames = page.frames();
+    for (const frame of frames) {
+      const url = frame.url();
+      if (url.includes('consent') || url.includes('cmp') || url.includes('quantcast')) {
+        const btn = await frame.$('button[class*="agree"], button[class*="accept"], button[title*="Agree"]');
+        if (btn) { await btn.click(); log('Zamknięto CMP iframe popup'); }
+      }
+    }
+    await new Promise(r => setTimeout(r, 500));
+  } catch (e) { /* no CMP iframe */ }
 
   // Scroll down to load more content
   for (let i = 0; i < 5; i++) {
