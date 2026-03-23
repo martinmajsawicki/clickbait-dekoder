@@ -226,6 +226,7 @@ const PATTERNS = [
       { re: /wydał[aoy]?\s+wyrok/i, snark: '"{0}" — "wydał wyrok" = powiedział swoją opinię. Nie był w todze.' },
       { re: /stracił[aoy]?\s+kontrolę/i, snark: '"{0}" — "stracił kontrolę" = wyraził emocje publicznie. W clickbaicie to wystarczy na nagłówek.' },
       { re: /odkrył[aoy]?\s+karty/i, snark: '"{0}" — karty odkryte, ale tytuł ich nie pokazuje. Musisz kliknąć.' },
+      { re: /kradnie\s+show/i, snark: '"{0}" — "kradnie show" = zwróciła na siebie uwagę. Ale "zwróciła uwagę" nie klika się tak dobrze.' },
       { re: /i\s+(się\s+)?zaczęło/i, snark: '"{0}" — niedokończone zdanie jako nagłówek. Klasyczny cliffhanger — bo samo zakończenie jest nudne.' },
       { re: /i\s+wtedy/i, snark: '"{0}" — "i wtedy" to clickbaitowy cliffhanger. Potem stało się coś zwyczajnego.' },
       { re: /oto\s+powód/i, snark: '"{0}" — powód jest banalny. Gdyby nie był, stałby w tytule.' },
