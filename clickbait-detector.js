@@ -66,6 +66,12 @@ const PATTERNS = [
       { re: /nikt\s+(się\s+nie|nie)\s+spodziewał/i, snark: '"{0}" — spodziewali się. Po prostu nie tak bardzo, jak sugeruje nagłówek.' },
       { re: /nie\s+wyklucza/i, snark: '"{0}" — "nie wyklucza" = nie potwierdził, nie zaprzeczył, nie powiedział nic konkretnego.' },
       { re: /garść\s+(porad|uwag|wskazówek|tipów)/i, snark: '"{0}" — garść = 3-5 banalnych porad, które znasz.' },
+      { re: /^brudn[eayo]\s+(praktyki|metody|zagrywki)/i, snark: '"{0}" — jakie? Nie powiedzą, bo wtedy nie klikniesz.' },
+      { re: /^ekspert\s+(mówi|twierdzi|radzi|ostrzega)/i, snark: '"{0}" — eksperci mówią. To ich zawód. Ale CO mówi — tego tytuł nie zdradzi.' },
+      { re: /^to\s+wydarzył[aoy]\s+się/i, snark: '"{0}" — ale CO? Tytuł buduje napięcie zamiast informować.' },
+      { re: /tego\s+nie\s+wiedz/i, snark: '"{0}" — i nie dowiedzą się z nagłówka. Trzeba klikać.' },
+      { re: /mówi\s+o\s+(ważnym|istotnym|kluczowym)\s+(szczegół|detal|fakci)/i, snark: '"{0}" — podajemy go w tytule? Jeśli nie, to pewnie nie taki ważny.' },
+      { re: /chodzi\s+o\s+(spore|duże|ogromne|niemałe)\s+pieniądze/i, snark: '"{0}" — jakie, czyje, ile? Nie powiedzą, bo kwota pewnie nie robi wrażenia.' },
       { re: /^kolejn[yaeio]\s+/i, snark: '"{0}" — "kolejny" zamiast nazwy. Bo nazwa nie klikałaby się tak dobrze.' },
       { re: /^znan[yae]\s+(metoda|sposób|sztuczka|trik|firma|marka)/i, snark: '"{0}" — "znana" ale nie napisali jaka. Bo "znana" brzmi groźniej niż nazwa.' },
       { re: /teraz\s+ujawnia/i, snark: '"{0}" — teraz ujawnia. Jakby wcześniej mówił, nie byłoby tak ciekawe.' },
@@ -281,6 +287,11 @@ const PATTERNS = [
       { re: /nocn[aąeyo]\s+schadzk/i, snark: '"{0}" — kto, kiedy, gdzie? Nie powiedzą, bo wtedy nie klikniesz.' },
       { re: /alarm\s+w\s+/i, snark: '"{0}" — alarm w całym kraju? Raczej w jednym budynku. Ale "alarm w budynku" to nie nagłówek.' },
       { re: /koniec\s+marzeń/i, snark: '"{0}" — marzenia żyją, ale "marzenia żyją" nie klika się tak dobrze.' },
+      { re: /są\s+wśród\s+nas/i, snark: '"{0}" — oczywistość podana jako rewelacja.' },
+      { re: /tak\s+się\s+(początkowo\s+)?wydawało/i, snark: '"{0}" — czyli tytuł też miał treść, i tak się początkowo wydawało.' },
+      { re: /napięcie\s+rosło/i, snark: '"{0}" — i trzeba je podtrzymać niepewnością w nagłówku.' },
+      { re: /nie\s+miel[aiy]\s+wstydu/i, snark: '"{0}" — skąd wiadomo? Ktoś ich zapytał?' },
+      { re: /koniec\s+marzeń/i, snark: '"{0}" — marzenia żyją, ale "marzenia żyją" nie klika się tak dobrze.' },
     ],
   },
   {
@@ -301,6 +312,8 @@ const PATTERNS = [
       { re: /podzielił[aoy]?\s+\d/i, snark: '"{0}" — podzieliło, czyli jedni kliknęli A, drudzy B. To nie debata — to quiz.' },
       { re: /wpad[ają]\w*\s+w\s+panikę/i, snark: '"{0}" — wpadają w panikę — ilu? Wszyscy? Pewnie kilka osób nerwowo googlowało.' },
       { re: /aż\s+(tylu|tyle|tak\s+wielu)/i, snark: '"{0}" — aż tylu, ale ilu? Musisz kliknąć. Ciekawe ilu kliknie.' },
+      { re: /^gwiazdy\s+/i, snark: '"{0}" — gdyby były prawdziwie znane, podaliby nazwisko.' },
+      { re: /wielu\s+się\s+zdziwi/i, snark: '"{0}" — niewielu. Ale "niewielu" to nie nagłówek.' },
       { re: /(niemieckie|włoskie|francuskie|brytyjskie|amerykańskie|rosyjskie|ukraińskie|zagraniczne|światowe|zachodnie|wschodnie)\s+media/i, snark: '"{0}" — prawdopodobnie 1-2 artykuły. Ale "jeden zagraniczny dziennikarz napisał" nie klika się tak dobrze.' },
     ],
   },
@@ -373,6 +386,8 @@ const PATTERNS = [
       { re: /wskazał\s+(błędy|problemy)/i, snark: '"{0}" — wskazał, czyli powiedział co mu się nie podoba. Normalka.' },
       { re: /nie\s+przebierał[aoy]?\s+w\s+słowach/i, snark: '"{0}" — przebierał. Ale jednym nieparlamentarnym.' },
       { re: /bez\s+ogródek/i, snark: '"{0}" — "bez ogródek" = powiedział normalnie. Ale "powiedział normalnie" to nie nagłówek.' },
+      { re: /zakpił[aoy]?\s+(z|sobie)/i, snark: '"{0}" — ktoś powiedział coś śmiesznego. Ale "powiedział coś śmiesznego" to nie nagłówek.' },
+      { re: /piej[ąa]\s+(z\s+)?zachwytu/i, snark: '"{0}" — kilka osób powiedziało, że ok.' },
     ],
   },
   {
@@ -721,7 +736,7 @@ function processPage() {
     if (el.closest('nav, footer, .menu, .sidebar-nav')) continue;
     if (text.length < 30 && !/[.!?""]/.test(text)) continue;
     // Skip subscription/promo banners — not articles
-    if (/oferta\s+prenumerat|prenumerata\s+cyfrowa|sprawdź\s+ofertę|kup\s+teraz/i.test(text)) continue;
+    if (/oferta\s+prenumerat|prenumerata\s+cyfrowa|sprawdź\s+ofertę|kup\s+teraz|ogłoszenia\s+(mieszkań|nieruchomości)|SPRAWDŹ$/i.test(text)) continue;
 
     processed.add(text);
 
