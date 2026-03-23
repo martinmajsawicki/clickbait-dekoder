@@ -397,7 +397,7 @@ const PATTERNS = [
     rules: [
       { re: /gwiazd[aąy]\s+(pokazała|zdradziła|zaskoczyła|wyznała)/i, snark: '"{0}" — gwiazda zrobiła coś normalnego. News, bo znana.' },
       { re: /celebryt/i, snark: '"{0}" — celebryta w nagłówku = brak prawdziwego newsa.' },
-      { re: /\blegenda\s+(ma|kina|sportu|muzyki|polskiej|polskiego|nie żyje|przerwała|zdradziła|wyznała|wróciła|pokazała)/i, snark: '"{0}" — "legenda" bez nazwiska = ktoś kiedyś znany, dziś nie na tyle, żeby samo nazwisko generowało kliknięcia.' },
+      { re: /\blegend[aąęy]\b/i, snark: '"{0}" — w 99% przypadków "legenda" to przesada. Gdyby osoba była legendarna, wystarczyłoby nazwisko.' },
       { re: /najpiękniejsz[yae]\s+(polka|polska|aktorka|sportsmenka|tenisistka|lekkoatletka|siatkarka|piosenkarka|uczestniczka)/i, snark: '"{0}" — technika: oceń wygląd zamiast osiągnięć. O mężczyźnie by tak nie napisali.' },
       { re: /najseksowniejsi?[aey]?\s/i, snark: '"{0}" — clickbait obiektyfikujący. Technika: wygląd zamiast treści.' },
     ],
