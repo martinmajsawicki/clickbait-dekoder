@@ -77,7 +77,7 @@ const PATTERNS = [
         // Skip: open Qs (kto/co/gdzie/kiedy/jak/ile/z kim — answer is never "no"),
         // conditional Qs ("Widzisz X?"), price Qs ("X zł?"), service Qs
         // Skip: open Qs, alternative Qs ("X, Y czy Z?"), price Qs
-        exclude: /\b(kto|co|gdzie|kiedy|jak|ile|jaki[me]?|któr[yae]|z\s+kim|czym|komu|dlaczego|skąd|dokąd)\b.*\?|\w+,\s+\w+\s+czy\s+\w+.*\?|o\s+której|transmisja|zł\s*\?|tys\.\s*zł|jest\s+(handlow[aąy]|otwart[eay]|wolna|dniem\s+woln)/i,
+        exclude: /\b(kto|kogo|co|gdzie|kiedy|jak|ile|jaki[me]?|któr[yae]|z\s+kim|czym|komu|czemu|dlaczego|skąd|dokąd|po\s+co)\b.*\?|\w+,\s+\w+\s+czy\s+\w+.*\?|o\s+której|transmisja|zł\s*\?|tys\.\s*zł|jest\s+(handlow[aąy]|otwart[eay]|wolna|dniem\s+woln)/i,
         snark: '"{0}" — Prawo Betteridge\'a: jeśli nagłówek jest pytaniem, odpowiedź najczęściej brzmi „nie" lub „nie wiadomo".',
       },
     ],
@@ -572,6 +572,7 @@ const SITE_SELECTORS = {
   'money.pl': ['a[class*="sc-"]', 'a[href*="money.pl/"]', 'h2 a', 'h3 a', 'article a'],
   'noizz.pl': ['a.itemLink', 'a[class*="itemLink"]', 'a[class*="item"]', 'h2 a', 'h3 a', 'article a'],
   'tvn24.pl': ['a[class*="sc-"]', 'a[class*="link"]', 'h2 a', 'h3 a', 'article a'],
+  'tvrepublika.pl': ['[class*="article-"] a', 'a[class*="btn"]', 'a[class*="navigation"]', 'h2 a', 'h3 a', 'article a'],
   'dziendobry.tvn.pl': ['a[class*="sc-"]', 'a[class*="link"]', 'h2 a', 'h3 a', 'article a'],
   _default: ['h1 a', 'h2 a', 'h3 a', 'h4 a', 'article a', 'a[data-ga-action]'],
 };
