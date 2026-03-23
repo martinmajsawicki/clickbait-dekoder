@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "Clickbait Dekoder",
   "version": "0.4.0",
-  "description": "Dekoduje clickbaitowe tytuły na 26 polskich portalach. Kontekstowe komentarze w stylu New Yorkera. 21 kategorii, 358 wzorców.",
+  "description": "Dekoduje clickbaitowe tytuły na 26 polskich portalach. Kontekstowe komentarze w stylu New Yorkera. 21 kategorii, 407 wzorców.",
   "permissions": [],
   "content_scripts": [
     {
