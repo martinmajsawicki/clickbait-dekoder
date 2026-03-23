@@ -29,7 +29,7 @@ Tooltip:
 ## Jak dziala
 
 1. **Skanowanie DOM** — po zaladowaniu strony wtyczka przeszukuje elementy linkow i naglowkow, uzywajac selektorow specyficznych dla kazdego portalu (a takze zestawu domyslnego)
-2. **Dopasowanie regex** — kazdy tytul (20-250 znakow) jest testowany przeciwko 345 wzorcom regexowym w 21 kategoriach
+2. **Dopasowanie regex** — kazdy tytul (20-250 znakow) jest testowany przeciwko 347 wzorcom regexowym w 21 kategoriach
 3. **Scoring** — kazda trafiona kategoria dodaje swoja wage (1 lub 2) do wyniku; maksymalny wynik to 10
 4. **Badge na obrazku** — przy wykrytym clickbaicie badge (CB 1-10) jest umieszczany na powiazanym obrazku (jesli istnieje), a nie w tekscie — lepiej widoczny i nie zaburza layoutu
 5. **Tooltip** — po najechaniu na badge pojawia sie tooltip z nazwa kategorii, dopasowanym fragmentem tekstu i zlosliwym komentarzem
