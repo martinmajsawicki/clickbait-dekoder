@@ -613,7 +613,7 @@ function processPage() {
   let count = 0;
 
   for (const el of sortedElements) {
-    if (el.querySelector('.cbd-badge')) continue;
+    if (el.querySelector('.cbd-badge') || el.getAttribute('data-cbd-processed')) continue;
     // Skip elements that are primarily images (no meaningful text)
     if (el.querySelector('img') && el.textContent.trim().replace(/\s+/g,' ').length < 30) continue;
     // Skip WP navigation tiles, ads, and section headers
@@ -675,18 +675,39 @@ function processPage() {
     wrapper.appendChild(badge);
     wrapper.appendChild(tooltip);
 
-    // Always insert inside element (firstChild) so querySelector('.cbd-badge')
-    // can detect it on re-runs and skip. Use position:absolute to escape overflow:hidden.
-    const elPosition = window.getComputedStyle(el).position;
-    if (elPosition === 'static') {
-      el.style.position = 'relative';
+    // Try to place badge on associated image instead of text
+    // Search up to 3 levels up for an img element
+    let imgTarget = null;
+    let searchEl = el;
+    for (let i = 0; i < 4 && searchEl; i++) {
+      const img = searchEl.querySelector('img, picture, [style*="background-image"]');
+      if (img && img.offsetHeight > 50) {
+        imgTarget = img.closest('a, div, figure, picture') || img.parentElement;
+        break;
+      }
+      searchEl = searchEl.parentElement;
+    }
+
+    const targetEl = imgTarget || el;
+    const targetPosition = window.getComputedStyle(targetEl).position;
+    if (targetPosition === 'static') {
+      targetEl.style.position = 'relative';
     }
     wrapper.style.position = 'absolute';
-    wrapper.style.top = '-8px';
-    wrapper.style.left = '-4px';
+    wrapper.style.top = '8px';
+    wrapper.style.left = '8px';
     wrapper.style.display = 'inline-block';
     wrapper.style.zIndex = '10000';
-    el.insertBefore(wrapper, el.firstChild);
+
+    if (imgTarget) {
+      // Place on image — more visible, doesn't obscure text
+      imgTarget.appendChild(wrapper);
+    } else {
+      // Fallback: place inside text element
+      el.insertBefore(wrapper, el.firstChild);
+    }
+    // Mark the original link so re-runs skip it
+    el.setAttribute('data-cbd-processed', 'true');
     count++;
   }
 
