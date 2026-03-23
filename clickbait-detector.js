@@ -104,6 +104,7 @@ const PATTERNS = [
       { re: /nieludzk[ie]/i, snark: '"{0}" — ludzkie, po prostu nieprzyjemne.' },
       { re: /jak\s+marzenie/i, snark: '"{0}" — marzenie, z którego budzisz się po kliknięciu.' },
       { re: /bije\s+(na\s+głowę|konkurencję|rekordy)/i, snark: '"{0}" — nikogo nie bije. Sprzedaje się umiarkowanie.' },
+      { re: /ogrywa\s+(konkurencj|rywali|rynek)/i, snark: '"{0}" — ogrywa, czyli radzi sobie dobrze. Ale JAK — tego tytuł nie zdradzi.' },
       { re: /na\s+łopatki/i, snark: '"{0}" — łopatki nie ucierpiały.' },
       { re: /zwala\s+z\s+nóg/i, snark: '"{0}" — nogi stabilne. Redakcja przesadza z efektem.' },
       { re: /jak\s+nigdy/i, snark: '"{0}" — jak zawsze, tylko z wykrzyknikiem.' },
