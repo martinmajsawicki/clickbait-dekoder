@@ -120,6 +120,8 @@ const PATTERNS = [
       { re: /pierwszy\s+raz/i, snark: '"{0}" — tak, kiedyś wszystko jest po raz pierwszy.' },
       { re: /rewolucj[aę]/i, snark: '"{0}" — rewolucja, po której nic się nie zmieni.' },
       { re: /obłędn[yae]/i, snark: '"{0}" — obłędne, czyli ładne. Ale "ładne" nie generuje kliknięć.' },
+      { re: /\bpowala\b/i, snark: '"{0}" — powala redakcję. Czytelnik prawdopodobnie przeżyje.' },
+      { re: /nietypow[yae]/i, snark: '"{0}" — nietypowe, czyli nieco inne niż zwykle. Ale "nieco inne" to nie nagłówek.' },
       { re: /zachwyca[jąe]?/i, snark: '"{0}" — zachwyca redakcję. Czytelnik oceni sam, jeśli kliknie.' },
       { re: /rozpal[ąi]\s+(zmysły|wyobraźnię)/i, snark: '"{0}" — zmysły zostaną nietknięte. To reklama, nie romans.' },
       { re: /niebywał[eayo]/i, snark: '"{0}" — bywałe. Po prostu rzadko opisywane.' },
@@ -562,6 +564,8 @@ const SITE_SELECTORS = {
   'pomponik.pl': ['a[class*="ids-card__anchor"]', 'a[class*="ids-undecorated"]', 'h2 a', 'h3 a', 'article a'],
   'se.pl': ['a[class*="tile"]', 'a[class*="article"]', 'h2 a', 'h3 a', 'article a'],
   'natemat.pl': ['a.page-link', 'a[class*="page-link"]', 'h2 a', 'h3 a', 'article a'],
+  'money.pl': ['a[class*="sc-"]', 'a[href*="money.pl/"]', 'h2 a', 'h3 a', 'article a'],
+  'noizz.pl': ['a.itemLink', 'a[class*="itemLink"]', 'a[class*="item"]', 'h2 a', 'h3 a', 'article a'],
   'tvn24.pl': ['a[class*="sc-"]', 'a[class*="link"]', 'h2 a', 'h3 a', 'article a'],
   'dziendobry.tvn.pl': ['a[class*="sc-"]', 'a[class*="link"]', 'h2 a', 'h3 a', 'article a'],
   _default: ['h1 a', 'h2 a', 'h3 a', 'h4 a', 'article a', 'a[data-ga-action]'],
@@ -628,6 +632,10 @@ function processPage() {
       /\s+(BIZNES|SPORT|KOBIETA|NEXT|MOTO|FILM|TENIS|PRENUMERATA|MATERIAŁ PROMOCYJNY|MOTO NEWS|OFERTY AVANTI24|OFERTY CZTERY KĄTY|LEKKOATLETYKA|SKOKI NARCIARSKIE|PIŁKA NOŻNA)$/i,
       ''
     );
+
+    // Strip section headers (BLOG EKONOMICZNY, MAT. SPONSOROWANY etc.)
+    text = text.replace(/^(BLOG\s+EKONOMICZNY[^|]*\|?\s*|MAT\.\s*SPONSOROWANY\s*)/i, '');
+    text = text.replace(/\s*\[(ANALIZA|OPINIA|KOMENTARZ|WYWIAD|RAPORT|DEBATA)\]\s*$/i, '');
 
     if (processed.has(text)) continue;
     if (el.closest('nav, footer, .menu, .sidebar-nav')) continue;
