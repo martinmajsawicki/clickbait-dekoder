@@ -79,7 +79,7 @@ const PATTERNS = [
         // conditional Qs ("Widzisz X?"), price Qs ("X zł?"), service Qs
         // Skip: open Qs, alternative Qs ("X, Y czy Z?"), price Qs
         exclude: /\b(kto|kogo|co|gdzie|kiedy|jak|ile|jaki[me]?|któr[yae]|z\s+kim|czym|komu|czemu|dlaczego|skąd|dokąd|po\s+co)\b.*\?|\w+,\s+\w+\s+czy\s+\w+.*\?|o\s+której|transmisja|zł\s*\?|tys\.\s*zł|jest\s+(handlow[aąy]|otwart[eay]|wolna|dniem\s+woln)/i,
-        snark: '"{0}" — Prawo Betteridge\'a: jeśli nagłówek jest pytaniem, odpowiedź najczęściej brzmi „nie" lub „nie wiadomo".',
+        snark: '"{0}" — Pytanie w nagłówku to technika: albo odpowiedź brzmi „nie", albo pytanie jest retoryczne i ma wzbudzić emocje zamiast informować.',
       },
     ],
   },
@@ -137,6 +137,12 @@ const PATTERNS = [
       { re: /\bwstrząs(nęł[aoy]?|ając[yae])\b/i, snark: '"{0}" — wstrząśnięte zostały głównie klawisze redaktora.' },
       { re: /fataln[yae]/i, snark: '"{0}" — fatalne w nagłówku = złe w rzeczywistości. Ale "złe" nie klika się tak dobrze.' },
       { re: /czarn[yae](go|m|mi)?\s+(scenariusz|scenariusza|scenariuszem|wizj[aąęi]|prognoz[aąęy])/i, snark: '"{0}" — czarny scenariusz to ulubiona broń clickbaitu. Prawdopodobny scenariusz jest szary i nudny.' },
+      { re: /pod\s+butem/i, snark: '"{0}" — "pod butem" to metafora propagandowa. W rzeczywistości: ktoś wygrał wybory.' },
+      { re: /szoruj[eą]?\s+po\s+dnie/i, snark: '"{0}" — "szoruje po dnie" = ma mniej poparcia. Ale "ma mniej poparcia" nie brzmi dramatycznie.' },
+      { re: /\bdoi\s+(polaków|ludzi|klientów|obywateli|emerytów|kierowców|mieszkańców)/i, snark: '"{0}" — "doi" = kosztuje więcej. Ale "kosztuje więcej" nie generuje gniewu.' },
+      { re: /zrównuj[eą]?\s+(z\s+ziemią|miasto|dzielnicę)/i, snark: '"{0}" — "zrównuje z ziemią" to hiperbola. Atakuje — tak. Niszczy — tak. Dosłownie zrównuje? Rzadko.' },
+      { re: /lec[ąi]\s+na\s+(księżyc|marsa|orbitę)/i, snark: '"{0}" — ceny rosną. Ale "rosną" to za mało na nagłówek, więc lecą na Księżyc.' },
+      { re: /nowy\s+(podatek|opłat[aąęy]|haracz)/i, snark: '"{0}" — nowy, ale JAKI? Ukrycie konkretów = clickbait. Gdyby napisali "podatek od X" — wiedziałbyś czy cię dotyczy.' },
       { re: /koszmarny?[ae]?/i, snark: '"{0}" — słowo emocjonalne zamiast opisu. Redakcja mówi ci co czuć, zamiast powiedzieć co się stało.' },
       { re: /(niezwykł|piękn|poruszając|niesamowit)[yae]\s+gest/i, snark: '"{0}" — gdyby gest był naprawdę niezwykły, opisaliby go w tytule. Nie opisali, bo sam w sobie nie jest wystarczająco ciekawy.' },
       { re: /niezwykł[yae]/i, snark: '"{0}" — przymiotnik zamiast opisu. Technika: oceń za czytelnika, zanim zobaczy fakty.' },
@@ -321,7 +327,8 @@ const PATTERNS = [
     name: 'Ekspresyjne czasowniki',
     weight: 1,
     rules: [
-      { re: /nie\s+(kryje\s+(emocji|wściekłości|radości|złości|frustracji|łez|rozczarowania|oburzenia|zawodu|smutku|żalu|gniewu|irytacji|niezadowolenia)|dowierza|gryzł[aoy]?\s+się\s+w\s+język)/i, snark: '"{0}" — kryje. Wszystko jest pod kontrolą. Po prostu skomentował.' },
+      { re: /nie\s+(kryj[eą]|krył[aoy]?|kryli)\s+(emocji|wściekłości|radości|złości|frustracji|łez|rozczarowania|oburzenia|zawodu|smutku|żalu|gniewu|irytacji|niezadowolenia|zaskoczenia|zdziwienia)/i, snark: '"{0}" — kryją. Wszystko jest pod kontrolą. Po prostu zareagowali publicznie.' },
+      { re: /nie\s+(dowierza|gryzł[aoy]?\s+się\s+w\s+język)/i, snark: '"{0}" — dowierza. Po prostu skomentował.' },
       { re: /mówi\s+wprost/i, snark: '"{0}" — gdyby mówił wprost, zacytowaliby go wprost. "Mówi wprost" = powiedział coś normalnego.' },
       { re: /przerwał[aoy]?\s+milczenie/i, snark: '"{0}" — milczenie trwało do momentu, aż redakcja potrzebowała kliknięć. Teraz "przerywa" — czyli skomentował.' },
       { re: /zabrał[aoy]?\s+głos/i, snark: '"{0}" — standardowy zwrot polityczny. Pytanie: tytuł mówi ŻE zabrał głos, ale czy mówi CO powiedział?' },
