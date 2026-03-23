@@ -9,7 +9,7 @@
 
 ## Sekcja 1: Baza chwytów clickbaitowych (kompletna)
 
-Rozszerzenie wykrywa **268 wzorców regexowych** pogrupowanych w **20 kategorii**. Każdy wzorzec ma przypisany komentarz (snark) w stylu New Yorkera — złośliwy, ale celny.
+Rozszerzenie wykrywa **356 wzorców regexowych** pogrupowanych w **21 kategorii**. Każdy wzorzec ma przypisany komentarz (snark) w stylu New Yorkera — złośliwy, ale celny.
 
 ### Legenda
 
@@ -845,4 +845,4 @@ Wzorce dodane na podstawie audytu nczas.com i dorzeczy.pl:
 | uderza w | superlative | "Uderza w polskie rodziny" |
 | nie usłyszycie | hidden_answer | "Tego nie usłyszycie w mediach" |
 
-**Łączny bilans**: 268 wzorców, 20 kategorii, 25 portali obsługiwanych.
+**Łączny bilans**: 356 wzorców, 21 kategorii, 26 portali obsługiwanych, 13 portali szczegółowo zaudytowanych.
