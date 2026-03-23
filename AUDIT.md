@@ -9,7 +9,7 @@
 
 ## Sekcja 1: Baza chwytów clickbaitowych (kompletna)
 
-Rozszerzenie wykrywa **186 wzorców regexowych** pogrupowanych w **19 kategorii**. Każdy wzorzec ma przypisany komentarz (snark) w stylu New Yorkera — złośliwy, ale celny.
+Rozszerzenie wykrywa **252 wzorce regexowe** pogrupowane w **20 kategorii**. Każdy wzorzec ma przypisany komentarz (snark) w stylu New Yorkera — złośliwy, ale celny.
 
 ### Legenda
 
@@ -526,9 +526,17 @@ Score: CB 6 (collective 2 + hidden_answer 2 + demonstrative 2)
 - [x] Przetestować na interia.pl — DONE, 50/263 = 19%
 - [x] Przetestować na pudelek.pl — DONE, paradoks: niski clickbait
 - [x] Przetestować na fakt.pl — DONE, klasyczny tabloid
-- [ ] Przetestować na tvn24.pl
+- [x] Przetestować na tvn24.pl — DONE, ~37%, dominacja Betteridge (90%)
+- [x] Przetestować na pomponik.pl — DONE, ~78%
+- [x] Przetestować na dziendobry.tvn.pl — DONE, ~23%
+- [x] Przetestować na natemat.pl — DONE, ~42%
+- [x] Przetestować na money.pl — DONE, niski CB
+- [x] Przetestować na noizz.pl — DONE, niski CB
+- [x] Przetestować na sport.pl — DONE, 4% → ~33% po dodaniu wzorców sportowych
+- [x] Przetestować na tvrepublika.pl — DONE, CB polityczny/geopolityczny
+- [x] Przetestować na wyborcza.pl — DONE, ~14%
 - [ ] Zmierzyć recall (ile clickbaitów omija detekcję) ręcznym audytem 100 tytułów
-- [ ] Dodać selektory SE.pl po testach
+- [x] Dodać selektory SE.pl po testach — DONE
 
 ---
 
@@ -600,7 +608,7 @@ Score: CB 6 (collective 2 + hidden_answer 2 + demonstrative 2)
 
 ---
 
-*Dokument żywy. Ostatnia aktualizacja: 22 marca 2026, 19:00. 201 wzorców, 20 kategorii, 7 portali przetestowanych.*
+*Dokument żywy. Ostatnia aktualizacja: 23 marca 2026. 252 wzorce, 20 kategorii, 19 portali obsługiwanych.*
 
 ---
 
@@ -617,3 +625,161 @@ Score: CB 6 (collective 2 + hidden_answer 2 + demonstrative 2)
 
 ### Odmiana polska = koszmar regexu
 "Taniec z gwiazdami" → "Tańca z gwiazdami" (dopełniacz). Każdy tytuł programu TV ma 7 form. Trzeba pisać regexy odmianowe: `/Tan(iec|[cń]a|[cń]em|cu)\s+(z\s+)?gwiazd/i`.
+
+### Narracja sportowa ≠ clickbait
+"I wtedy ruszył niesamowity Pietuszewski" — narracja emocjonalna w kontekście sportowym to opis wydarzeń, nie manipulacja. Sport z natury jest dramatyczny — "niesamowity" może być uzasadnione. Problem: regex nie odróżnia kontekstu sportowego od tabloidowego.
+
+### Badge na obrazku
+Badge umieszczany na powiązanym obrazku (zamiast w tekście) jest lepiej widoczny i nie zaburza layoutu strony. Wtyczka szuka elementu `img`/`picture`/`background-image` w drzewie DOM do 4 poziomów w górę od wykrytego linku.
+
+---
+
+## Audyt runda 3 (23 marca 2026) — masowe testy nowych portali
+
+### pomponik.pl — ~78%
+
+**Profil**: Portal gossip (Interia/Polsat). Wysoki clickbait — narracja emocjonalna, cytaty jako przynęta, ukryte odpowiedzi.
+
+**Typowe chwyty:**
+- Cytaty wyrwane z kontekstu: "Przejmujące słowa" + cudzysłów
+- Ukryta odpowiedź: "Wiadomo, co się stało", "Oto, co powiedziała"
+- Emocjonalny szantaż: "Łzy", "Wzruszenie", "Ciarki"
+
+**False positive naprawiony**: Tytuły programów TV w cudzysłowie (np. tytuły odcinków "Tańca z gwiazdami") wykrywane jako `quote_bait`. Naprawione przez dodanie exclude na nazwy programów TV z odmianą polską.
+
+**Wniosek**: Pomponik to wysokiej klasy clickbait portal — prawie 4 na 5 tytułów używa co najmniej jednej techniki manipulacji.
+
+---
+
+### dziendobry.tvn.pl — ~23%
+
+**Profil**: Portal lifestyle (TVN). Niski clickbait, głównie horoskopy i porady zdrowotne.
+
+**Specyfika DOM**: Styled-components (`sc-*` selektory) wymagające dopasowania selektorów CSS.
+
+**Typowe chwyty (gdy występują):**
+- Superlativy w poradach: "najlepsze", "najgorsze"
+- Ukryta odpowiedź w horoskopach: "oto co czeka"
+- Pytajniki w artykułach zdrowotnych
+
+**Wniosek**: Niski poziom clickbaitu. Portal bardziej informacyjny/poradnikowy niż tabloidowy.
+
+---
+
+### natemat.pl — ~42%
+
+**Profil**: Portal opiniotwórczy z ambiwalentnym stylem clickbaitu. Mieszanka rzetelnych nagłówków z clickbaitowymi.
+
+**Specyfika**: Prefiksy dnia tygodnia i godziny w tytułach (np. "Pon 18:42 ...") — wymagały stripowania w preprocessingu.
+
+**Typowe chwyty:**
+- Pytajniki Betteridge'a
+- Dramaturgia serialu: "ale potem", "zawrzało"
+- Superlativy: "szokujące", "sensacyjne"
+
+**Zgodność z recenzentem ludzkim**: Dobra — większość oznaczeń pokrywa się z oceną ręczną.
+
+**Wniosek**: Portal na granicy — wiele tytułów balansuje między informacją a manipulacją. Detektor radzi sobie dobrze z tym ambiwalentnym stylem.
+
+---
+
+### money.pl — niski CB
+
+**Profil**: Portal analityczny/finansowy. Niski clickbait — treści merytoryczne, konkretne dane.
+
+**False positive naprawiony**: Nagłówki sekcji w CAPS LOCK (np. "BLOG EKONOMICZNY", "MAT. SPONSOROWANY") wykrywane jako `caps_exclaim`. Naprawione przez stripowanie tych prefiksów w preprocessingu.
+
+**Wniosek**: Portal analityczny generuje mało clickbaitu. Tytuły są konkretne i informacyjne.
+
+---
+
+### noizz.pl — niski CB
+
+**Profil**: Portal lifestyle/wywiady (Ringier Axel Springer). Niski clickbait — treści kulturalne, wywiady.
+
+**Wniosek**: Mało clickbaitu. Styl redakcyjny bliższy magazynowi niż tabloidowi.
+
+---
+
+### tvn24.pl — ~37%
+
+**Profil**: Portal informacyjny (TVN/Warner Bros. Discovery). Clickbait zdominowany przez pytania Betteridge'a.
+
+**Kluczowe odkrycie**: 90% wykrytych clickbaitów to pytajniki w tytule — zamknięte pytania tak/nie, na które odpowiedź brzmi "nie" lub "nie wiadomo". Reszta to sporadyczne superlativy i dramaturgia.
+
+**Typowe chwyty:**
+- Pytajniki Betteridge'a: "Czy grozi nam...?", "Czy to koniec...?"
+- Ekspresyjne czasowniki: "zabrał głos", "mówi wprost"
+
+**Wniosek**: TVN24 clickbaituje głównie pytajnikami. Styl bardziej powściągliwy niż portale tabloidowe.
+
+---
+
+### sport.pl — 4% → ~33% (po dodaniu wzorców sportowych)
+
+**Profil**: Portal sportowy (Agora). Bardzo niski clickbait przed dodaniem wzorców specyficznych dla sportu.
+
+**Problem**: Detektor nie rozpoznawał clickbaitu sportowego — "miażdży", "deklasacja", "demolka" nie były w bazie. Po dodaniu wzorców sportowych wynik wzrósł z 4% do ~33%.
+
+**Nowe wzorce dodane:**
+- `miażdży` — w sporcie clickbait, bo ukrywa wynik
+- `deklasacja` — sportowy superlativ
+- `ogrywa konkurencję/rywali` — ocena bez konkretów
+- `zwala z nóg` — hiperboliczny superlativ
+- `powala` — sportowa przesada
+
+**Zasada odkryta**: Narracja sportowa ("i wtedy ruszył niesamowity Pietuszewski") to NIE clickbait — to opis emocjonalnego wydarzenia sportowego. Natomiast "miażdży rywali" BEZ podania wyniku to clickbait, bo ukrywa informację.
+
+---
+
+### tvrepublika.pl — CB polityczny/geopolityczny
+
+**Profil**: Portal informacyjny/opiniotwórczy (prawicowy). Clickbait polityczny i geopolityczny.
+
+**Specyfika DOM**: Nagłówki H2 bez linków — wymagały specjalnych selektorów `[class*="article-"] h2`.
+
+**Typowe chwyty:**
+- Superlativy polityczne: "sensacyjne", "skandaliczne", "historyczne"
+- Ukryte tożsamości: "ten polityk", "ta partia" — zaimki zamiast nazw
+- Dramaturgia serialu: "zawrzało", "jest reakcja"
+
+**Wniosek**: Clickbait typowy dla portali opiniotwórczych — gra na emocjach politycznych, ukrywanie tożsamości podmiotów.
+
+---
+
+### wyborcza.pl — ~14%
+
+**Profil**: Portal jakościowego dziennikarstwa (Agora). Niski clickbait.
+
+**False positive naprawiony**: Pytania z "kogo" (np. "Kogo dotyczy ta zmiana?") nie były wyłączone z detekcji Betteridge'a. Dodano "kogo" do listy exclude w regexie pytajnikowym.
+
+**Dodatkowe exclude**: Banery subskrypcyjne ("oferta prenumerat", "prenumerata cyfrowa") i tagi analityczne ([OPINIA], [ANALIZA]) stripowane w preprocessingu.
+
+**Wniosek**: Jakościowe dziennikarstwo = niski clickbait. 14% to głównie sporadyczne pytajniki i superlativy w sekcji sportowej.
+
+---
+
+## Podsumowanie audytu runda 3
+
+### Skuteczność po rozszerzeniu
+
+| Portal | % clickbaitu | Profil | Uwagi |
+|---|---|---|---|
+| pomponik.pl | ~78% | gossip | quote_bait FP na tytułach TV naprawiony |
+| dziendobry.tvn.pl | ~23% | lifestyle | styled-components selektory |
+| natemat.pl | ~42% | opiniotwórczy | dobra zgodność z oceną ludzką |
+| money.pl | niski | analityczny | CAPS FP na nagłówkach sekcji naprawiony |
+| noizz.pl | niski | lifestyle | mało materiału do detekcji |
+| tvn24.pl | ~37% | informacyjny | 90% CB to pytania Betteridge'a |
+| sport.pl | ~33% | sportowy | po dodaniu wzorców sportowych (z 4%) |
+| tvrepublika.pl | w trakcie | polityczny | DOM H2-bez-linków, CB geopolityczny |
+| wyborcza.pl | ~14% | jakościowy | "kogo" dodane do Betteridge exclude |
+
+### Zasady edytorskie odkryte w rundzie 3
+
+1. **Paradoks ≠ Clickbait** — paradoks UJAWNIA (sprzeczność), clickbait UKRYWA (brak informacji)
+2. **Konkretna liczba = nie clickbait** — "zniknęło tysiąc firm" to fakt; "ogrywa konkurencję" to ukryta ocena
+3. **"Prosiła, ale..."** — zbitka akcja+kontrast+ukryty przedmiot. Trudne do regex bo "ale" jest powszechne
+4. **Odmiana polska = koszmar** — każdy tytuł TV ma 7 form odmiany. Regex musi je przewidzieć
+5. **Narracja sportowa ≠ clickbait** — emocjonalny opis meczu to relacja, nie manipulacja
+6. **Badge na obrazku** — umieszczanie badge'a na zdjęciu zamiast w tekście poprawia widoczność

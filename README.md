@@ -29,35 +29,37 @@ Tooltip:
 ## Jak dziala
 
 1. **Skanowanie DOM** — po zaladowaniu strony wtyczka przeszukuje elementy linkow i naglowkow, uzywajac selektorow specyficznych dla kazdego portalu (a takze zestawu domyslnego)
-2. **Dopasowanie regex** — kazdy tytul (20-250 znakow) jest testowany przeciwko 185 wzorcom regexowym w 19 kategoriach
+2. **Dopasowanie regex** — kazdy tytul (20-250 znakow) jest testowany przeciwko 252 wzorcom regexowym w 20 kategoriach
 3. **Scoring** — kazda trafiona kategoria dodaje swoja wage (1 lub 2) do wyniku; maksymalny wynik to 10
-4. **Badge + tooltip** — przy wykrytym clickbaicie pojawia sie kolorowy badge (CB 1-10), a po najechaniu myszka — tooltip z nazwa kategorii, dopasowanym fragmentem tekstu i zlosliwym komentarzem
-5. **Scoreboard** — plywajacy panel w prawym dolnym rogu strony pokazuje liczbe wykrytych clickbaitow, liczbe przeskanowanych tytulow i procent clickbaitu na stronie
-6. **MutationObserver** — wtyczka obserwuje dynamicznie ladowana tresc (infinite scroll) i automatycznie skanuje nowe elementy
+4. **Badge na obrazku** — przy wykrytym clickbaicie badge (CB 1-10) jest umieszczany na powiazanym obrazku (jesli istnieje), a nie w tekscie — lepiej widoczny i nie zaburza layoutu
+5. **Tooltip** — po najechaniu na badge pojawia sie tooltip z nazwa kategorii, dopasowanym fragmentem tekstu i zlosliwym komentarzem
+6. **Scoreboard** — plywajacy panel w prawym dolnym rogu strony (przesuwany) pokazuje liczbe wykrytych clickbaitow, liczbe przeskanowanych tytulow i procent clickbaitu na stronie
+7. **MutationObserver** — wtyczka obserwuje dynamicznie ladowana tresc (infinite scroll) i automatycznie skanuje nowe elementy
 
-## 19 kategorii wzorcow (185 regexow)
+## 20 kategorii wzorcow (252 regexy)
 
-| # | Kategoria | Waga | Liczba regexow | Przyklad triggera |
-|---|---|---|---|---|
-| 1 | Ukryta odpowiedz | 2 | 36 | "oto co", "jest nagranie", "ujawniono", "kulisy", "nie moga uwierzyc", "tak wygladaja", "policzyli ile", "ostrzega", "zle wiesci" |
-| 2 | Pytajnik w tytule (prawo Betteridge'a) | 1 | 1 | Znak `?` w tytule (tylko pytania zamkniete tak/nie; wylaczone: kto/co/gdzie/kiedy/jak/ile/z kim) |
-| 3 | Superlativ / przesada | 1 | 41 | "HIT", "szokujace", "skandaliczne", "miazga", "rekordowe", "historyczne", "niebywale", "bez precedensu", "fatalne", "koszmarny" |
-| 4 | Obietnica szoku | 2 | 7 | "az sie wierzyc nie chce", "trudno uwierzyc", "nie do wiary" |
-| 5 | Zaimek wskazujacy | 2 | 6 | "ten preparat", "ta metoda", "to urzadzenie", "te buty" |
-| 6 | Wyrwany cytat | 0 | 1 | Cudzyslow w tytule (waga 0 — sam nie uruchamia badge'a) |
-| 7 | Cytat jako przyneta | 1 | 5 | "przejmujace slowa", "mocne slowa", "wyznal", "zdradzil co" |
-| 8 | Dramaturgia serialu | 1 | 28 | "ale potem", "sa konsekwencje", "zawrzalo", "bez litosci", "wydal wyrok", "odkryl karty", "i wtedy", "oto powod", "stracil kontrole" |
-| 9 | "Polacy oszaleli" | 2 | 9 | "Polacy oszaleli", "internet eksplodowal", "cala Polska", "wszyscy mowia", "rzucili sie" |
-| 10 | Emocjonalny szantaz | 2 | 6 | "peknie ci serce", "ciarki", "lzy/lzami", "wzruszy" |
-| 11 | Wyzwanie / rywalizacja | 1 | 5 | "a ty?", "wiekszosc odpada", "quiz" |
-| 12 | Prowokacja / wciaganie | 1 | 3 | "z pewnoscia go znacie", "na pewno widziales", "pamietasz go" |
-| 13 | Ekspresyjne czasowniki | 1 | 8 | "nie kryje wscieklosci/emocji", "ostro zareagowal", "grozi palcem", "trzesie rynkiem" |
-| 14 | Niedopowiedziana pointa | 1 | 6 | "prosty blad", "jeden szczegol", "na co je stac", "dal do myslenia" |
-| 15 | Kwestionowanie wiedzy | 1 | 4 | "nie wiedziales?", "wiekszosc ludzi nie wie", "malo kto zna" |
-| 16 | Ukryta cena/kwota | 1 | 8 | "kwota 3-cyfrowa", "a cena?", "tyle kosztuje/otrzymuja/zarabia", "za grosze" |
-| 17 | Reklama natywna | 1 | 7 | "sprawdza sie", "koniec z", "polskiej marki", "skradnie serce" |
-| 18 | Celebryci jako przyneta | 1 | 2 | "gwiazda pokazala", "celebryta" |
-| 19 | KRZYK w tytule | 1 | 3 | CAPS LOCK (10+ wielkich liter), podwojne wykrzykniki |
+| # | Kategoria | Waga | Przyklad triggera |
+|---|---|---|---|
+| 1 | Ukryta odpowiedz | 2 | "oto co", "jest nagranie", "ujawniono", "kulisy", "nie moga uwierzyc", "tak wygladaja", "policzyli ile", "ostrzega", "zle wiesci", "tak dba/zarabia/mieszka" |
+| 2 | Pytajnik w tytule (prawo Betteridge'a) | 1 | Znak `?` w tytule (tylko pytania zamkniete tak/nie; wylaczone: kto/co/gdzie/kiedy/jak/ile/z kim/kogo) |
+| 3 | Superlativ / przesada | 1 | "HIT", "szokujace", "skandaliczne", "miazga", "rekordowe", "historyczne", "niebywale", "bez precedensu", "fatalne", "koszmarny", "deklasacja", "kompromitujace", "skandal", "magiczne", "odrazajace", "straszne", "zgroza", "obrzydliwe" |
+| 4 | Obietnica szoku | 2 | "az sie wierzyc nie chce", "trudno uwierzyc", "nie do wiary" |
+| 5 | Zaimek wskazujacy | 2 | "ten preparat", "ta metoda", "to urzadzenie", "te buty", "wyspiarskie panstwo", "pierwszy kraj w Europie" |
+| 6 | Wyrwany cytat | 0 | Cudzyslow w tytule (waga 0 — sam nie uruchamia badge'a; exclude na tytuły programow TV) |
+| 7 | Cytat jako przyneta | 1 | "przejmujace slowa", "mocne slowa", "wyznal", "zdradzil co" |
+| 8 | Dramaturgia serialu | 1 | "ale potem", "sa konsekwencje", "zawrzalo", "bez litosci", "wydal wyrok", "odkryl karty", "i wtedy", "oto powod", "stracil kontrole", "burza", "awantura", "konflikt", "moze zmienic wszystko" |
+| 9 | "Polacy oszaleli" | 2 | "Polacy oszaleli", "internet eksplodowal", "cala Polska", "wszyscy mowia", "rzucili sie", "sypia sie", "podzielil" |
+| 10 | Emocjonalny szantaz | 2 | "peknie ci serce", "ciarki", "lzy/lzami", "wzruszy", "mrozi krew", "wyciskaja lzy", "na potege" |
+| 11 | Wyzwanie / rywalizacja | 1 | "a ty?", "wiekszosc odpada", "quiz" |
+| 12 | Prowokacja / wciaganie | 1 | "z pewnoscia go znacie", "na pewno widziales", "pamietasz go", "poznajesz" |
+| 13 | Ekspresyjne czasowniki | 1 | "nie kryje wscieklosci/emocji", "ostro zareagowal", "grozi palcem", "trzesie rynkiem", "bez ogrodek", "mowi wprost" |
+| 14 | Niedopowiedziana pointa | 1 | "prosty blad", "jeden szczegol", "na co je stac", "dal do myslenia" |
+| 15 | Kwestionowanie wiedzy | 1 | "nie wiedziales?", "wiekszosc ludzi nie wie", "malo kto zna", "wiesz co/jak" |
+| 16 | Ukryta cena/kwota | 1 | "kwota 3-cyfrowa", "a cena?", "tyle kosztuje/otrzymuja/zarabia", "za grosze", "kwoty moga dziwic" |
+| 17 | Reklama natywna | 1 | "sprawdza sie", "koniec z", "polskiej marki", "skradnie serce", "ktora pokochasz" |
+| 18 | Celebryci jako przyneta | 1 | "gwiazda pokazala", "celebryta", "najpiekniejsza polka", "najseksowniejsza" |
+| 19 | KRZYK w tytule | 1 | CAPS LOCK (8+ wielkich liter), CAPS w srodku zdania, podwojne wykrzykniki |
+| 20 | Cliffhanger / niedokonczenie | 1 | "..." (wielokropek na koncu), "mial byc zwykly/normalny" |
 
 ## Skala badge'ow
 
@@ -78,11 +80,31 @@ Plywajacy panel w prawym dolnym rogu strony (ciemne tlo, pomaranczowa ramka) pok
 
 Panel aktualizuje sie automatycznie przy kazdym skanie (takze po dolaczeniu nowej tresci przez infinite scroll).
 
-## Obslugiwane portale (17)
+## Obslugiwane portale (19)
 
-gazeta.pl, onet.pl, wp.pl, pudelek.pl, fakt.pl, se.pl, pomponik.pl, o2.pl, interia.pl, tvn24.pl, dziendobry.tvn.pl, plotek.pl, sport.pl, money.pl, natemat.pl, noizz.pl, polsatnews.pl
+| Portal | Status | % clickbaitu | Profil |
+|---|---|---|---|
+| gazeta.pl | przetestowany | ~54% | Historyczny poligon — zbiorowosc, ukryte odpowiedzi, cytaty |
+| onet.pl | przetestowany | ~41% | Pytajniki Betteridge'a, celebryci, quizy |
+| wp.pl | przetestowany | ~41% | Ekspresyjne czasowniki, dramaturgia serialowa, CAPS sportowe |
+| fakt.pl | przetestowany | ~46% | Klasyczny tabloid — narracja emocjonalna, urgency, cliffhangery |
+| interia.pl | przetestowany | ~30% | Portal informacyjny z premium — pytajniki, cytaty, superlativy |
+| se.pl | przetestowany | ~60% | Wysoki clickbait — tabloidowy styl |
+| plotek.pl | przetestowany | ~100% | Portal plotkarski — prawie kazdy tytul to clickbait |
+| pudelek.pl | przetestowany | ~0% | Paradoks: tabloid bez clickbaitu — ujawnia zamiast ukrywac |
+| pomponik.pl | przetestowany | ~78% | Portal gossip, narracja emocjonalna, cytaty jako przyneta |
+| dziendobry.tvn.pl | przetestowany | ~23% | Niski CB, glownie horoskopy, lifestyle |
+| natemat.pl | przetestowany | ~42% | Styl ambiwalentny, dobra zgodnosc z recenzentem ludzkim |
+| o2.pl | przetestowany | ~35% | Portal informacyjny WP-style |
+| polsatnews.pl | przetestowany | ~37% | Portal informacyjny |
+| tvn24.pl | przetestowany | ~37% | Dominuja pytania Betteridge'a (90% wykrytych CB) |
+| sport.pl | przetestowany | ~33% | Narracja sportowa (po dodaniu wzorcow sportowych) |
+| money.pl | przetestowany | niski CB | Portal analityczny — false positive na naglowkach CAPS naprawiony |
+| noizz.pl | przetestowany | niski CB | Lifestyle/wywiady — malo clickbaitu |
+| tvrepublika.pl | nowy | w trakcie | CB polityczny/geopolityczny, superlativy, ukryte tozsamosci, DOM H2-bez-linkow |
+| wyborcza.pl | przetestowany | ~14% | Jakosciowe dziennikarstwo — niski clickbait, poprawka "kogo" w Betteridge |
 
-Portale z dedykowanymi selektorami DOM: **gazeta.pl**, **onet.pl**, **wp.pl**, **tvn24.pl**. Pozostale portale uzywaja selektorow domyslnych (`h1-h4 a`, `article a`, `a[data-ga-action]`).
+Portale z dedykowanymi selektorami DOM: **gazeta.pl**, **onet.pl**, **wp.pl**, **tvn24.pl**, **interia.pl**, **fakt.pl**, **pomponik.pl**, **natemat.pl**, **money.pl**, **noizz.pl**, **tvrepublika.pl**, **dziendobry.tvn.pl** i inne. Kazdy portal ma zestaw selektorow specyficznych + domyslne (`h1-h4 a`, `article a`, `a[data-ga-action]`).
 
 ## Dlaczego bez AI?
 
