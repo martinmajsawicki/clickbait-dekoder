@@ -64,6 +64,7 @@ const PATTERNS = [
       { re: /nikt\s+się\s+nie\s+spodziewał/i, snark: '"{0}" — spodziewali się. Po prostu nie tak bardzo, jak sugeruje nagłówek.' },
       { re: /nie\s+wyklucza/i, snark: '"{0}" — "nie wyklucza" = nie potwierdził, nie zaprzeczył, nie powiedział nic konkretnego.' },
       { re: /garść\s+(porad|uwag|wskazówek|tipów)/i, snark: '"{0}" — garść = 3-5 banalnych porad, które znasz.' },
+      { re: /^tak\s+\w+\s+(dba|wygląda|żyje|zarabia|mieszka|gotuje|ćwiczy|odżywia|ubiera|spędza|radzi|leczy|myje|trenuje)/i, snark: '"{0}" — "tak" = JAK, ale tytuł nie mówi jak. Gdyby sposób był ciekawy, opisaliby go.' },
     ],
   },
   {
