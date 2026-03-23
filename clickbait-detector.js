@@ -220,6 +220,8 @@ const PATTERNS = [
       { re: /wydał[aoy]\s+się/i, snark: '"{0}" — wydało się coś, co pewnie i tak wszyscy podejrzewali.' },
       { re: /zawrzało/i, snark: '"{0}" — "zawrzało" w internecie = 20 osób napisało komentarze.' },
       { re: /\bburza\b/i, snark: '"{0}" — burza w nagłówku = kilka krytycznych komentarzy. W meteorologii byłoby ciekawiej.' },
+      { re: /\bkonflikt\b/i, snark: '"{0}" — konflikt brzmi poważnie. Tytuł nie mówi o co — bo wtedy brzmiałoby banalnie.' },
+      { re: /\bawantura\b/i, snark: '"{0}" — awantura = ktoś podniósł głos. Ale "podniósł głos" to nie nagłówek.' },
       { re: /bez\s+litości/i, snark: '"{0}" — z litością. Po prostu skrytykował. Ale "skrytykował" nie generuje klików.' },
       { re: /wydał[aoy]?\s+wyrok/i, snark: '"{0}" — "wydał wyrok" = powiedział swoją opinię. Nie był w todze.' },
       { re: /stracił[aoy]?\s+kontrolę/i, snark: '"{0}" — "stracił kontrolę" = wyraził emocje publicznie. W clickbaicie to wystarczy na nagłówek.' },
