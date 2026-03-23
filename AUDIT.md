@@ -601,3 +601,19 @@ Score: CB 6 (collective 2 + hidden_answer 2 + demonstrative 2)
 ---
 
 *Dokument żywy. Ostatnia aktualizacja: 22 marca 2026, 19:00. 201 wzorców, 20 kategorii, 7 portali przetestowanych.*
+
+---
+
+## Zasady odkryte podczas audytu (sesja 23.03.2026)
+
+### Paradoks ≠ Clickbait
+"Pomocnik, który przeszkadzał" — paradoks w tytule UJAWNIA pointę (sprzeczność: pomagał ale przeszkadzał). Clickbait UKRYWA. Paradoks intryguje przez zaskoczenie, clickbait przez brak informacji.
+
+### Konkretna liczba = nie clickbait
+"Zniknęło tysiąc firm" — liczba jest konkretna i weryfikowalna. To fakt, nie manipulacja. Natomiast "ogrywa konkurencję" to ocena bez dowodu — ukrywa JAK.
+
+### Zbitka "prosiła, ale..."
+"Prosiła, ale ją zignorowali" — klasyczna zbitka: akcja + kontrast + ukryty przedmiot. O CO prosiła? Tytuł buduje napięcie bez informacji. Trudne do złapania regexem bo "ale" jest powszechne.
+
+### Odmiana polska = koszmar regexu
+"Taniec z gwiazdami" → "Tańca z gwiazdami" (dopełniacz). Każdy tytuł programu TV ma 7 form. Trzeba pisać regexy odmianowe: `/Tan(iec|[cń]a|[cń]em|cu)\s+(z\s+)?gwiazd/i`.
