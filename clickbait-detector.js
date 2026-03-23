@@ -579,6 +579,12 @@ const SITE_SELECTORS = {
   'tvn24.pl': ['a[class*="sc-"]', 'a[class*="link"]', 'h2 a', 'h3 a', 'article a'],
   'tvrepublika.pl': ['[class*="article-"] h2', '[class*="article-"] a', 'a[class*="btn"]', 'h2 a', 'h3 a', 'article a'],
   'dziendobry.tvn.pl': ['a[class*="sc-"]', 'a[class*="link"]', 'h2 a', 'h3 a', 'article a'],
+  'radiozet.pl': ['a.box__item__link', 'a.box__timeline__list__item__link', 'a.box__alert__title__text__item', 'a[class*="box__"]', 'h2 a', 'h3 a'],
+  'rmf24.pl': ['a.t0', 'a.t1', 'a.t2', 'a.t3', 'a.t4', 'h2 a', 'h3 a', 'article a'],
+  'tokfm.pl': ['a[class*="box__"]', 'a[class*="item"]', 'h2 a', 'h3 a', 'article a'],
+  'polskieradio24.pl': ['a[class*="article"]', 'a[class*="news"]', 'h2 a', 'h3 a', 'article a'],
+  'wyborcza.pl': ['a[class*="entry"]', 'a[class*="article"]', 'a[class*="sc-"]', 'h2 a', 'h3 a', 'article a'],
+  'xyz.pl': ['a[class*="article"]', 'a[class*="post"]', 'h2 a', 'h3 a', 'article a'],
   _default: ['h1 a', 'h2 a', 'h3 a', 'h4 a', 'article a', 'a[data-ga-action]'],
 };
 
