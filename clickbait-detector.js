@@ -559,6 +559,7 @@ const SITE_SELECTORS = {
   'se.pl': ['a[class*="tile"]', 'a[class*="article"]', 'h2 a', 'h3 a', 'article a'],
   'natemat.pl': ['a.page-link', 'a[class*="page-link"]', 'h2 a', 'h3 a', 'article a'],
   'tvn24.pl': ['a[class*="sc-"]', 'a[class*="link"]', 'h2 a', 'h3 a', 'article a'],
+  'dziendobry.tvn.pl': ['a[class*="sc-"]', 'a[class*="link"]', 'h2 a', 'h3 a', 'article a'],
   _default: ['h1 a', 'h2 a', 'h3 a', 'h4 a', 'article a', 'a[data-ga-action]'],
 };
 
