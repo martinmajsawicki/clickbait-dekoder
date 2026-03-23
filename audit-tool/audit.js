@@ -349,7 +349,26 @@ Clickbait to nie SŁOWO, ale UKRYWANIE informacji. "Jest reakcja Tuska" = clickb
   }).join('\n');
 
   return 'Jesteś ekspertem od clickbaitu w polskich mediach. Oceniasz detektor clickbaitu oparty na regexach.\n\n' +
+    'DEFINICJA CLICKBAITU — dwa filary:\n' +
+    '1. UKRYTE FAKTY: tytuł celowo ukrywa informację, którą mógł podać (kto, co, jak, ile, gdzie). ' +
+    'Niedopowiedzenie, tajemnica, zaimki zamiast nazw. "Legenda sportu przerwała milczenie" = CB bo ukrywa KTO. ' +
+    '"Lewandowski przerwał milczenie" = mniejszy CB bo mówi kto.\n' +
+    '2. NIEDOPASOWANY JĘZYK EMOCJONALNY: użycie słów silniejszych niż fakty uzasadniają. ' +
+    '"Brutalna przemowa" — przemowa nie może być brutalna (sticks and stones can break my bones but words cannot). ' +
+    '"Apokalipsa na rynku" — spadek o 3% to nie apokalipsa. ' +
+    'ALE: "brutalny atak" może być dosłownie prawdziwy — wtedy NIE jest clickbaitem.\n\n' +
+    'CO NIE JEST CLICKBAITEM:\n' +
+    '- Żywy język dziennikarski: metafory, skróty myślowe, paradoksy (o ile informacja jest w tytule)\n' +
+    '- Pytania analityczne: "NATO, Francja czy własny arsenał?" — to analiza wariantów, nie clickbait\n' +
+    '- Narracja sportowa: "i wtedy ruszył niesamowity Pietuszewski!" — mówi kto i co, to narracja\n' +
+    '- Tytuły programów TV w cudzysłowie: "Taniec z gwiazdami", "The Traitors" to nazwy, nie cytaty\n\n' +
     ruleContext + '\n\n' +
+    'OCENA SNARKÓW — snark + tytuł razem mają tworzyć:\n' +
+    '- Gramatycznie poprawny, celny komunikat\n' +
+    '- Rozbrajający humorem ALBO precyzją zamiar manipulacji\n' +
+    '- Snark musi pasować do KONKRETNEGO tytułu, nie być generyczny\n' +
+    '- "snark_ok" = false jeśli: snark jest nietrafny, nie pasuje do treści, jest za generyczny, ' +
+    'lub flaguje normalny język jako clickbait\n\n' +
     'Oceń poniższe tytuły. Dla KAŻDEGO odpowiedz w formacie JSON:\n' +
     '{\n' +
     '  "nr": 1,\n' +
@@ -365,22 +384,38 @@ Clickbait to nie SŁOWO, ale UKRYWANIE informacji. "Jest reakcja Tuska" = clickb
     'WAŻNE:\n' +
     '- "sugerowany_regex" wypełnij TYLKO jeśli pominięty clickbait i NIE mamy jeszcze pasującego wzorca\n' +
     '- Przy ocenie snarków pamiętaj o trzech poziomach (pewniaki/ambiwalentne/emocjonalne)\n' +
-    '- "detekcja_ok" = false jeśli: wykryty a nie powinien (false positive) LUB pominięty a powinien złapać\n\n' +
-    'Odpowiedz TYLKO tablicą JSON.\n\nTytuły:\n' + lines;
+    '- "detekcja_ok" = false jeśli: wykryty a nie powinien (false positive) LUB pominięty a powinien złapać\n' +
+    '- NIE flaguj żywego języka jako clickbait — "ogrywa konkurencję" to CB, ale "pokonał rywala" w sporcie to fakt\n\n' +
+    'Odpowiedz TYLKO tablicą JSON, bez komentarzy przed ani po.\n\nTytuły:\n' + lines;
 }
 
 async function auditBatch(items) {
   const prompt = buildPrompt(items);
   const response = await callLLM(prompt);
 
-  // Parse JSON from response
+  // Parse JSON from response — strip markdown fences, find JSON array
   try {
-    const jsonMatch = response.match(/\[[\s\S]*\]/);
-    if (jsonMatch) {
-      return JSON.parse(jsonMatch[0]);
+    let cleaned = response
+      .replace(/```json\s*/gi, '')
+      .replace(/```\s*/g, '')
+      .trim();
+
+    // Try full parse first
+    try {
+      const parsed = JSON.parse(cleaned);
+      if (Array.isArray(parsed)) return parsed;
+    } catch (_) {}
+
+    // Fallback: find first [ ... ] in response
+    const start = cleaned.indexOf('[');
+    const end = cleaned.lastIndexOf(']');
+    if (start !== -1 && end > start) {
+      return JSON.parse(cleaned.slice(start, end + 1));
     }
   } catch (e) {
+    // Log raw response for debugging
     console.log('  ⚠️ Nie udało się sparsować odpowiedzi LLM');
+    console.log('  📝 Początek raw response:', response.slice(0, 200));
   }
   return [];
 }
