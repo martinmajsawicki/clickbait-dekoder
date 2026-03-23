@@ -574,7 +574,7 @@ const SITE_SELECTORS = {
   'money.pl': ['a[class*="sc-"]', 'a[href*="money.pl/"]', 'h2 a', 'h3 a', 'article a'],
   'noizz.pl': ['a.itemLink', 'a[class*="itemLink"]', 'a[class*="item"]', 'h2 a', 'h3 a', 'article a'],
   'tvn24.pl': ['a[class*="sc-"]', 'a[class*="link"]', 'h2 a', 'h3 a', 'article a'],
-  'tvrepublika.pl': ['[class*="article-"] a', 'a[class*="btn"]', 'a[class*="navigation"]', 'h2 a', 'h3 a', 'article a'],
+  'tvrepublika.pl': ['[class*="article-"] h2', '[class*="article-"] a', 'a[class*="btn"]', 'h2 a', 'h3 a', 'article a'],
   'dziendobry.tvn.pl': ['a[class*="sc-"]', 'a[class*="link"]', 'h2 a', 'h3 a', 'article a'],
   _default: ['h1 a', 'h2 a', 'h3 a', 'h4 a', 'article a', 'a[data-ga-action]'],
 };
