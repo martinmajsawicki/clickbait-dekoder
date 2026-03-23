@@ -146,6 +146,7 @@ const PATTERNS = [
       { re: /\bskandal(em|u)?\b/i, snark: '"{0}" — jedno słowo, zero kontekstu. Idealna przynęta na kliknięcie.' },
       { re: /magiczn[yae]/i, snark: '"{0}" — magia istnieje tylko w nagłówkach. W artykule — normalna arytmetyka.' },
       { re: /odrażając[yae]/i, snark: '"{0}" — przymiotnik wartościujący. Redakcja ocenia za ciebie, zanim zobaczysz fakty.' },
+      { re: /obrzydliw[yae]/i, snark: '"{0}" — przymiotnik wartościujący. Redakcja mówi ci co czuć, zanim przeczytasz co się stało.' },
       { re: /straszn[yae]/i, snark: '"{0}" — emocja narzucona z góry. Technika: powiedz czytelnikowi co czuć, zanim pozna szczegóły.' },
       { re: /\bzgroza\b/i, snark: '"{0}" — jednosłowna emocja jako nagłówek. Im krótsze hasło, tym silniejsza manipulacja.' },
       { re: /obrzydliw[yae]/i, snark: '"{0}" — emocja zamiast opisu. Technika: najpierw wzbudzić oburzenie, potem dać treść.' },
