@@ -29,14 +29,14 @@ Tooltip:
 ## Jak dziala
 
 1. **Skanowanie DOM** — po zaladowaniu strony wtyczka przeszukuje elementy linkow i naglowkow, uzywajac selektorow specyficznych dla kazdego portalu (a takze zestawu domyslnego)
-2. **Dopasowanie regex** — kazdy tytul (20-250 znakow) jest testowany przeciwko 268 wzorcom regexowym w 20 kategoriach
+2. **Dopasowanie regex** — kazdy tytul (20-250 znakow) jest testowany przeciwko 345 wzorcom regexowym w 21 kategoriach
 3. **Scoring** — kazda trafiona kategoria dodaje swoja wage (1 lub 2) do wyniku; maksymalny wynik to 10
 4. **Badge na obrazku** — przy wykrytym clickbaicie badge (CB 1-10) jest umieszczany na powiazanym obrazku (jesli istnieje), a nie w tekscie — lepiej widoczny i nie zaburza layoutu
 5. **Tooltip** — po najechaniu na badge pojawia sie tooltip z nazwa kategorii, dopasowanym fragmentem tekstu i zlosliwym komentarzem
 6. **Scoreboard** — plywajacy panel w prawym dolnym rogu strony (przesuwany) pokazuje liczbe wykrytych clickbaitow, liczbe przeskanowanych tytulow i procent clickbaitu na stronie
 7. **MutationObserver** — wtyczka obserwuje dynamicznie ladowana tresc (infinite scroll) i automatycznie skanuje nowe elementy
 
-## 20 kategorii wzorcow (268 regexow)
+## 21 kategorii wzorcow (345 regexow)
 
 | # | Kategoria | Waga | Przyklad triggera |
 |---|---|---|---|
@@ -60,6 +60,7 @@ Tooltip:
 | 18 | Celebryci jako przyneta | 1 | "gwiazda pokazala", "celebryta", "najpiekniejsza polka", "najseksowniejsza" |
 | 19 | KRZYK w tytule | 1 | CAPS LOCK (8+ wielkich liter), CAPS w srodku zdania, podwojne wykrzykniki |
 | 20 | Cliffhanger / niedokonczenie | 1 | "..." (wielokropek na koncu), "mial byc zwykly/normalny" |
+| 21 | Idiom bait | 1 | "zapalila mi sie lampka" |
 
 ## Skala badge'ow
 
@@ -105,11 +106,11 @@ Panel aktualizuje sie automatycznie przy kazdym skanie (takze po dolaczeniu nowe
 | wyborcza.pl | przetestowany | ~14% | Jakosciowe dziennikarstwo — niski clickbait, poprawka "kogo" w Betteridge |
 | nczas.com | przetestowany | ~6% | Portal prawicowy — niski CB, glownie cliffhangery, WordPress layout |
 | dorzeczy.pl | przetestowany | ~44% | Portal konserwatywny — ciezki quote bait (13x cytat jako przyneta) |
-| radiozet.pl | dodany | — | Portal radiowy |
-| tokfm.pl | dodany | — | Portal radiowy |
-| rmf24.pl | dodany | — | Portal informacyjny/radiowy |
-| polskieradio24.pl | dodany | — | Portal radiowy publiczny |
-| xyz.pl | dodany | — | Portal informacyjny |
+| radiozet.pl | przetestowany | — | Portal radiowy |
+| tokfm.pl | przetestowany | — | Portal radiowy |
+| rmf24.pl | przetestowany | — | Portal informacyjny/radiowy |
+| polskieradio24.pl | przetestowany | — | Portal radiowy publiczny |
+| xyz.pl | przetestowany | — | Portal informacyjny |
 
 Portale z dedykowanymi selektorami DOM: **gazeta.pl**, **onet.pl**, **wp.pl**, **tvn24.pl**, **interia.pl**, **fakt.pl**, **pomponik.pl**, **natemat.pl**, **money.pl**, **noizz.pl**, **tvrepublika.pl**, **dziendobry.tvn.pl** i inne. Kazdy portal ma zestaw selektorow specyficznych + domyslne (`h1-h4 a`, `article a`, `a[data-ga-action]`).
 
