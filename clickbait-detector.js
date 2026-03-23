@@ -181,7 +181,7 @@ const PATTERNS = [
     rules: [
       {
         re: /[""„""].{3,60}[""„""]/,
-        exclude: /Taniec z gwiazdami|TzG|The Voice|MasterChef|Mam talent|Big Brother|Hotel Paradise|Rolnik szuka|Nasz nowy dom|Kuchenne rewolucje|Top Model|Bake Off|The Traitors|Zdrajcy|Sanatorium|halo tu polsat|Kocham cię,?\s*Polsko|Dzień Dobry|Lepsze włosy|Pytanie na śniadanie|Biur[oa]\s+Tajemnic|Piękn[aąey]\s+i\s+Besti[aąi]/i,
+        exclude: /Tan(iec|[cń]a|[cń]em|cu)\s+(z\s+)?gwiazd|TzG|The Voice|MasterChef|Mam talent|Big Brother|Hotel Paradise|Rolnik szuka|Nasz[ey]?(go)?\s+now[yae](go)?\s+dom|Kuchenn[yae](ch)?\s+rewolucj|Top Model|Bake Off|The Traitors|Zdrajc[yów]|Sanatori[ua]m|halo tu polsat|Kocham cię,?\s*Polsko|Dzień Dobry|Lepsze włosy|Pytanie na śniadanie|Biur[oa]\s+Tajemnic|Piękn[aąey]\s+i\s+Besti[aąi]/i,
         snark: '{0} — brzmi dramatycznie wyrwane z kontekstu. W pełnej rozmowie to zdanie pewnie było o niczym.',
       },
     ],
@@ -307,7 +307,7 @@ const PATTERNS = [
     name: 'Ekspresyjne czasowniki',
     weight: 1,
     rules: [
-      { re: /nie\s+(kryje\s+(emocji|wściekłości|radości|złości|frustracji|łez|rozczarowania|oburzenia)|dowierza|gryzł[aoy]?\s+się\s+w\s+język)/i, snark: '"{0}" — kryje. Wszystko jest pod kontrolą. Po prostu skomentował.' },
+      { re: /nie\s+(kryje\s+(emocji|wściekłości|radości|złości|frustracji|łez|rozczarowania|oburzenia|zawodu|smutku|żalu|gniewu|irytacji|niezadowolenia)|dowierza|gryzł[aoy]?\s+się\s+w\s+język)/i, snark: '"{0}" — kryje. Wszystko jest pod kontrolą. Po prostu skomentował.' },
       { re: /mówi\s+wprost/i, snark: '"{0}" — gdyby mówił wprost, zacytowaliby go wprost. "Mówi wprost" = powiedział coś normalnego.' },
       { re: /przerwał[aoy]?\s+milczenie/i, snark: '"{0}" — milczenie trwało do momentu, aż redakcja potrzebowała kliknięć. Teraz "przerywa" — czyli skomentował.' },
       { re: /zabrał[aoy]?\s+głos/i, snark: '"{0}" — standardowy zwrot polityczny. Pytanie: tytuł mówi ŻE zabrał głos, ale czy mówi CO powiedział?' },
