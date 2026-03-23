@@ -2,3 +2,4 @@
 audit-tool/.env
 audit-tool/node_modules/
 audit-tool/reports/
+CLAUDE.md
