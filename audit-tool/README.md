@@ -31,10 +31,29 @@ node audit.js wp.pl onet.pl fakt.pl
 # Audyt wszystkich 24 portali
 node audit.js --all
 
-# Tylko zbierz tytuły (bez LLM, bez kosztu)
+# Tylko zbierz tytuły i statystyki (bez LLM, bez kosztu)
 node audit.js gazeta.pl --dry
 node audit.js --all --dry
+
+# Szczegółowe logi (debug)
+node audit.js gazeta.pl --verbose
+node audit.js --all --dry -v
 ```
+
+### Flagi
+
+| Flaga | Opis |
+|-------|------|
+| `--all` | Audyt wszystkich 24 portali |
+| `--dry` | Bez LLM — zbiera tytuły, detekcję i statystyki (zero kosztów) |
+| `--verbose` / `-v` | Szczegółowe logi diagnostyczne |
+
+### Zatrzymanie
+
+| Akcja | Efekt |
+|-------|-------|
+| `Ctrl+C` | Kończy po bieżącym portalu, zapisuje częściowe wyniki i statystyki |
+| `Ctrl+C` ×2 | Natychmiastowe wyjście |
 
 ## Wyniki
 
@@ -46,6 +65,8 @@ Raporty trafiają do `audit-tool/reports/`:
 | `gazeta.pl-audit.tsv` | TSV (tab-separated) | Arkusz kalkulacyjny, przeglądanie ręczne |
 | `gazeta.pl-titles.json` | JSON | Tylko tytuły (tryb --dry) |
 | `summary-2026-03-23.json` | JSON | Podsumowanie wszystkich portali |
+| `pattern-stats-2026-03-23.json` | JSON | Ranking technik, profile portali, heatmapa |
+| `pattern-stats-2026-03-23.tsv` | TSV | Heatmapa kategoria × portal (do arkusza) |
 
 ### Kolumny TSV
 
@@ -64,6 +85,13 @@ Raporty trafiają do `audit-tool/reports/`:
 | `detekcja_ok` | OK/BŁĄD — czy detekcja trafna |
 | `snark_ok` | OK/BŁĄD — czy snark pasuje |
 | `snark_problem` | Opis problemu snarku (za ostry, nietrafny...) |
+
+### Pattern Stats (deterministyczny, bez LLM)
+
+Generowany automatycznie po audycie (także --dry). Zawiera:
+- **Global ranking** — najczęstsze techniki clickbaitu we wszystkich portalach
+- **Portal profiles** — top 5 technik per portal + % clickbaitu
+- **Heatmapa** — tabela kategoria × portal (TSV do arkusza)
 
 ### Metryki w JSON
 

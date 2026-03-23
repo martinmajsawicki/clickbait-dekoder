@@ -61,7 +61,18 @@ const MAX_TITLES = 80; // max per portal
 const args = process.argv.slice(2);
 const isDry = args.includes('--dry');
 const isAll = args.includes('--all');
-const portalArgs = args.filter(a => !a.startsWith('--'));
+const isVerbose = args.includes('--verbose') || args.includes('-v');
+const portalArgs = args.filter(a => !a.startsWith('--') && !a.startsWith('-'));
+
+// Graceful shutdown — Ctrl+C saves partial results
+let _interrupted = false;
+process.on('SIGINT', () => {
+  if (_interrupted) process.exit(1); // double Ctrl+C = force quit
+  console.log('\n\n⏸️  Ctrl+C — kończę po bieżącym portalu. Ctrl+C ponownie = natychmiastowe wyjście.');
+  _interrupted = true;
+});
+
+function log(msg) { if (isVerbose) console.log(`  [verbose] ${msg}`); }
 
 let portalsToAudit;
 if (isAll) {
@@ -80,6 +91,15 @@ Użycie:
   node audit.js wp.pl onet.pl      # audyt wybranych
   node audit.js --all              # audyt wszystkich (${PORTALS.length}) portali
   node audit.js --all --dry        # zbierz tytuły bez LLM (bez kosztu)
+
+Flagi:
+  --dry         Zbierz tytuły i statystyki bez LLM (zero kosztów)
+  --all         Audyt wszystkich ${PORTALS.length} portali
+  --verbose/-v  Szczegółowe logi (debug)
+
+Zatrzymanie:
+  Ctrl+C        Kończy po bieżącym portalu, zapisuje częściowe wyniki
+  Ctrl+C×2      Natychmiastowe wyjście
 
 Wymaga: plik .env z OPENROUTER_API_KEY
   `);
@@ -112,7 +132,13 @@ async function callLLM(prompt) {
 
   if (!res.ok) {
     const err = await res.text();
-    throw new Error(`OpenRouter API error ${res.status}: ${err}`);
+    console.error(`  ⚠️  OpenRouter ${res.status}: ${err.substring(0, 200)}`);
+    if (res.status === 429) {
+      console.log('  ⏳ Rate limit — czekam 10s...');
+      await new Promise(r => setTimeout(r, 10000));
+      return callLLM(prompt); // retry once
+    }
+    throw new Error(`OpenRouter API error ${res.status}`);
   }
 
   const data = await res.json();
@@ -159,13 +185,13 @@ async function collectTitles(url) {
         }
       }
     });
-    await page.waitForTimeout(1000);
+    await new Promise(r => setTimeout(r, 1000));
   } catch (e) { /* no popup */ }
 
   // Scroll down to load more content
   for (let i = 0; i < 5; i++) {
     await page.evaluate(() => window.scrollBy(0, 800));
-    await page.waitForTimeout(500);
+    await new Promise(r => setTimeout(r, 500));
   }
 
   // Inject clickbait detector
@@ -185,7 +211,7 @@ async function collectTitles(url) {
   }, detectorJS);
 
   // Wait for detector to run
-  await page.waitForTimeout(2000);
+  await new Promise(r => setTimeout(r, 2000));
 
   // Collect results
   const results = await page.evaluate((maxTitles) => {
@@ -245,11 +271,15 @@ async function collectTitles(url) {
     return items;
   }, MAX_TITLES);
 
-  await browser.close();
+  await browser.close().catch(() => {});
 
   const detected = results.filter(r => r.detected);
   const missed = results.filter(r => !r.detected);
   console.log(`  📊 Zebrano ${results.length} tytułów: ${detected.length} wykrytych, ${missed.length} bez badge'a`);
+
+  if (results.length === 0) {
+    console.log(`  ⚠️  Zero tytułów — sprawdź selektory dla tego portalu`);
+  }
 
   return results;
 }
@@ -522,6 +552,10 @@ async function main() {
   const allReports = [];
 
   for (const portal of portalsToAudit) {
+    if (_interrupted) {
+      console.log(`\n⏸️  Przerwano — pomijam ${portal} i kolejne. Zapisuję dotychczasowe wyniki.`);
+      break;
+    }
     try {
       const items = await collectTitles(portal);
 
