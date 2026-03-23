@@ -77,7 +77,7 @@ const PATTERNS = [
         // Skip: open Qs (kto/co/gdzie/kiedy/jak/ile/z kim — answer is never "no"),
         // conditional Qs ("Widzisz X?"), price Qs ("X zł?"), service Qs
         // Skip: open Qs, alternative Qs ("X, Y czy Z?"), price Qs
-        exclude: /\b(kto|co|gdzie|kiedy|jak|ile|jaki[me]?|któr[yae]|z\s+kim|czym|komu|dlaczego|skąd|dokąd)\b.*\?|\w+,\s+\w+\s+czy\s+\w+.*\?|o\s+której|transmisja|zł\s*\?|tys\.\s*zł/i,
+        exclude: /\b(kto|co|gdzie|kiedy|jak|ile|jaki[me]?|któr[yae]|z\s+kim|czym|komu|dlaczego|skąd|dokąd)\b.*\?|\w+,\s+\w+\s+czy\s+\w+.*\?|o\s+której|transmisja|zł\s*\?|tys\.\s*zł|jest\s+(handlow[aąy]|otwart[eay]|wolna|dniem\s+woln)/i,
         snark: '"{0}" — Prawo Betteridge\'a: jeśli nagłówek jest pytaniem, odpowiedź brzmi „nie".',
       },
     ],
@@ -179,7 +179,7 @@ const PATTERNS = [
     rules: [
       {
         re: /[""„""].{3,60}[""„""]/,
-        exclude: /Taniec z gwiazdami|The Voice|MasterChef|Mam talent|Big Brother|Hotel Paradise|Rolnik szuka|Nasz nowy dom|Kuchenne rewolucje|Top Model|Bake Off/i,
+        exclude: /Taniec z gwiazdami|TzG|The Voice|MasterChef|Mam talent|Big Brother|Hotel Paradise|Rolnik szuka|Nasz nowy dom|Kuchenne rewolucje|Top Model|Bake Off|The Traitors|Zdrajcy|Sanatorium|halo tu polsat|Kocham cię,?\s*Polsko|Dzień Dobry|Lepsze włosy|Pytanie na śniadanie|Biur[oa]\s+Tajemnic|Piękn[aąey]\s+i\s+Besti[aąi]/i,
         snark: '{0} — brzmi dramatycznie wyrwane z kontekstu. W pełnej rozmowie to zdanie pewnie było o niczym.',
       },
     ],
