@@ -4,6 +4,7 @@
   position: relative;
   display: inline;
   z-index: 10000;
+  pointer-events: auto !important;
 }
 
 /* Badge — v2: bigger, bolder */
@@ -22,6 +23,9 @@
   text-transform: uppercase;
   transition: transform 0.15s ease;
   white-space: nowrap;
+  pointer-events: auto !important;
+  position: relative;
+  z-index: 10001;
 }
 
 .cbd-badge:hover {

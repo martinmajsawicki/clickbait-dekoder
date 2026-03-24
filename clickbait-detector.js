@@ -879,7 +879,7 @@ function processPage() {
     wrapper.style.position = 'relative';
     wrapper.style.display = 'inline';
 
-    badge.addEventListener('mouseenter', () => {
+    function positionTooltip() {
       const rect = badge.getBoundingClientRect();
       // Position tooltip below badge, clamped to viewport
       let top = rect.bottom + 6;
@@ -898,11 +898,28 @@ function processPage() {
       }
       tooltip.style.top = top + 'px';
       tooltip.style.left = left + 'px';
+    }
+
+    badge.addEventListener('mouseenter', () => {
+      positionTooltip();
       tooltip.classList.add('cbd-tooltip--visible');
     });
 
     badge.addEventListener('mouseleave', () => {
       tooltip.classList.remove('cbd-tooltip--visible');
+    });
+
+    // Click as fallback — works even when overlay blocks hover (hero images)
+    badge.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      const isVisible = tooltip.classList.contains('cbd-tooltip--visible');
+      // Hide all other tooltips first
+      document.querySelectorAll('.cbd-tooltip--visible').forEach(t => t.classList.remove('cbd-tooltip--visible'));
+      if (!isVisible) {
+        positionTooltip();
+        tooltip.classList.add('cbd-tooltip--visible');
+      }
     });
 
     wrapper.appendChild(badge);
@@ -1009,6 +1026,13 @@ function updateScoreboard(scanned, detected) {
     ? `${pct}% tytułów to clickbait`
     : 'Czysto — brak clickbaitu';
 }
+
+// Zamknij wszystkie tooltips po kliknięciu poza badge
+document.addEventListener('click', (e) => {
+  if (!e.target.closest('.cbd-badge')) {
+    document.querySelectorAll('.cbd-tooltip--visible').forEach(t => t.classList.remove('cbd-tooltip--visible'));
+  }
+});
 
 // Uruchom po załadowaniu strony
 if (document.readyState === 'loading') {
