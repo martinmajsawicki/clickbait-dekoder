@@ -145,7 +145,7 @@ const PATTERNS = [
         // Skip: open Qs (kto/co/gdzie/kiedy/jak/ile/z kim — answer is never "no"),
         // conditional Qs ("Widzisz X?"), price Qs ("X zł?"), service Qs
         // Skip: open Qs, alternative Qs ("X, Y czy Z?"), price Qs
-        exclude: /\b(kto|kogo|co|gdzie|kiedy|jak|ile|jaki[me]?|któr[yae]|czyj[aie]?|z\s+kim|czym|komu|czemu|dlaczego|skąd|dokąd|po\s+co|czy)\b.*\?|\w+,\s+\w+\s+czy\s+\w+.*\?|o\s+której|transmisja|zł\s*\?|tys\.\s*zł|jest\s+(handlow[aąy]|otwart[eay]|wolna|dniem\s+woln)/i,
+        exclude: /\b(kto|kogo|co|gdzie|kiedy|jak|ile|jaki[me]?|jaka|jakie|któr[yae]|czyj[aie]?|z\s+kim|czym|komu|czemu|dlaczego|skąd|dokąd|po\s+co|czy)\b.*\?|\w+,\s+\w+\s+czy\s+\w+.*\?|o\s+której|transmisja|zł\s*\?|tys\.\s*zł|jest\s+(handlow[aąy]|otwart[eay]|wolna|dniem\s+woln)/i,
         snark: '"{0}" — Pytanie w nagłówku to technika: albo odpowiedź brzmi „nie", albo pytanie jest retoryczne i ma wzbudzić emocje zamiast informować.',
       },
     ],
@@ -213,6 +213,10 @@ const PATTERNS = [
       { re: /(niemcy|francuzi|włosi|rosjanie|chińczycy|amerykanie|brytyjczycy|irańczycy)\s+nie\s+kryl[iay]\s+(złości|oburzenia|rozczarowania|zaskoczenia|radości)/i, snark: '"{0}" — prawdopodobnie jedna osoba coś powiedziała. I tyle.' },
       { re: /doi\s+(polaków|polskę|konsumentów|klientów|obywateli|kierowców)/i, snark: '"{0}" — "doi" = płacą trochę więcej. Ale dojenia się każdy boi, więc może klikniesz.' },
       { re: /kręci\s+nosem/i, snark: '"{0}" — "kręci nosem" = nie zgodził się. Ale argumentów nie podają, bo argumenty nie generują kliknięć.' },
+      { re: /posypały\s+się\s+(komentarze|reakcje|opinie|głosy)/i, snark: '"{0}" — ile się posypało? 3? 30? 300? Nie powiedzą, bo liczba pewnie nie robi wrażenia.' },
+      { re: /popłoch\s+(wśród|u|w)/i, snark: '"{0}" — "popłoch" = kilka osób się zmartwiło. Ale "kilka osób się zmartwiło" to nie nagłówek.' },
+      { re: /^ALE\s+CYRK/i, snark: '"{0}" — duże litery, bo trzeba udawać emocje. Cyrk to przesada — po prostu coś się stało.' },
+      { re: /\bMOCNE\s+uderzenie\s+w\b/i, snark: '"{0}" — "mocne uderzenie" to CAPS zamiast konkretów. Co dokładnie powiedziano? Nie napiszą.' },
       { re: /(potężn|straszliw|przerażając|bezprecedensow|niewyobrażaln|apokaliptyczn|masakryczn|drastyczn|niszczycielski).{5,60}(potężn|straszliw|przerażając|bezprecedensow|niewyobrażaln|apokaliptyczn|masakryczn|drastyczn|niszczycielski)/i, snark: '"{0}" — dwa wyolbrzymienia w jednym tytule. Jedno nie wystarczyło, żebyś kliknął?' },
       { re: /fataln[yae]/i, snark: '"{0}" — fatalne w nagłówku = złe w rzeczywistości. Ale "złe" nie klika się tak dobrze.' },
       { re: /czarn[yae](go|m|mi)?\s+(scenariusz|scenariusza|scenariuszem|wizj[aąęi]|prognoz[aąęy])/i, snark: '"{0}" — czarny scenariusz to ulubiona broń clickbaitu. Prawdopodobny scenariusz jest szary i nudny.' },
