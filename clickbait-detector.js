@@ -769,12 +769,13 @@ const SITE_SELECTORS = {
   'o2.pl': ['a[class*="teaser"]', 'a[class*="wp-text-link"]', 'a[class*="wp-"]', 'h2 a', 'h3 a'],
   'pomponik.pl': ['a[class*="ids-card__anchor"]', 'a[class*="ids-undecorated"]', 'h2 a', 'h3 a', 'article a'],
   'se.pl': ['a[class*="tile"]', 'a[class*="article"]', 'h2 a', 'h3 a', 'article a'],
-  'natemat.pl': ['a.page-link', 'a[class*="page-link"]', 'h2 a', 'h3 a', 'article a'],
+  // natemat.pl: SPA — headless Chrome nie widzi treści (consent wall?). Działa w prawdziwym Chrome.
+  'natemat.pl': ['a.page-link', 'a[class*="page-link"]', 'a[class*="item"]', 'a[class*="tile"]', 'h2 a', 'h3 a', 'article a'],
   'money.pl': ['a[class*="sc-"]', 'a[href*="money.pl/"]', 'h2 a', 'h3 a', 'article a'],
   'noizz.pl': ['a.itemLink', 'a[class*="itemLink"]', 'a[class*="item"]', 'h2 a', 'h3 a', 'article a'],
   'polsatnews.pl': ['a.news__link', 'a.urgent__link', 'a.section__link', 'a.report-widget__link', 'a.tabs__link', 'h2 a', 'h3 a'],
   'tvn24.pl': ['a[class*="sc-"]', 'a[class*="link"]', 'h2 a', 'h3 a', 'article a'],
-  'tvrepublika.pl': ['[class*="article-"] h2', '[class*="article-"] a', 'a[class*="btn"]', 'h2 a', 'h3 a', 'article a'],
+  'tvrepublika.pl': ['[class*="article-"] h2', '[class*="article-"] h2 a', 'h2 a', 'h3 a'],
   'dziendobry.tvn.pl': ['a[class*="sc-"]', 'a[class*="link"]', 'h2 a', 'h3 a', 'article a'],
   'radiozet.pl': ['a.box__item__link', 'a.box__timeline__list__item__link', 'a.box__alert__title__text__item', 'a[class*="box__"]', 'h2 a', 'h3 a'],
   'rmf24.pl': ['a.t0', 'a.t1', 'a.t2', 'a.t3', 'a.t4', 'h2 a', 'h3 a', 'article a'],
@@ -783,7 +784,7 @@ const SITE_SELECTORS = {
   'wyborcza.pl': ['a[class*="entry"]', 'a[class*="article"]', 'a[class*="sc-"]', 'h2 a', 'h3 a', 'article a'],
   'xyz.pl': ['a[class*="article"]', 'a[class*="post"]', 'h2 a', 'h3 a', 'article a'],
   'nczas.com': ['h3.entry-title a', '.entry-title a', 'h2 a', 'h3 a', 'article a'],
-  'dorzeczy.pl': ['li.bli a', 'li a', 'h2 a', 'h3 a', 'article a'],
+  'dorzeczy.pl': ['li.bli a', 'h2 a', 'h3 a', 'article a'],
   _default: ['h1 a', 'h2 a', 'h3 a', 'h4 a', 'article a', 'a[data-ga-action]'],
 };
 
@@ -815,7 +816,7 @@ function processPage() {
 
   // Sort: smallest (leaf) elements first, so parents are processed after children
   const sortedElements = [...allElements].sort(
-    (a, b) => (a.textContent?.length || 0) - (b.textContent?.length || 0)
+    (a, b) => ((a.innerText || a.textContent)?.length || 0) - ((b.innerText || b.textContent)?.length || 0)
   );
 
   let count = 0;
@@ -823,11 +824,13 @@ function processPage() {
   for (const el of sortedElements) {
     if (el.querySelector('.cbd-badge') || el.getAttribute('data-cbd-processed')) continue;
     // Skip elements that are primarily images (no meaningful text)
-    if (el.querySelector('img') && el.textContent.trim().replace(/\s+/g,' ').length < 30) continue;
+    if (el.querySelector('img') && (el.innerText || el.textContent).trim().replace(/\s+/g,' ').length < 30) continue;
     // Skip WP navigation tiles, ads, and section headers
     if (el.closest('[class*="header-services"], [class*="header-tile"]')) continue;
 
-    let text = el.textContent?.trim().replace(/\s+/g, ' ');
+    // innerText reads only VISIBLE text (excludes hidden children, category labels, lead paragraphs)
+    // textContent reads ALL text including hidden elements — causes false matches on dorzeczy, tvrepublika
+    let text = (el.innerText || el.textContent)?.trim().replace(/\s+/g, ' ');
     if (!text || text.length < 20 || text.length > 250) continue;
     // Skip WP internal promos and section navigation
     if (/^(REKLAMA|HOROSKOPY|PROGRAM TV|POGODA)\b/i.test(text)) continue;
