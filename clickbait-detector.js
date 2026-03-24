@@ -164,7 +164,7 @@ const PATTERNS = [
       { re: /rewolucyjn[yae]/i, snark: '"{0}" — rewolucyjne jak każda nowość, o której zapomnisz za tydzień.' },
       { re: /kosmiczn[yae]/i, exclude: /statek\s+kosmiczn|kosmiczn\w+\s+(stacj|agencj|rakiet|lot|misj|program)/i, snark: '"{0}" — na ziemi. Zdecydowanie na ziemi.' },
       { re: /brutaln[yae]/i, snark: '"{0}" — przymiotnik emocjonalny. Mówi ci co czuć, zanim przeczytasz co się stało.' },
-      { re: /skandaliczn[yae]/i, snark: '"{0}" — skandal tak duży, że zmieścił się w jednym kliknięciu.' },
+      { re: /skandaliczn[yae]/i, exclude: /skandaliczn\w+\s+(decyzj|wyrok)\w*\s+(sądu|trybunału)/i, snark: '"{0}" — skandal tak duży, że zmieścił się w jednym kliknięciu.' },
       { re: /\bsensacj[aąęi]\b/i, snark: '"{0}" — gdyby to była prawdziwa sensacja, byłaby w nagłówku TVN24, nie w trzecim tytule na portalu.' },
       { re: /sensacyjn[yae]/i, snark: '"{0}" — sensacyjne dla redakcji. Dla czytelnika: normalne.' },
       { re: /fundamentaln[yae]/i, snark: '"{0}" — fundamentalna jak każda zmiana, o której zapomnisz za tydzień.' },
