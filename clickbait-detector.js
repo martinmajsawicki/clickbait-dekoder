@@ -784,7 +784,7 @@ const SITE_SELECTORS = {
   'wyborcza.pl': ['a[class*="entry"]', 'a[class*="article"]', 'a[class*="sc-"]', 'h2 a', 'h3 a', 'article a'],
   'xyz.pl': ['a[class*="article"]', 'a[class*="post"]', 'h2 a', 'h3 a', 'article a'],
   'nczas.com': ['h3.entry-title a', '.entry-title a', 'h2 a', 'h3 a', 'article a'],
-  'dorzeczy.pl': ['li.bli a', 'h2 a', 'h3 a', 'article a'],
+  'dorzeczy.pl': ['li.bli a strong.t', 'h2 a', 'h3 a'],
   _default: ['h1 a', 'h2 a', 'h3 a', 'h4 a', 'article a', 'a[data-ga-action]'],
 };
 
