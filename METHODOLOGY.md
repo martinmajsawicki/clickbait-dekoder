@@ -30,6 +30,8 @@ Uzylem Claude Code do wygenerowania prototypu wtyczki Chrome. Pierwsza wersja (v
 
 **v3 → v0.4**: Masowa ekspansja — 21 kategorii, 407 wzorcow, 26 portali. Szczegolowy audyt 16 portali z human review kazdego tytulu. Dodano: idiomy jako CB, zbitki miedzyzdaniowe, "znany bez nazwiska", interaktywne snarki na ambiwalentnych slowach, exclude na nazwy programow TV i akronimy. Skrypt auto-audytu (Puppeteer + Gemini Flash via OpenRouter).
 
+**v0.4 → v0.5**: 443 wzorcow. Audyt wszystkich 26 portali. 4-filarowa definicja clickbaitu (ukrywanie informacji, wyolbrzymianie, emocja zamiast faktu, falszywa narracja). Persona redaktora z Big Five dla LLM-sedzi. Profile portali z bayesowskim priorem. 2-fazowy pipeline audytu: Gemini Flash (sedzia) + Claude Sonnet (reviewer + auto-fixy). Tracking metryk (error_rate, precision, recall, F1). Flaga --auto do automatycznych poprawek.
+
 Przyklad: tytul zawiera "Polacy odkryli" → tooltip pokazuje:
 > **"Polacy odkryli"** — zamien na "kilka osob z Radomia przeczytalo artykul". Nadal chcesz kliknac?
 
@@ -42,7 +44,7 @@ Wtyczka nie uzywa AI — opiera sie na wzorcach regexowych (pattern matching). T
 3. **Transparentna** — kazdy wzorzec mozna przeczytac i zrozumiec
 4. **Szybka** — skanowanie calej strony trwa <10ms
 
-### 21 kategorii wzorcow (407 regexow)
+### 21 kategorii wzorcow (443 regexow)
 
 Kazda kategoria ma wage (weight), ktora wplywa na score:
 
@@ -77,7 +79,11 @@ Kazda kategoria ma wage (weight), ktora wplywa na score:
    - **Ambiwalentne** (opisz technike): "dramat", "skandal", "ostrzega", "historyczny"
    - **Emocjonalne** (opisz emocje): "brutalne", "koszmarne", "dramatyczne"
 
-2. **Clickbait = ukrywanie informacji**, nie samo slowo. "Dramat pięściarza walczącego o życie" to nie CB jesli tytul podaje pelna informacje.
+2. **Clickbait = 4 filary** (nie samo slowo):
+   - **Filar 1: Ukrywa informacje** — celowo nie podaje kluczowego faktu, dajac dosc kontekstu by wywoalc dyskomfort luki informacyjnej
+   - **Filar 2: Wyolbrzymia** — jezyk silniejszy niz fakty uzasadniaja
+   - **Filar 3: Zastepuje fakt emocja** — mowi JAK reagowac zamiast CO sie stalo
+   - **Filar 4: Falszywa narracja** — tworzy fabule (konflikt, punkt kulminacyjny) tam, gdzie jest zwykle zdarzenie
 
 3. **Kontekst sekcji decyduje** — pytanie w [ANALIZA], [OPINIA], [DYLEMATY] nie jest clickbaitem.
 
