@@ -21,6 +21,11 @@
   const SOFT_SUPERLATIVE = /\b(naj\w+|rekordow\w*|szokując\w*|niewiarygodn\w*|absolutn\w*)/i;
   const SOFT_QUESTION = /\?\s*$/;
 
+  // Typ portalu z profili (cbd-profiles.js ładowany wcześniej w content_scripts).
+  function isTabloid(host) {
+    return !!CBD.profiles && CBD.profiles.getProfile(host).type === 'tabloid';
+  }
+
   // Regexowy werdykt wstępny → Verdict.
   function judgeRegex(title, ctx = {}) {
     const r = analyzeHeadlineCore(title, { isAnalytical: ctx.isAnalytical });
@@ -59,6 +64,10 @@
 
     // Graniczne CB 1–2 — model kalibruje w górę/dół.
     if (raw === 1 || raw === 2) return true;
+
+    // Tabloidy: regex łapie mało ich stylu ("Robią to s…", "przerywa milczenie"),
+    // więc każdy niepewny tytuł idzie do modelu, także bez miękkiego sygnału.
+    if (raw === 0 && isTabloid(ctx.host)) return true;
 
     // Regex = 0, ale są miękkie sygnały → kandydat na false-negative.
     if (raw === 0) {

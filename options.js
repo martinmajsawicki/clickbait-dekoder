@@ -11,22 +11,41 @@ function setStatus(msg, kind) {
   statusEl.className = 'status' + (kind ? ' ' + kind : '');
 }
 
+// Ostatni wynik wywołania modelu, zapisywany przez service worker.
+function showAiStatus(s) {
+  const el = $('ai-status');
+  if (!s) {
+    el.textContent = '';
+    return;
+  }
+  const when = new Date(s.ts).toLocaleString('pl-PL');
+  el.textContent = s.ok
+    ? `Ostatnie wywołanie AI (${s.model}, ${when}): działa ✓`
+    : `Ostatnie wywołanie AI (${s.model}, ${when}): błąd — ${s.error}`;
+  el.className = 'status ' + (s.ok ? 'ok' : 'err');
+}
+
 // Wczytaj zapisane ustawienia.
-chrome.storage.local.get(['cbd_key', 'cbd_enabled', 'cbd_model'], (r) => {
+chrome.storage.local.get(['cbd_key', 'cbd_enabled', 'cbd_model', 'cbd_status'], (r) => {
   $('key').value = r.cbd_key || '';
   $('enabled').checked = r.cbd_enabled === true;
-  if (r.cbd_model) $('model').value = r.cbd_model;
+  // Zapisany model spoza listy (np. wycofany) — zostaje domyślny, czyli pierwsza opcja.
+  if (r.cbd_model && [...$('model').options].some((o) => o.value === r.cbd_model)) {
+    $('model').value = r.cbd_model;
+  }
+  showAiStatus(r.cbd_status);
+});
+chrome.storage.onChanged.addListener((changes, area) => {
+  if (area === 'local' && changes.cbd_status) showAiStatus(changes.cbd_status.newValue);
 });
 
 $('save').addEventListener('click', () => {
   const key = $('key').value.trim();
   const enabled = $('enabled').checked;
   const model = $('model').value;
-  if (enabled && !key) {
-    setStatus('Włączono AI, ale brak klucza — wtyczka użyje samego regexu.', 'err');
-  }
   chrome.storage.local.set({ cbd_key: key, cbd_enabled: enabled, cbd_model: model }, () => {
-    setStatus('Zapisano.', 'ok');
+    if (enabled && !key) setStatus('Zapisano, ale brak klucza — wtyczka użyje samego regexu.', 'err');
+    else setStatus('Zapisano.', 'ok');
   });
 });
 

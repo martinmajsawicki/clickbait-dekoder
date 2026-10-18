@@ -29,27 +29,44 @@ let _flushTimer = null;
 // Ustawienia z chrome.storage (opt-in). Domyślnie LLM wyłączony.
 let settings = { enabled: false, hasKey: false };
 
+// Stan warstwy AI na tej karcie: null (brak odpowiedzi), { ok: true } albo { ok: false, error }.
+let aiState = null;
+
+// Zwraca Promise — pierwszy skan rusza dopiero po wczytaniu ustawień,
+// inaczej tytuły z pierwszego przebiegu nigdy nie trafiłyby do modelu.
 function loadSettings() {
-  try {
-    if (typeof chrome === 'undefined' || !chrome.storage) return;
-    chrome.storage.local.get(['cbd_enabled', 'cbd_key'], (res) => {
-      settings.enabled = res.cbd_enabled === true;
-      settings.hasKey = typeof res.cbd_key === 'string' && res.cbd_key.length > 0;
-    });
-    chrome.storage.onChanged?.addListener((changes, area) => {
-      if (area !== 'local') return;
-      if ('cbd_enabled' in changes) settings.enabled = changes.cbd_enabled.newValue === true;
-      if ('cbd_key' in changes) settings.hasKey = !!changes.cbd_key.newValue;
-    });
-  } catch (e) {
-    /* storage niedostępny — działamy na samym regexie */
-  }
+  return new Promise((resolve) => {
+    try {
+      if (typeof chrome === 'undefined' || !chrome.storage) return resolve();
+      chrome.storage.local.get(['cbd_enabled', 'cbd_key'], (res) => {
+        settings.enabled = res.cbd_enabled === true;
+        settings.hasKey = typeof res.cbd_key === 'string' && res.cbd_key.length > 0;
+        resolve();
+      });
+      chrome.storage.onChanged?.addListener((changes, area) => {
+        if (area !== 'local') return;
+        if ('cbd_enabled' in changes) settings.enabled = changes.cbd_enabled.newValue === true;
+        if ('cbd_key' in changes) settings.hasKey = !!changes.cbd_key.newValue;
+      });
+    } catch (e) {
+      /* storage niedostępny — działamy na samym regexie */
+      resolve();
+    }
+  });
 }
 
 // Aktualizuje istniejący badge werdyktem modelu (lub usuwa, gdy model odrzucił).
+// Wpis "ghost" to tytuł bez badge'a, który model może dopiero uznać za clickbait.
 function updateBadge(id, verdict) {
   const entry = pendingBadges.get(id);
   if (!entry) return; // DOM zniknął — ignorujemy
+  if (entry.ghost) {
+    pendingBadges.delete(id);
+    if (verdict.cb < 1 || !entry.el.isConnected) return;
+    const ui = attachBadge(entry.el, verdict, id);
+    pendingBadges.set(id, { ...ui, title: entry.title, verdict });
+    return;
+  }
   if (verdict.cb < 1) {
     // Model odrzucił clickbait (regex dał false-positive) — sprzątamy.
     entry.tooltip.remove();
@@ -97,7 +114,16 @@ function enqueueForApi(item) {
 if (typeof chrome !== 'undefined' && chrome.runtime?.onMessage) {
   chrome.runtime.onMessage.addListener((msg) => {
     if (msg && msg.type === 'JUDGE_RESULT' && Array.isArray(msg.verdicts)) {
+      aiState = { ok: true };
       for (const { id, verdict } of msg.verdicts) updateBadge(id, verdict);
+      refreshScoreboard();
+    }
+    if (msg && msg.type === 'JUDGE_ERROR') {
+      aiState = { ok: false, error: msg.error || '' };
+      // Badge'e zostają regexowe; tytuły bez badge'a przestają czekać na model.
+      for (const id of msg.ids || []) {
+        if (pendingBadges.get(id)?.ghost) pendingBadges.delete(id);
+      }
       refreshScoreboard();
     }
   });
@@ -266,10 +292,132 @@ function getSelectors() {
 
 // === GŁÓWNA LOGIKA ===
 
+// Imię i nazwisko autora (2–3 słowa wielką literą, opcjonalnie z łącznikiem).
+const AUTHOR_NAME = /^[A-ZĄĆĘŁŃÓŚŹŻ][a-ząćęłńóśźż]+(\s+[A-ZĄĆĘŁŃÓŚŹŻ][a-ząćęłńóśźż]+){1,2}(-[A-ZĄĆĘŁŃÓŚŹŻ][a-ząćęłńóśźż]+)?$/;
+
+// Odcina podpis autora doklejony przez WP/Onet ("...tekst Jakub Balcerski"),
+// ale tylko gdy siedzi w osobnym elemencie — nazwiska w samym tytule zostają
+// ("Ten trik zaskoczył Roberta Lewandowskiego").
+function stripAuthorSuffix(el, text) {
+  for (const child of el.querySelectorAll('*')) {
+    const ct = (child.textContent || '').trim().replace(/\s+/g, ' ');
+    if (ct && ct !== text && AUTHOR_NAME.test(ct) && text.endsWith(' ' + ct)) {
+      return text.slice(0, -ct.length).trim();
+    }
+  }
+  return text;
+}
+
+function sectionLabelFor(el) {
+  return (el.closest('section, [class*="section"]')?.querySelector('h2, h3, [class*="header"]')?.textContent || '')
+    .trim()
+    .slice(0, 40);
+}
+
+// Wstawia badge + tooltip przy elemencie tytułu. Zwraca uchwyt do późniejszej aktualizacji.
+function attachBadge(el, verdict, badgeId) {
+  const badge = createBadge(verdict);
+  const tooltip = buildTooltipElement(verdict);
+  badge.setAttribute('data-cbd-id', String(badgeId));
+
+  const wrapper = document.createElement('span');
+  wrapper.className = 'cbd-wrapper';
+
+  function positionTooltip() {
+    const rect = badge.getBoundingClientRect();
+    // Position tooltip below badge, clamped to viewport
+    let top = rect.bottom + 6;
+    let left = rect.left;
+    // Clamp right edge
+    if (left + 350 > window.innerWidth) {
+      left = window.innerWidth - 360;
+    }
+    if (left < 10) left = 10;
+    // If below viewport, show above badge
+    if (top + 200 > window.innerHeight) {
+      top = rect.top - 10;
+      tooltip.style.transform = 'translateY(-100%)';
+    } else {
+      tooltip.style.transform = '';
+    }
+    tooltip.style.top = top + 'px';
+    tooltip.style.left = left + 'px';
+  }
+
+  badge.addEventListener('mouseenter', () => {
+    positionTooltip();
+    tooltip.classList.add('cbd-tooltip--visible');
+  });
+
+  badge.addEventListener('mouseleave', () => {
+    tooltip.classList.remove('cbd-tooltip--visible');
+  });
+
+  // Click as fallback — works even when overlay blocks hover (hero images)
+  badge.addEventListener('click', (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    const isVisible = tooltip.classList.contains('cbd-tooltip--visible');
+    // Hide all other tooltips first
+    document.querySelectorAll('.cbd-tooltip--visible').forEach(t => t.classList.remove('cbd-tooltip--visible'));
+    if (!isVisible) {
+      positionTooltip();
+      tooltip.classList.add('cbd-tooltip--visible');
+    }
+  });
+
+  wrapper.appendChild(badge);
+  // Append tooltip to body so it escapes overflow:hidden parents
+  document.body.appendChild(tooltip);
+
+  // Try to place badge on associated image instead of text
+  // Search up to 3 levels up for an img element
+  let imgTarget = null;
+  let searchEl = el;
+  for (let i = 0; i < 4 && searchEl; i++) {
+    const img = searchEl.querySelector('img, picture, [style*="background-image"]');
+    if (img && img.offsetHeight > 50) {
+      imgTarget = img.closest('a, div, figure, picture') || img.parentElement;
+      break;
+    }
+    searchEl = searchEl.parentElement;
+  }
+
+  const targetEl = imgTarget || el;
+  const targetPosition = window.getComputedStyle(targetEl).position;
+  if (targetPosition === 'static') {
+    targetEl.style.position = 'relative';
+  }
+  wrapper.style.position = 'absolute';
+  wrapper.style.top = '8px';
+  wrapper.style.left = '8px';
+  wrapper.style.display = 'inline-block';
+  wrapper.style.zIndex = '10000';
+
+  if (imgTarget) {
+    // Place on image — more visible, doesn't obscure text
+    imgTarget.appendChild(wrapper);
+  } else {
+    // Fallback: place inside text element
+    el.insertBefore(wrapper, el.firstChild);
+  }
+  // Mark the original link so re-runs skip it
+  el.setAttribute('data-cbd-processed', 'true');
+
+  return { badge, tooltip, wrapper };
+}
+
+// Wszystkie tytuły przeskanowane na tej karcie (mianownik scoreboardu).
+// Rośnie między przebiegami — oznaczone tytuły nie wypadają z liczenia.
+const seenTitles = new Set();
+
 function processPage() {
   _isProcessing = true;
   const selectors = getSelectors();
-  const processed = new Set();
+  // Tekst tytułu → elementy już przetworzone w tym przebiegu. Ten sam tytuł
+  // w dwóch miejscach strony (kafelek + "Najnowsze") dostaje dwa badge'e;
+  // pomijamy tylko element zagnieżdżony w już przetworzonym (h2 vs h2 a).
+  const processed = new Map();
   const allElements = new Set();
 
   for (const selector of selectors) {
@@ -312,7 +460,7 @@ function processPage() {
     text = text.replace(/^(DUŻO ZDJĘĆ|ZDJĘCIA|MOCNE|WAŻNE|TYLKO U NAS|EXCLUSIVE)\s+/i, ''); // Strip SE/fakt tags
     // Strip author names appended by WP/Onet (e.g. "...tekst Jakub Balcerski")
     text = text.replace(/\s+(Obserwuj|Obserwuj autorów).*$/i, '');
-    text = text.replace(/\s+[A-ZĄĆĘŁŃÓŚŹŻ][a-ząćęłńóśźż]+\s+[A-ZĄĆĘŁŃÓŚŹŻ][a-ząćęłńóśźż]+([-][A-ZĄĆĘŁŃÓŚŹŻ][a-ząćęłńóśźż]+)?$/,'');
+    text = stripAuthorSuffix(el, text);
     text = text.replace(
       /\s+(BIZNES|SPORT|KOBIETA|NEXT|MOTO|FILM|TENIS|PRENUMERATA|MATERIAŁ PROMOCYJNY|MOTO NEWS|OFERTY AVANTI24|OFERTY CZTERY KĄTY|LEKKOATLETYKA|SKOKI NARCIARSKIE|PIŁKA NOŻNA)$/i,
       ''
@@ -322,123 +470,50 @@ function processPage() {
     text = text.replace(/^(BLOG\s+EKONOMICZNY[^|]*\|?\s*|MAT\.\s*SPONSOROWANY\s*)/i, '');
     text = text.replace(/\s*\[(ANALIZA|OPINIA|KOMENTARZ|WYWIAD|RAPORT|DEBATA)\]\s*$/i, '');
 
-    if (processed.has(text)) continue;
+    if ((processed.get(text) || []).some((prev) => prev.contains(el) || el.contains(prev))) continue;
     if (el.closest('nav, footer, .menu, .sidebar-nav')) continue;
     if (text.length < 30 && !/[.!?""]/.test(text)) continue;
     // Skip subscription/promo banners — not articles
     if (/oferta\s+prenumerat|prenumerata\s+cyfrowa|sprawdź\s+ofertę|kup\s+teraz|ogłoszenia\s+(mieszkań|nieruchomości)|SPRAWDŹ$/i.test(text)) continue;
 
-    processed.add(text);
+    processed.set(text, [...(processed.get(text) || []), el]);
+    seenTitles.add(text);
 
-    const verdict = judgeRegex(text, { isAnalytical });
-    if (verdict.cb < 1) continue;
-
-    const badge = createBadge(verdict);
-    const tooltip = buildTooltipElement(verdict);
+    const verdict = judgeRegex(text, { isAnalytical, host: window.location.hostname });
     const badgeId = ++_badgeSeq;
-    badge.setAttribute('data-cbd-id', String(badgeId));
 
-    const wrapper = document.createElement('span');
-    wrapper.className = 'cbd-wrapper';
-    wrapper.style.position = 'relative';
-    wrapper.style.display = 'inline';
-
-    function positionTooltip() {
-      const rect = badge.getBoundingClientRect();
-      // Position tooltip below badge, clamped to viewport
-      let top = rect.bottom + 6;
-      let left = rect.left;
-      // Clamp right edge
-      if (left + 350 > window.innerWidth) {
-        left = window.innerWidth - 360;
+    if (verdict.cb < 1) {
+      // Regex nic nie znalazł, ale tytuł ma miękkie sygnały (cytat, superlatyw,
+      // pytajnik) albo jest z tabloidu — model może go uznać za clickbait
+      // i dopiero wtedy dostaje badge.
+      if (verdict.status === 'pending' && settings.enabled && settings.hasKey) {
+        el.setAttribute('data-cbd-processed', 'true');
+        pendingBadges.set(badgeId, { ghost: true, el, title: text });
+        enqueueForApi({
+          id: badgeId,
+          title: text,
+          host: window.location.hostname,
+          section: sectionLabelFor(el),
+          // Trafienia o wadze 0 (np. sam cytat) nie dają badge'a, ale są dowodem dla modelu.
+          signals: verdict.matches.map((m) => ({ t: m.name, frag: m.matchedText })),
+          isAnalytical,
+        });
       }
-      if (left < 10) left = 10;
-      // If below viewport, show above badge
-      if (top + 200 > window.innerHeight) {
-        top = rect.top - 10;
-        tooltip.style.transform = 'translateY(-100%)';
-      } else {
-        tooltip.style.transform = '';
-      }
-      tooltip.style.top = top + 'px';
-      tooltip.style.left = left + 'px';
+      continue;
     }
 
-    badge.addEventListener('mouseenter', () => {
-      positionTooltip();
-      tooltip.classList.add('cbd-tooltip--visible');
-    });
-
-    badge.addEventListener('mouseleave', () => {
-      tooltip.classList.remove('cbd-tooltip--visible');
-    });
-
-    // Click as fallback — works even when overlay blocks hover (hero images)
-    badge.addEventListener('click', (e) => {
-      e.preventDefault();
-      e.stopPropagation();
-      const isVisible = tooltip.classList.contains('cbd-tooltip--visible');
-      // Hide all other tooltips first
-      document.querySelectorAll('.cbd-tooltip--visible').forEach(t => t.classList.remove('cbd-tooltip--visible'));
-      if (!isVisible) {
-        positionTooltip();
-        tooltip.classList.add('cbd-tooltip--visible');
-      }
-    });
-
-    wrapper.appendChild(badge);
-    // Append tooltip to body so it escapes overflow:hidden parents
-    document.body.appendChild(tooltip);
-
-    // Try to place badge on associated image instead of text
-    // Search up to 3 levels up for an img element
-    let imgTarget = null;
-    let searchEl = el;
-    for (let i = 0; i < 4 && searchEl; i++) {
-      const img = searchEl.querySelector('img, picture, [style*="background-image"]');
-      if (img && img.offsetHeight > 50) {
-        imgTarget = img.closest('a, div, figure, picture') || img.parentElement;
-        break;
-      }
-      searchEl = searchEl.parentElement;
-    }
-
-    const targetEl = imgTarget || el;
-    const targetPosition = window.getComputedStyle(targetEl).position;
-    if (targetPosition === 'static') {
-      targetEl.style.position = 'relative';
-    }
-    wrapper.style.position = 'absolute';
-    wrapper.style.top = '8px';
-    wrapper.style.left = '8px';
-    wrapper.style.display = 'inline-block';
-    wrapper.style.zIndex = '10000';
-
-    if (imgTarget) {
-      // Place on image — more visible, doesn't obscure text
-      imgTarget.appendChild(wrapper);
-    } else {
-      // Fallback: place inside text element
-      el.insertBefore(wrapper, el.firstChild);
-    }
-    // Mark the original link so re-runs skip it
-    el.setAttribute('data-cbd-processed', 'true');
+    const ui = attachBadge(el, verdict, badgeId);
 
     // Zarejestruj uchwyt, by werdykt modelu mógł zaktualizować ten badge.
-    pendingBadges.set(badgeId, { badge, tooltip, wrapper, title: text, verdict });
+    pendingBadges.set(badgeId, { ...ui, title: text, verdict });
 
     // Dosądzenie przez model tylko dla przypadków niepewnych (i gdy LLM włączony).
     if (verdict.status === 'pending') {
-      const sectionLabel = (
-        el.closest('section, [class*="section"]')?.querySelector('h2, h3, [class*="header"]')?.textContent || ''
-      )
-        .trim()
-        .slice(0, 40);
       enqueueForApi({
         id: badgeId,
         title: text,
         host: window.location.hostname,
-        section: sectionLabel,
+        section: sectionLabelFor(el),
         // Dowody dla modelu: technika + fragment, który ją uruchomił (bez snarka — lżejszy prompt).
         signals: verdict.matches.map((m) => ({ t: m.name, frag: m.matchedText })),
         isAnalytical,
@@ -447,25 +522,30 @@ function processPage() {
     count++;
   }
 
-  // Count ALL badges on page (not just this run — MutationObserver re-runs skip already-badged)
-  const totalBadges = document.querySelectorAll('.cbd-badge').length;
-  const totalScanned = Math.max(processed.size, totalBadges);
+  const totalBadges = countDetected();
 
   console.log(
-    `[Clickbait Dekoder] Przeskanowano ${totalScanned} tytułów, oznaczono ${totalBadges} clickbaitów (ten przebieg: +${count})`
+    `[Clickbait Dekoder] Przeskanowano ${seenTitles.size} tytułów, oznaczono ${totalBadges} clickbaitów (ten przebieg: +${count})`
   );
 
   // === FLOATING SCOREBOARD ===
-  _lastScanned = totalScanned;
-  updateScoreboard(totalScanned, totalBadges);
+  updateScoreboard(seenTitles.size, totalBadges);
   _isProcessing = false;
 }
 
+// Liczba różnych tytułów z badge'em na stronie (tytuł w dwóch miejscach liczy się raz).
+function countDetected() {
+  const titles = new Set();
+  for (const entry of pendingBadges.values()) {
+    if (!entry.ghost && entry.badge?.isConnected) titles.add(entry.title);
+  }
+  return titles.size;
+}
+
 // Przelicza scoreboard po asynchronicznej zmianie liczby badge'y (werdykty modelu).
-let _lastScanned = 0;
 function refreshScoreboard() {
-  const detected = document.querySelectorAll('.cbd-badge').length;
-  updateScoreboard(Math.max(_lastScanned, detected), detected);
+  const detected = countDetected();
+  updateScoreboard(Math.max(seenTitles.size, detected), detected);
 }
 
 function updateScoreboard(scanned, detected) {
@@ -487,6 +567,7 @@ function updateScoreboard(scanned, detected) {
         </div>
       </div>
       <div class="cbd-sb-pct" id="cbd-sb-pct"></div>
+      <div class="cbd-sb-ai" id="cbd-sb-ai"></div>
     `;
     document.body.appendChild(sb);
 
@@ -518,6 +599,21 @@ function updateScoreboard(scanned, detected) {
   document.getElementById('cbd-sb-pct').textContent = pct > 0
     ? `${pct}% tytułów to clickbait`
     : 'Czysto — brak clickbaitu';
+
+  // Status AI widoczny tylko przy włączonym modelu i po pierwszej odpowiedzi.
+  const ai = document.getElementById('cbd-sb-ai');
+  if (!settings.enabled || !settings.hasKey || !aiState) {
+    ai.textContent = '';
+    ai.className = 'cbd-sb-ai';
+  } else if (aiState.ok) {
+    ai.textContent = 'AI: działa';
+    ai.className = 'cbd-sb-ai cbd-sb-ai--ok';
+    ai.title = '';
+  } else {
+    ai.textContent = 'AI: błąd, oceny z samego regexu';
+    ai.className = 'cbd-sb-ai cbd-sb-ai--err';
+    ai.title = aiState.error;
+  }
 }
 
 // Zamknij wszystkie tooltips po kliknięciu poza badge
@@ -526,16 +622,6 @@ document.addEventListener('click', (e) => {
     document.querySelectorAll('.cbd-tooltip--visible').forEach(t => t.classList.remove('cbd-tooltip--visible'));
   }
 });
-
-// Wczytaj ustawienia (opt-in LLM) zanim ruszy przetwarzanie.
-loadSettings();
-
-// Uruchom po załadowaniu strony
-if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', processPage);
-} else {
-  processPage();
-}
 
 // Obserwuj dynamicznie ładowaną treść (infinite scroll)
 const observer = new MutationObserver((mutations) => {
@@ -557,4 +643,12 @@ const observer = new MutationObserver((mutations) => {
   }
 });
 
-observer.observe(document.body, { childList: true, subtree: true });
+// Wczytaj ustawienia (opt-in LLM), potem pierwszy skan i obserwacja zmian.
+loadSettings().then(() => {
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', processPage);
+  } else {
+    processPage();
+  }
+  observer.observe(document.body, { childList: true, subtree: true });
+});

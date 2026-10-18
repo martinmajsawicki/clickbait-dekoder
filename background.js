@@ -10,15 +10,19 @@ importScripts('cbd-profiles.js', 'cbd-prompt.js');
 
 const { buildBatchPrompt, parseBatchResponse, JUDGE_SYSTEM_PROMPT } = self.CBD.prompt;
 
-const DEFAULT_MODEL = 'google/gemini-2.0-flash-001';
+const DEFAULT_MODEL = 'google/gemini-2.5-flash-lite';
+// Modele wycofane z OpenRoutera — zapisany wybór użytkownika przechodzi na domyślny.
+const RETIRED_MODELS = new Set(['google/gemini-2.0-flash-001', 'anthropic/claude-3.5-haiku']);
 const BATCH_SIZE = 15;
 const CACHE_PREFIX = 'cbd:v1:';
 const CACHE_TTL_MS = 7 * 24 * 60 * 60 * 1000;
 const CACHE_MAX = 5000;
 const OPENROUTER_URL = 'https://openrouter.ai/api/v1/chat/completions';
 
-// In-flight cache keys — dedup równoległych żądań o ten sam tytuł.
-const inFlight = new Set();
+// In-flight: klucz cache → lista dodatkowych chętnych [{ tabId, id }].
+// Ten sam tytuł w drugim miejscu strony (albo w drugiej karcie) nie pyta modelu
+// drugi raz, tylko dostaje werdykt z zapytania, które już trwa.
+const inFlight = new Map();
 
 // === Ustawienia ===
 async function getSettings() {
@@ -26,8 +30,17 @@ async function getSettings() {
   return {
     key: r.cbd_key || '',
     enabled: r.cbd_enabled === true,
-    model: r.cbd_model || DEFAULT_MODEL,
+    model: r.cbd_model && !RETIRED_MODELS.has(r.cbd_model) ? r.cbd_model : DEFAULT_MODEL,
   };
+}
+
+// === Status warstwy AI (widoczny w scoreboardzie i w opcjach) ===
+async function setStatus(ok, model, error = '') {
+  await chrome.storage.local.set({ cbd_status: { ok, model, error: error.slice(0, 200), ts: Date.now() } });
+}
+function reportError(tabId, ids, message) {
+  if (tabId == null) return;
+  chrome.tabs.sendMessage(tabId, { type: 'JUDGE_ERROR', ids, error: message }, () => void chrome.runtime.lastError);
 }
 
 // === Hash (cyrb53) do klucza cache ===
@@ -160,8 +173,11 @@ async function handleBatch(items, tabId) {
       continue;
     }
     const k = cacheKey(host, it.title);
-    if (inFlight.has(k)) continue; // ktoś już pyta o ten tytuł
-    inFlight.add(k);
+    if (inFlight.has(k)) {
+      inFlight.get(k).push({ tabId, id: it.id }); // ktoś już pyta o ten tytuł — czekamy na jego werdykt
+      continue;
+    }
+    inFlight.set(k, []);
     it._k = k;
     misses.push(it);
   }
@@ -177,11 +193,19 @@ async function handleBatch(items, tabId) {
         const prompt = buildBatchPrompt(numbered, host, section);
         const raw = await callLLM(prompt, { key: settings.key, model: settings.model, systemPrompt: JUDGE_SYSTEM_PROMPT });
         results = parseBatchResponse(raw);
+        if (results.length === 0) throw new Error('nieczytelna odpowiedź modelu');
       } catch (e) {
-        console.warn('[CBD] LLM batch error:', e.message); // tytuły zostają regexowe
+        // Tytuły zostają regexowe; błąd trafia do scoreboardu i opcji.
+        console.warn('[CBD] LLM batch error:', e.message);
+        await setStatus(false, settings.model, e.message);
+        reportError(tabId, slice.map((it) => it.id), e.message);
+        for (const it of slice) {
+          for (const w of inFlight.get(it._k) || []) reportError(w.tabId, [w.id], e.message);
+        }
         continue;
       }
-      const byNr = new Map(results.map((r) => [r.nr, r]));
+      await setStatus(true, settings.model);
+      const byNr = new Map(results.map((r) => [Number(r.nr), r]));
       const out = [];
       for (const it of numbered) {
         const mr = byNr.get(it.nr);
@@ -189,6 +213,7 @@ async function handleBatch(items, tabId) {
         const verdict = toVerdict(mr, it);
         await cacheSet(host, it.title, verdict, settings.model);
         out.push({ id: it.id, verdict });
+        for (const w of inFlight.get(it._k) || []) sendVerdicts(w.tabId, [{ id: w.id, verdict }]);
       }
       if (out.length) sendVerdicts(tabId, out);
     }

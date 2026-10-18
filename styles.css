@@ -247,3 +247,21 @@
   color: #fbbf24;
   font-weight: 600;
 }
+
+.cbd-sb-ai {
+  font-size: 10px;
+  text-align: center;
+  margin-top: 4px;
+}
+
+.cbd-sb-ai:empty {
+  display: none;
+}
+
+.cbd-sb-ai--ok {
+  color: #86efac;
+}
+
+.cbd-sb-ai--err {
+  color: #fca5a5;
+}

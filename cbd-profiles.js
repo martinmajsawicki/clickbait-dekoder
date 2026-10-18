@@ -4,6 +4,8 @@
  * Port z audit-tool/audit.js. Ładowany w service workerze (importScripts),
  * wstrzykiwany do promptu modelu, by ocena uwzględniała charakter portalu:
  * tabloid zaczyna z domniemaniem clickbaitu, dziennik opinii — z domniemaniem uczciwości.
+ * Ładowany też w content_scripts: cbd-judge.js po typie portalu decyduje,
+ * które tytuły idą do modelu (na tabloidach każdy niepewny).
  *
  * Nie dotyka window/document. Eksport: globalThis.CBD.profiles = { PORTAL_PROFILES, getProfile }
  */
