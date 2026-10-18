@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="pl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Clickbait Dekoder — ustawienia</title>
+  <style>
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 560px; margin: 24px auto; padding: 0 20px; color: #1a1a2e; line-height: 1.5; }
+    h1 { font-size: 20px; margin-bottom: 4px; }
+    .sub { color: #666; font-size: 13px; margin-bottom: 20px; }
+    label { display: block; font-weight: 600; margin: 18px 0 6px; font-size: 14px; }
+    input[type="password"], select { width: 100%; padding: 9px 11px; border: 1px solid #ccc; border-radius: 8px; font-size: 14px; box-sizing: border-box; }
+    .row { display: flex; align-items: center; gap: 10px; margin: 18px 0; }
+    .row input[type="checkbox"] { width: 18px; height: 18px; }
+    .row label { margin: 0; }
+    button { margin-top: 16px; padding: 9px 18px; border: 0; border-radius: 8px; background: #f97316; color: #fff; font-weight: 700; font-size: 14px; cursor: pointer; }
+    button.secondary { background: #e5e7eb; color: #1a1a2e; margin-left: 8px; }
+    .note { background: #fef3c7; border: 1px solid #f59e0b; border-radius: 8px; padding: 12px 14px; font-size: 12.5px; color: #92400e; margin-top: 22px; }
+    .status { margin-top: 12px; font-size: 13px; min-height: 18px; }
+    .status.ok { color: #15803d; }
+    .status.err { color: #b91c1c; }
+    a { color: #c2410c; }
+  </style>
+</head>
+<body>
+  <h1>Clickbait Dekoder</h1>
+  <div class="sub">Ocena przez model AI (opcjonalna). Bez klucza wtyczka działa na samych wzorcach regex.</div>
+
+  <div class="row">
+    <input type="checkbox" id="enabled" />
+    <label for="enabled">Używaj modelu AI do dosądzania niepewnych tytułów</label>
+  </div>
+
+  <label for="key">Klucz API OpenRouter</label>
+  <input type="password" id="key" placeholder="sk-or-v1-..." autocomplete="off" />
+
+  <label for="model">Model</label>
+  <select id="model">
+    <option value="google/gemini-2.0-flash-001">Gemini 2.0 Flash (tani, domyślny)</option>
+    <option value="google/gemini-2.5-flash">Gemini 2.5 Flash</option>
+    <option value="anthropic/claude-3.5-haiku">Claude 3.5 Haiku</option>
+    <option value="openai/gpt-4o-mini">GPT-4o mini</option>
+  </select>
+
+  <div>
+    <button id="save">Zapisz</button>
+    <button id="test" class="secondary">Test klucza</button>
+  </div>
+  <div class="status" id="status"></div>
+
+  <div class="note">
+    <strong>Prywatność:</strong> przy włączonym AI do OpenRouter wysyłany jest wyłącznie
+    <em>tekst tytułu</em>, domena portalu i nazwy wykrytych technik — nigdy adres (URL) artykułu.
+    Klucz API przechowywany jest lokalnie w przeglądarce (nieszyfrowany) i nie opuszcza Twojego komputera
+    poza wywołaniami do OpenRouter. Klucz wygenerujesz na
+    <a href="https://openrouter.ai/keys" target="_blank" rel="noopener">openrouter.ai/keys</a>.
+  </div>
+
+  <script src="options.js"></script>
+</body>
+</html>

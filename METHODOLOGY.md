@@ -44,6 +44,18 @@ Wtyczka nie uzywa AI — opiera sie na wzorcach regexowych (pattern matching). T
 3. **Transparentna** — kazdy wzorzec mozna przeczytac i zrozumiec
 4. **Szybka** — skanowanie calej strony trwa <10ms
 
+> **Aktualizacja v0.5 — hybryda regex + AI (opcjonalna).** Powyzsze opisuje
+> warstwe bazowa, ktora dziala zawsze i bez klucza. Od v0.5 doszla OPCJONALNA
+> warstwa AI (opt-in, BYO-key OpenRouter): regex przestaje byc tylko detektorem,
+> a staje sie **materialem dowodowym** dla taniego modelu — przekazuje mu, ktora
+> technika trafila i w ktory fragment, a model kalibruje wynik z uwzglednieniem
+> profilu portalu. Powod: definicja clickbaitu jest kontekstowa (to, co jest CB
+> na tabloidzie, nie jest nim na dzienniku opinii) — czysty regex tego nie rozroznia.
+> Swiadomy koszt: przy wlaczonym AI tracimy "offline" i "<10ms" dla tytulow
+> niepewnych (badge regexowy pojawia sie natychmiast, werdykt AI ~1s pozniej),
+> a "deterministyczna" staje sie miekka. Prywatnosc zachowana: do API leci tylko
+> tytul + host + nazwy technik, nigdy URL artykulu. Szczegoly w CLAUDE.md.
+
 ### 21 kategorii wzorcow (443 regexow)
 
 Kazda kategoria ma wage (weight), ktora wplywa na score:
