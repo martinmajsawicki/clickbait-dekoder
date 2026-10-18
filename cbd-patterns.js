@@ -647,16 +647,22 @@
     },
   ];
 
+  const QUIZ_EXEMPT = new Set(['challenge', 'question_headline', 'knowledge_question']);
+
   // Rdzeń analizy regexowej. Zwraca werdykt wstępny (pre-API).
   // matches[] niosą id kategorii (dla filarów) + name/snark/matchedText (dla tooltipa).
   function analyzeHeadlineCore(text, opts = {}) {
     const matches = [];
     const pillarSet = new Set();
     let totalScore = 0;
+    // Quizy nie są clickbaitami (decyzja redakcyjna 2026-10-18) — ich pytania
+    // i zaczepki ("zdobędziesz 8/8?") to forma gatunku.
+    const isQuiz = /\bquiz/i.test(text);
 
     for (const pattern of PATTERNS) {
       // Pomiń detekcję pytajnika dla tekstów analitycznych/opinii
       if (opts.isAnalytical && pattern.id === 'question_headline') continue;
+      if (isQuiz && QUIZ_EXEMPT.has(pattern.id)) continue;
 
       for (const rule of pattern.rules) {
         const match = text.match(rule.re);

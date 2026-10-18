@@ -14,7 +14,7 @@
   const CBD = (root.CBD = root.CBD || {});
 
   const PORTAL_PROFILES = {
-    'fakt.pl':          { type: 'tabloid', baseline: 70, note: 'Tabloid. Agresywne ukrywanie informacji, sensacyjny język. Przy wątpliwościach — domniemanie clickbaitu.' },
+    'fakt.pl':          { type: 'tabloid', baseline: 70, note: 'Tabloid. Częste ukrywanie informacji i sensacyjny język.' },
     'se.pl':            { type: 'tabloid', baseline: 70, note: 'Super Express. Tabloid zbliżony do Faktu. Wysoki baseline CB.' },
     'pudelek.pl':       { type: 'tabloid', baseline: 65, note: 'Portal plotkarski. Prawie wszystko oparte na ciekawości, ale w kontekście show-biznesu to gatunek.' },
     'pomponik.pl':      { type: 'tabloid', baseline: 65, note: 'Plotki i lifestyle. Wysoki baseline, ale lżejszy niż Fakt/SE.' },

@@ -6,7 +6,7 @@
  * werdykty (JUDGE_RESULT) przyrostowo do karty. Klucz API nigdy nie opuszcza SW.
  */
 
-importScripts('cbd-profiles.js', 'cbd-prompt.js');
+importScripts('cbd-patterns.js', 'cbd-profiles.js', 'cbd-prompt.js');
 
 const { buildBatchPrompt, parseBatchResponse, JUDGE_SYSTEM_PROMPT } = self.CBD.prompt;
 
@@ -131,12 +131,13 @@ async function callLLM(prompt, { key, model, systemPrompt, maxTokens = 4000, tem
 }
 
 // === Adapter: wynik modelu (cb 0-100) → Verdict (cb 0-10) ===
-// Respektuje progi semantyczne promptu: 0-25 = nie CB (cb 0 → badge znika),
-// 26-100 → skala 1-10 (26≈1, 100≈10). Dzięki temu /10 wreszcie coś znaczy,
-// a model może usunąć false-positive regexa.
+// Próg badge'a 40 (pomiar 2026-10-18 na 123 tytułach z ręczną oceną: przy 26
+// model oznaczał większość uczciwych tytułów z dolnej części strefy "graniczny").
+// Poniżej progu cb 0 → badge znika; 40-100 → skala 1-10 (40≈1, 100≈10).
+const BADGE_MIN_CB100 = 40;
 function modelCbToBadge(cb100) {
-  if (!Number.isFinite(cb100) || cb100 < 26) return 0;
-  const scaled = Math.round(1 + ((cb100 - 26) * 9) / 74);
+  if (!Number.isFinite(cb100) || cb100 < BADGE_MIN_CB100) return 0;
+  const scaled = Math.round(1 + ((cb100 - BADGE_MIN_CB100) * 9) / (100 - BADGE_MIN_CB100));
   return Math.max(1, Math.min(scaled, 10));
 }
 

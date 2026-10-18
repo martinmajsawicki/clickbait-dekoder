@@ -12,6 +12,49 @@
   const CBD = (root.CBD = root.CBD || {});
   const getProfile = CBD.profiles ? CBD.profiles.getProfile : () => ({ baseline: 40, note: 'Nieznany portal.' });
 
+  // Opisy kategorii regexu (z AUDIT.md, sekcja 1). Wagi i filary bierzemy z cbd-patterns.js,
+  // żeby katalog w prompcie nie rozjechał się z detektorem.
+  const DESCRIPTIONS = {
+    hidden_answer: 'Tytuł obiecuje odpowiedź, ale jej nie podaje — zmuszając do kliknięcia.',
+    question_headline: 'Prawo Betteridge\'a: jeśli nagłówek jest pytaniem, odpowiedź brzmi "nie".',
+    superlative: 'Inflacja przymiotników.',
+    shock_promise: 'Tytuł zapowiada, że czytelnik dozna wstrząsu emocjonalnego.',
+    demonstrative: '"Ten", "ta", "to" zamiast nazwy — bo nazwa rozczarowuje.',
+    quote_bait: 'Sam cudzysłów nie wystarcza — potrzebuje drugiego trafienia z innej kategorii.',
+    quote_amplifier: 'Słowa wzmacniające znaczenie cytatu.',
+    serial_drama: 'Struktura narracyjna rodem z serialu — cliffhangery, napięcie, niedokończone wątki.',
+    collective: 'Fałszywa zbiorowość — kilka osób staje się "całą Polską".',
+    emotional_blackmail: 'Tytuł manipuluje emocjami czytelnika.',
+    challenge: 'Portal prowokuje czytelnika do udowodnienia swojej wiedzy.',
+    provocation: 'Clickbait gra na poczuciu winy lub ego czytelnika.',
+    expressive_verbs: 'Pompowanie zwyczajnych czynności ekspresyjnymi czasownikami.',
+    underpromise: 'Tytuł sugeruje puentę, ale jej nie podaje.',
+    knowledge_question: 'Clickbait sugeruje, że czytelnik czegoś nie wie.',
+    price_tease: 'Kwota jest ukryta w tytule, żeby wymusić kliknięcie.',
+    native_ad: 'Artykuł sponsorowany ukryty pod nagłówkiem redakcyjnym.',
+    celebrity_peek: 'Znana osoba przyciąga kliknięcia samym istnieniem.',
+    caps_exclaim: 'Caps lock i wykrzykniki zastępują treść.',
+    cliffhanger: 'Wielokropek, "stało się", "to mało powiedziane".',
+    idiom_bait: '"Zapaliła się lampka", "szczęka opadła", "krew zagotowała".',
+  };
+
+  // Siła sygnału z wagi wzorca (legenda z AUDIT.md).
+  const STRENGTH = { 2: 'silny', 1: 'lekki', 0: 'wspierający' };
+  const PATTERNS = CBD.patterns ? CBD.patterns.PATTERNS : [];
+  const PILLARS = CBD.patterns ? CBD.patterns.CATEGORY_PILLARS : {};
+  const byName = new Map(PATTERNS.map((p) => [p.name, p]));
+
+  function strengthOf(name) {
+    const p = byName.get(name);
+    return p ? STRENGTH[p.weight] || 'lekki' : null;
+  }
+
+  const CATALOG = PATTERNS.map((p) => {
+    const pillars = (PILLARS[p.id] || []).join(', ');
+    const meta = [pillars ? `filar ${pillars}` : 'reklama', STRENGTH[p.weight] || 'lekki'].join(', ');
+    return `- ${p.name} (${meta}): ${DESCRIPTIONS[p.id] || ''}`.trimEnd();
+  }).join('\n');
+
   // Persona redaktora (port audit.js:191-219) + sekcja o sygnałach regexowych.
   const JUDGE_SYSTEM_PROMPT = `Jesteś doświadczonym redaktorem naczelnym z 25-letnim stażem w polskich mediach. Widziałeś tysiące nagłówków i znasz kuchnię od środka.
 
@@ -28,17 +71,39 @@ Oceniasz tytuły przez 4 filary clickbaitu:
 - SPEŁNIENIE: Czy artykuł prawdopodobnie pokryje obietnicę tytułu?
 - SZACUNEK: Czy tytuł traktuje czytelnika jak inteligentną osobę?
 
-NIE karzesz za: kreatywny żywy język, jeśli informacja jest w tytule; emocję adekwatną do skali zdarzenia; pytania analityczne; reklamy (inny gatunek — cb: 0).
+NIE karzesz za: kreatywny żywy język, jeśli informacja jest w tytule; emocję adekwatną do skali zdarzenia; pytania analityczne.
 
-WAŻNE: Uwzględniasz profil portalu. Tabloid zaczynasz z domniemaniem clickbaitu. Dziennik opiniotwórczy — z domniemaniem uczciwości. Oceniasz probabilistycznie (0-100). Mierzysz EFEKT na czytelnika, nie zamiar autora.
+WAŻNE: Profil portalu to tło: każdy tytuł oceniasz po jego treści, także na tabloidzie. Oceniasz probabilistycznie (0-100). Mierzysz EFEKT na czytelnika, nie zamiar autora.
 
 --- SYGNAŁY REGEXOWE ---
-Przy każdym tytule dostajesz listę "wykrytych sygnałów" z detektora regexowego. To MATERIAŁ DOWODOWY DO WERYFIKACJI, nie wyrok. Detektor ma ~0% false-positive, ale niski recall: gdy coś wykrył, prawdopodobnie ma rację co do TECHNIKI, ale może źle ocenić jej SIŁĘ w kontekście. Twoje zadania:
+Przy każdym tytule dostajesz listę "wykrytych sygnałów" z detektora regexowego. To MATERIAŁ DOWODOWY DO WERYFIKACJI, nie wyrok. Detektor wykrywa słowa i konstrukcje, a nie mechanizm, więc myli się w obie strony: bywa, że wskazuje technikę, a tytuł mimo to uczciwie informuje. Twoje zadania:
 - POTWIERDŹ lub ODRZUĆ każdy sygnał (sygnał bywa fałszywy w kontekście portalu/sekcji).
 - SKALIBRUJ wynik cb z uwzględnieniem profilu portalu.
 - DODAJ filary, których regex nie złapał.
 - ZŁAP false-negatives: tytuły z adnotacją "brak sygnału" też oceniaj od zera.
-Masz pełne prawo zignorować sygnał, jeśli kontekst go unieważnia.`;
+Masz pełne prawo zignorować sygnał, jeśli kontekst go unieważnia.
+
+--- ZASADY REDAKCJI (decyzje redaktora prowadzącego) ---
+- Quizy nie są clickbaitami.
+- Jeśli jest brak informacji o czym to, to raczej clickbait.
+- Jeśli silne emocje zamiast treści, to na pewno clickbait. Emocjonalny temat podany z faktami (kto, co, ile) to informacja.
+- Pytanie oceniasz po informacji, nie po formie: "Sochan wyleci z NBA?" jest jasne; "Trump przesadził?" (nie wiadomo, w czym) i "Czego naprawdę boimy się w wiatrakach?" (nie mówią, czego) to clickbait.
+- Niedopowiedzenie udające ważniejszy temat to clickbait (np. kwoty bez nazwy towaru, sugerujące ceny paliwa).
+- Szczucie chorobą to clickbait.
+- Paradoks ujawnia pointę, clickbait ją ukrywa.
+- Konkretna liczba jest faktem, nie manipulacją.
+- Narracja sportowa to relacja, nie manipulacja; "miażdży rywali" bez wyniku ukrywa informację.
+- "Znany" bez nazwiska to zawsze clickbait.
+- Materiał promocyjny oceniasz jak każdy tytuł.
+
+Siła sygnału (z wagi wzorca w detektorze):
+- silny — sam wystarczy na oznaczenie
+- lekki — w kombinacji z innymi daje wyższy wynik; sam nie przesądza
+- wspierający — sam nie wystarcza, potrzebuje drugiego trafienia z innej kategorii
+
+--- KATALOG TECHNIK DETEKTORA ---
+Nazwa techniki (filar, siła): co oznacza.
+${CATALOG}`;
 
   // Buduje prompt batcha. items: [{ nr, title, signals:[{t,frag}] }]
   function buildBatchPrompt(items, host, section) {
@@ -47,7 +112,12 @@ Masz pełne prawo zignorować sygnał, jeśli kontekst go unieważnia.`;
       .map((it) => {
         const ev =
           it.signals && it.signals.length
-            ? it.signals.map((s) => `      - [${s.t}] fragment: "${s.frag}"`).join('\n')
+            ? it.signals
+                .map((s) => {
+                  const strength = strengthOf(s.t);
+                  return `      - [${s.t}${strength ? ' · ' + strength : ''}] fragment: "${s.frag}"`;
+                })
+                .join('\n')
             : '      - brak sygnału — kandydat na false-negative, oceń od zera';
         return `${it.nr}. "${it.title}"\n   Wykryte sygnały (do weryfikacji):\n${ev}`;
       })
@@ -55,7 +125,6 @@ Masz pełne prawo zignorować sygnał, jeśli kontekst go unieważnia.`;
 
     return `PORTAL: ${host}
 PROFIL: ${profile.note}
-BASELINE CB: ~${profile.baseline}%
 SEKCJA: ${section || 'nieznana'}
 
 Oceń poniższe tytuły. Dla KAŻDEGO zwróć obiekt JSON:
@@ -64,7 +133,6 @@ Oceń poniższe tytuły. Dla KAŻDEGO zwróć obiekt JSON:
 ZASADY:
 - cb 0-25 = nie CB, 26-50 = graniczny, 51-100 = CB
 - filary: tablica numerów [1-4]; 1=ukrywa, 2=wyolbrzymia, 3=emocja, 4=fałszywa narracja; [] gdy nie CB
-- reklamy → cb: 0
 - snark: opisuje TECHNIKĘ manipulacji, nie treść; null gdy cb < 26
 
 Odpowiedz TYLKO tablicą JSON, bez komentarzy.
