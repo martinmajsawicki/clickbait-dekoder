@@ -10,7 +10,7 @@ importScripts('cbd-patterns.js', 'cbd-profiles.js', 'cbd-prompt.js');
 
 const { buildBatchPrompt, parseBatchResponse, JUDGE_SYSTEM_PROMPT } = self.CBD.prompt;
 
-const DEFAULT_MODEL = 'google/gemini-2.5-flash-lite';
+const DEFAULT_MODEL = 'google/gemini-2.5-flash';
 // Modele wycofane z OpenRoutera — zapisany wybór użytkownika przechodzi na domyślny.
 const RETIRED_MODELS = new Set(['google/gemini-2.0-flash-001', 'anthropic/claude-3.5-haiku']);
 const BATCH_SIZE = 15;
@@ -184,43 +184,48 @@ async function handleBatch(items, tabId) {
   }
   if (cachedVerdicts.length) sendVerdicts(tabId, cachedVerdicts);
 
-  // 2. Brakujące — batche po BATCH_SIZE.
+  // 2. Brakujące — batche po BATCH_SIZE, wysyłane równolegle (model z "myśleniem"
+  // odpowiada ~10 s na batch; po kolei ostatnie badge'e na dużej stronie czekałyby pół minuty).
+  const slices = [];
+  for (let i = 0; i < misses.length; i += BATCH_SIZE) slices.push(misses.slice(i, i + BATCH_SIZE));
   try {
-    for (let i = 0; i < misses.length; i += BATCH_SIZE) {
-      const slice = misses.slice(i, i + BATCH_SIZE);
-      const numbered = slice.map((it, idx) => ({ ...it, nr: idx + 1 }));
-      let results = [];
-      try {
-        const prompt = buildBatchPrompt(numbered, host, section);
-        const raw = await callLLM(prompt, { key: settings.key, model: settings.model, systemPrompt: JUDGE_SYSTEM_PROMPT });
-        results = parseBatchResponse(raw);
-        if (results.length === 0) throw new Error('nieczytelna odpowiedź modelu');
-      } catch (e) {
-        // Tytuły zostają regexowe; błąd trafia do scoreboardu i opcji.
-        console.warn('[CBD] LLM batch error:', e.message);
-        await setStatus(false, settings.model, e.message);
-        reportError(tabId, slice.map((it) => it.id), e.message);
-        for (const it of slice) {
-          for (const w of inFlight.get(it._k) || []) reportError(w.tabId, [w.id], e.message);
-        }
-        continue;
-      }
-      await setStatus(true, settings.model);
-      const byNr = new Map(results.map((r) => [Number(r.nr), r]));
-      const out = [];
-      for (const it of numbered) {
-        const mr = byNr.get(it.nr);
-        if (!mr) continue; // brak w odpowiedzi → werdykt regexowy zostaje
-        const verdict = toVerdict(mr, it);
-        await cacheSet(host, it.title, verdict, settings.model);
-        out.push({ id: it.id, verdict });
-        for (const w of inFlight.get(it._k) || []) sendVerdicts(w.tabId, [{ id: w.id, verdict }]);
-      }
-      if (out.length) sendVerdicts(tabId, out);
-    }
+    await Promise.all(slices.map((slice) => judgeSlice(slice, { host, section, tabId, settings })));
   } finally {
     for (const it of misses) if (it._k) inFlight.delete(it._k);
   }
+}
+
+// Jeden batch: zapytanie do modelu, cache, werdykty do karty i do czekających powtórek.
+async function judgeSlice(slice, { host, section, tabId, settings }) {
+  const numbered = slice.map((it, idx) => ({ ...it, nr: idx + 1 }));
+  let results = [];
+  try {
+    const prompt = buildBatchPrompt(numbered, host, section);
+    const raw = await callLLM(prompt, { key: settings.key, model: settings.model, systemPrompt: JUDGE_SYSTEM_PROMPT });
+    results = parseBatchResponse(raw);
+    if (results.length === 0) throw new Error('nieczytelna odpowiedź modelu');
+  } catch (e) {
+    // Tytuły zostają regexowe; błąd trafia do scoreboardu i opcji.
+    console.warn('[CBD] LLM batch error:', e.message);
+    await setStatus(false, settings.model, e.message);
+    reportError(tabId, slice.map((it) => it.id), e.message);
+    for (const it of slice) {
+      for (const w of inFlight.get(it._k) || []) reportError(w.tabId, [w.id], e.message);
+    }
+    return;
+  }
+  await setStatus(true, settings.model);
+  const byNr = new Map(results.map((r) => [Number(r.nr), r]));
+  const out = [];
+  for (const it of numbered) {
+    const mr = byNr.get(it.nr);
+    if (!mr) continue; // brak w odpowiedzi → werdykt regexowy zostaje
+    const verdict = toVerdict(mr, it);
+    await cacheSet(host, it.title, verdict, settings.model);
+    out.push({ id: it.id, verdict });
+    for (const w of inFlight.get(it._k) || []) sendVerdicts(w.tabId, [{ id: w.id, verdict }]);
+  }
+  if (out.length) sendVerdicts(tabId, out);
 }
 
 function sendVerdicts(tabId, verdicts) {
