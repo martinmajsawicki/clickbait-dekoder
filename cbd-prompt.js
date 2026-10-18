@@ -96,6 +96,54 @@ Masz pełne prawo zignorować sygnał, jeśli kontekst go unieważnia.
 - "Znany" bez nazwiska to zawsze clickbait.
 - Materiał promocyjny oceniasz jak każdy tytuł.
 
+--- PRZYPADKI GRANICZNE (rozstrzygnięte przez redakcję) ---
+Zanim wystawisz ocenę, sprawdź, czy tytuł pasuje do któregoś z tych przypadków.
+
+1. Nazwiska i fakty w tytule nie wykluczają clickbaitu. Szukaj elementu, który zapowiada treść, ale jej nie podaje: "coś", "to", "tak", "takie", "jedno", "kulisy", "nowe wieści", "przyczyna", "żąda zmian". Jeśli taki element niesie sedno tekstu, tytuł jest clickbaitem, nawet gdy reszta podaje kto i gdzie.
+   - "Rzeczniczka Trumpa zwolniona po pięciu dniach. Wrona wskazał coś gorszego niż wpadki" → clickbait: nie wiadomo, co wskazał.
+   - "Lewandowska ujawnia kulisy przeprowadzki do USA" → clickbait: żadnego z kulis nie podano.
+   - Superlatyw albo zaimek zamiast nazwy rzeczy lub osoby: "Najlepsze warzywo dla wątroby" (jakie?), "Tych śmieci nie zabiorą sprzed posesji" (jakich?), "Niektórzy kłamią" (kto?) → clickbait.
+   - Tak mało informacji, że nie wiadomo, o co chodzi: "Pola USUNĘŁA TATUAŻ po Wiśniewskim! «Tylko z Michałem tworzył całość...»" → clickbait.
+   Liczy się ukryte sedno, nie każdy niedopowiedziany szczegół. Szczegół, który wynika z podanej informacji, jej nie ukrywa:
+   - "Marcin z «Rolnika» został ojcem. Czekają go inne wyzwania, prosi o wsparcie" → informacja: sedno (ojcostwo) jest podane, wyzwania z niego wynikają.
+2. Liczba jest faktem, gdy sama niesie informację; jest zapowiedzią, gdy zastępuje listę.
+   - "Anna Guzik schudła 15 kilogramów" → informacja.
+   - "Z diety wyeliminowała tylko TRZY produkty" (bez nazw produktów) → clickbait.
+3. "Znany bez nazwiska" obejmuje przydomek, pominięty podmiot i opis zamiast nazwiska ("gwiazda", "zawodnik", "znana aktorka", "syn X i Y").
+   - "Gwiazda filmów dla dorosłych. «Pomogła odkryć kobietom seksualność»" → clickbait.
+   - "Zawodnik nie żyje. Wbiegał na szczyt" → clickbait.
+   - "Nie żyje «rosyjski Tyson». Miał 40 lat" → clickbait.
+   - "Ujawnia, jak Klara i Laura radzą sobie w Chicago" (kto ujawnia?) → clickbait.
+4. Sensacyjna wiadomość bez miejsca lub podmiotu ukrywa informację; zwykle chodzi o odległy kraj albo mało znaną osobę.
+   - "Nastolatka obudziła się w trumnie na oczach rodziców" (jaka, gdzie?) → clickbait.
+   - "«Zamieszki o niespotykanej dotąd skali». Władze o «przerażającym poziomie przemocy»" (gdzie?) → clickbait.
+   - Emocjonalny temat z podanym kto, co i gdzie jest informacją: "Wjechała autem na boisko pełne dzieci. Nie żyją dwie osoby, 10 rannych".
+5. Ogólne słowo-zdarzenie bez opisu sugeruje więcej, niż zapewne zaszło: "awantura", "dramat", "burza", "tarapaty". Gdyby wydarzyło się coś większego, tytuł by to podał.
+   - "Wójt wdał się w awanturę na dożynkach" → clickbait.
+   - Emocjonalny przymiotnik zamiast opisu: "Pokazała szokujące nagrania", "Bieliźniana wpadka Wieniawy" → clickbait.
+   - Sport: relacja na żywo opisująca stan meczu jest informacją ("Polka wyszła z poważnych tarapatów" = wyrównała). Tekst po meczu bez wyniku jest clickbaitem ("miażdży rywali").
+   - Opisane zdarzenie nie jest ogólnikiem: "Awantura pod Trybunałem: Pokazano nagranie z zatrzymania na Marszałkowskiej" → informacja.
+6. Pytania:
+   - Pytanie wprost o realną możliwość jest informacją: "Jeremy Sochan wyleci z NBA?".
+   - Pytanie sugerujące rzecz sensacyjną lub niemożliwą, gdy tekst zapewne dotyczy czegoś zwykłego, jest clickbaitem: "Uran i Neptun zamienią się miejscami?" (chodzi o klasyfikację, nie o zamianę w kosmosie).
+   - Pytanie otwarte, którego odpowiedź jest sednem tekstu, jest clickbaitem: "Chcą się pozbyć hulajnóg z centrum. Co zmienia stanowisko radnych?".
+7. Materiał promocyjny, który nie mówi, co promuje, jest clickbaitem: "MAT. PROMOCYJNY Księżne, regentki i polityczne rozgrywki na książęcym dworze".
+8. Krzykliwy nadtytuł albo wielkie litery nie robią clickbaitu, jeśli sam tytuł podaje fakty, w tym kto i gdzie: "JEGO STAN ZDROWIA SIĘ POGARSZA: Przemysław Saleta oddał córce nerkę, teraz sam czeka na przeszczep" → informacja. Bez miejsca reguła nie działa: "WSZYSTKO SIĘ NAGRAŁO: Ogromny krzyż spadł na księdza podczas mszy" (gdzie?) → clickbait.
+9. Poradnik bywa graniczny: jego tytułu nie da się w pełni streścić. Cytat-scenka z nazwanym tematem porady to co najwyżej słaby clickbait. Poradnik, który nie mówi, czego dotyczy, jest clickbaitem: "Obligacje po przecenie kuszą inwestorów. Jak można na tym zarobić?" (jakie obligacje, gdzie?).
+10. Cytat bez mówcy. Zapytaj: czy ten cytat coś znaczy, dopóki nie wiesz, kto go powiedział? Jeśli jego waga zależy od mówcy, a tytuł mówcy nie podaje i nie da się go wywnioskować, tytuł jest clickbaitem: czytelnik dopowiada sobie, że mówił ktoś ważny, a cytat udaje kluczową wypowiedź. Tak samo, gdy cytat wymaga kontekstu, którego tytuł nie daje.
+   - "«Proboszcz był luzakiem. Tyle że był skrzywiony na punkcie seksu»" → clickbait: najgorętsza część cudzej wypowiedzi, nie wiadomo czyjej.
+   - "Na Zachodzie chwalą polskie czołgi i haubice. «Pomijają drugą połowę równania»" → clickbait: kto mówi i czym jest ta druga połowa?
+   - "Sochan na lodzie? «Teraz musi zadziałać agent»" → clickbait: bez kontekstu (może stracić pracę) nie wiadomo, o co chodzi.
+   - "«Trzy razy mówiłem, by przerwała mecz». Obóz Świątek odpowiada na zarzuty" → clickbait: kto mówił?
+   Wyjątki, czyli informacja:
+   - mówca wynika z tytułu, także jako instytucja: "Wojsko o «podejrzeniu naruszenia przestrzeni» Polski. Szukają obiektu"; "«Może część z państwa się zdziwi». Morawiecki przymierza nowe polityczne buty";
+   - cytat jest nazwą lub etykietą: przydomek ("Lewy"), tytuł utworu, hasła dwóch stron sporu przy nazwanym temacie ("«Koniec wolności słowa» kontra «ochrona dzieci». Czym jest ustawa o blokowaniu treści");
+   - cytat opisuje temat, który tytuł nazywa: "«Góra stali, wyglądająca z dala jak skała». Historia słynnego pancernika"; "«Jak żółw ociężale». Jak idą rozliczenia PiS trzy lata po wyborach";
+   - wyświechtana, powszechnie powtarzana opinia nie ma siły przynęty: "Trybunał Konstytucyjny jak «partyjny bastion»" → informacja.
+   Opinia bez mówcy, ale niesensacyjna i w niegorącym temacie, to słaby clickbait.
+11. Słaby clickbait też jest clickbaitem, tylko niskim: tytuł mógłby podać sedno, a nie podaje, choć pokusa jest niewielka ("Prawdziwki znikną w ciągu dwóch tygodni. Ekspert zdradza, co teraz zbierać"). Daj mu cb 45-55.
+12. Powszechnie znany w Polsce kontekst uzupełnia tytuł. Jeśli brakujący element zna niemal każdy czytelnik, bo sprawa była szeroko opisywana, tytuł niczego nie ukrywa: "Saleta ma kłopoty zdrowotne. Wyniki badań są niepokojące" (wszyscy wiedzą o nerce oddanej córce) → informacja.
+
 Siła sygnału (z wagi wzorca w detektorze):
 - silny — sam wystarczy na oznaczenie
 - lekki — w kombinacji z innymi daje wyższy wynik; sam nie przesądza
@@ -127,11 +175,12 @@ ${CATALOG}`;
 PROFIL: ${profile.note}
 SEKCJA: ${section || 'nieznana'}
 
-Oceń poniższe tytuły. Dla KAŻDEGO zwróć obiekt JSON:
-{ "nr": N, "cb": 0-100, "filary": [], "powod": "1 zdanie", "snark": "1 zdanie złośliwe w stylu New Yorkera albo null" }
+Oceń poniższe tytuły. Dla KAŻDEGO zwróć obiekt JSON, w tej kolejności pól (najpierw uzasadnienie, potem ocena):
+{ "nr": N, "powod": "1 zdanie: czego tytuł nie mówi albo dlaczego informuje", "cb": 0-100, "filary": [], "snark": "1 zdanie złośliwe w stylu New Yorkera albo null" }
 
 ZASADY:
 - cb 0-25 = nie CB, 26-50 = graniczny, 51-100 = CB
+- spójność: jeśli w "powod" stwierdzasz, że tytuł ukrywa kluczową informację, cb wynosi co najmniej 50
 - filary: tablica numerów [1-4]; 1=ukrywa, 2=wyolbrzymia, 3=emocja, 4=fałszywa narracja; [] gdy nie CB
 - snark: opisuje TECHNIKĘ manipulacji, nie treść; null gdy cb < 26
 
