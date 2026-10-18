@@ -256,11 +256,11 @@ const SITE_SELECTORS = {
     'article a',
   ],
   'interia.pl': ['a.tile-a', 'a.listitem-a', 'a[class*="tile"]', 'a[class*="news"]', 'h2 a', 'h3 a', 'article a'],
-  'pudelek.pl': ['a[class*="tile"]', 'a[class*="article"]', 'h2 a', 'h3 a', 'article a'],
+  'pudelek.pl': ['a[class*="wp-teaser"]', 'a[class*="tile"]', 'a[class*="article"]', 'h2 a', 'h3 a', 'article a'],
   'fakt.pl': ['a.padded-item-link', 'a.item-link', 'a[class*="item-link"]', 'h2 a', 'h3 a'],
   'o2.pl': ['a[class*="teaser"]', 'a[class*="wp-text-link"]', 'a[class*="wp-"]', 'h2 a', 'h3 a'],
   'pomponik.pl': ['a[class*="ids-card__anchor"]', 'a[class*="ids-undecorated"]', 'h2 a', 'h3 a', 'article a'],
-  'se.pl': ['a[class*="tile"]', 'a[class*="article"]', 'h2 a', 'h3 a', 'article a'],
+  'se.pl': ['a.slot', 'a[class*="tile"]', 'a[class*="article"]', 'h2 a', 'h3 a', 'article a'],
   // natemat.pl: SPA — headless Chrome nie widzi treści (consent wall?). Działa w prawdziwym Chrome.
   'natemat.pl': ['a.page-link', 'a[class*="page-link"]', 'a[class*="item"]', 'a[class*="tile"]', 'h2 a', 'h3 a', 'article a'],
   'money.pl': ['a[class*="sc-"]', 'a[href*="money.pl/"]', 'h2 a', 'h3 a', 'article a'],
@@ -279,6 +279,29 @@ const SITE_SELECTORS = {
   'dorzeczy.pl': ['li.bli a strong.t', 'h2 a', 'h3 a'],
   _default: ['h1 a', 'h2 a', 'h3 a', 'h4 a', 'article a', 'a[data-ga-action]'],
 };
+
+// Portale, które w jednym linku trzymają tytuł i dodatki w osobnych elementach.
+// title: element z samym tytułem (bez działu, licznika komentarzy, etykiety reklamy).
+// kicker: nadtytuł, który zostaje, oddzielony dwukropkiem — na se.pl bywa haczykiem
+// ("WSZYSTKO SIĘ NAGRAŁO"), więc nie wolno go wyciąć razem z nazwami działów.
+const TITLE_PARTS = {
+  'pudelek.pl': { title: '.wp-teaser-title' },
+  'pomponik.pl': { title: 'h3' },
+  'se.pl': { title: 'h3', kicker: ':scope > p, p' },
+};
+
+function titleFromParts(el) {
+  const host = window.location.hostname;
+  const cfg = Object.entries(TITLE_PARTS).find(([domain]) => host === domain || host.endsWith('.' + domain))?.[1];
+  if (!cfg) return null;
+  const clean = (node) => (node ? (node.innerText || node.textContent || '').trim().replace(/\s+/g, ' ') : '');
+  const title = clean(el.querySelector(cfg.title));
+  if (title.length < 20) return null;
+  const kicker = cfg.kicker ? clean(el.querySelector(cfg.kicker)) : '';
+  if (!kicker || kicker === title || kicker.length > 60) return title;
+  const k = kicker.replace(/[:.\s]+$/, '');
+  return /[!?]$/.test(k) ? `${k} ${title}` : `${k}: ${title}`;
+}
 
 function getSelectors() {
   const host = window.location.hostname;
@@ -452,8 +475,11 @@ function processPage() {
     // Detect analytical/opinion section tags BEFORE stripping (reduces false positives)
     const isAnalytical = /Strefa\s+wojn|Dylematy|Analiz[aę]|Opini[aę]|Ekonomi[aę]|Wywiad|Komentarz|Felieton|Debata|Raport|\[OPINIA\]|\[ANALIZA\]|\[KOMENTARZ\]|\[WYWIAD\]|\[RAPORT\]|\[DEBATA\]/i.test(text);
 
+    // Tytuł złożony z elementów (bez doklejonych działów i liczników), jeśli portal to umożliwia.
+    text = titleFromParts(el) || text;
+
     // Strip leading labels (PREMIUM, PILNE, timestamps, category tags, author names)
-    text = text.replace(/^(PREMIUM|PILNE|NOWE|NA ŻYWO|TYLKO U NAS|WASZ GŁOS|OPINIA|WYWIAD|KOMENTARZ|WYBORCZA\.PL|WIDEO)\s*/i, '');
+    text = text.replace(/^(PREMIUM|PILNE|NOWE|NA ŻYWO|TYLKO U NAS|TYLKO NA PUDELKU:?|WASZ GŁOS|OPINIA|WYWIAD|KOMENTARZ|WYBORCZA\.PL|WIDEO)\s*/i, '');
     text = text.replace(/^\d{1,2}:\d{2}\s+/, ''); // Strip timestamps (19:14 ...)
     text = text.replace(/^(Pon|Wt|Śr|Czw|Pt|Sob|Nie|pn|wt|śr|czw|pt|sb|nd)\s+\d{1,2}:\d{2}\s+/i, ''); // naTemat day+time
     text = text.replace(/^\d{1,4}\s+/, ''); // Strip SE.pl numeric prefixes (96 Relacja..., 40 Psychologia...)
