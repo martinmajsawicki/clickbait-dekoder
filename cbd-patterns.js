@@ -649,6 +649,15 @@
 
   const QUIZ_EXEMPT = new Set(['challenge', 'question_headline', 'knowledge_question']);
 
+  // Kategorie, które na danym portalu są stylem domu, a nie sygnałem clickbaitu.
+  // pudelek.pl: wielkie litery na emocjonalnych słowach to styl portalu (audyt 2026-03).
+  const PORTAL_EXEMPT = { 'pudelek.pl': new Set(['caps_exclaim']) };
+  function portalExempt(host) {
+    const h = (host || '').toLowerCase().replace(/^www\./, '');
+    const key = Object.keys(PORTAL_EXEMPT).find((d) => h === d || h.endsWith('.' + d));
+    return key ? PORTAL_EXEMPT[key] : null;
+  }
+
   // Rdzeń analizy regexowej. Zwraca werdykt wstępny (pre-API).
   // matches[] niosą id kategorii (dla filarów) + name/snark/matchedText (dla tooltipa).
   function analyzeHeadlineCore(text, opts = {}) {
@@ -658,11 +667,13 @@
     // Quizy nie są clickbaitami (decyzja redakcyjna 2026-10-18) — ich pytania
     // i zaczepki ("zdobędziesz 8/8?") to forma gatunku.
     const isQuiz = /\bquiz/i.test(text);
+    const exempt = portalExempt(opts.host);
 
     for (const pattern of PATTERNS) {
       // Pomiń detekcję pytajnika dla tekstów analitycznych/opinii
       if (opts.isAnalytical && pattern.id === 'question_headline') continue;
       if (isQuiz && QUIZ_EXEMPT.has(pattern.id)) continue;
+      if (exempt && exempt.has(pattern.id)) continue;
 
       for (const rule of pattern.rules) {
         const match = text.match(rule.re);

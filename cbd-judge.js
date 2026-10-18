@@ -28,7 +28,7 @@
 
   // Regexowy werdykt wstępny → Verdict.
   function judgeRegex(title, ctx = {}) {
-    const r = analyzeHeadlineCore(title, { isAnalytical: ctx.isAnalytical });
+    const r = analyzeHeadlineCore(title, { isAnalytical: ctx.isAnalytical, host: ctx.host });
     const techniques = [...new Set(r.matches.map((m) => m.name))];
     const pending = qualifiesForApi(title, r, ctx);
     return {

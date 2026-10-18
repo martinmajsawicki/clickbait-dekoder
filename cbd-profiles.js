@@ -16,7 +16,7 @@
   const PORTAL_PROFILES = {
     'fakt.pl':          { type: 'tabloid', baseline: 70, note: 'Tabloid. Częste ukrywanie informacji i sensacyjny język.' },
     'se.pl':            { type: 'tabloid', baseline: 70, note: 'Super Express. Tabloid zbliżony do Faktu. Wysoki baseline CB.' },
-    'pudelek.pl':       { type: 'tabloid', baseline: 65, note: 'Portal plotkarski. Prawie wszystko oparte na ciekawości, ale w kontekście show-biznesu to gatunek.' },
+    'pudelek.pl':       { type: 'tabloid', baseline: 65, note: 'Tabloid plotkarski, ale tytuły zwykle długie i opisowe: ujawniają, kto i co. Wielkie litery na emocjonalnych słowach oraz dopiski (FOTO), (WIDEO) to styl portalu, nie clickbait. Clickbait tu to tytuł, który ukrywa, kogo lub czego dotyczy.' },
     'pomponik.pl':      { type: 'tabloid', baseline: 65, note: 'Plotki i lifestyle. Wysoki baseline, ale lżejszy niż Fakt/SE.' },
     'plotek.pl':        { type: 'tabloid', baseline: 60, note: 'Portal plotkarski Gazety. Trochę bardziej powściągliwy niż Pudelek.' },
     'o2.pl':            { type: 'portal', baseline: 55, note: 'Portal ogólny. Mieszanka informacji i lifestyle. Średni baseline.' },
