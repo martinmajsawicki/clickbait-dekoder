@@ -10,7 +10,12 @@ importScripts('cbd-patterns.js', 'cbd-profiles.js', 'cbd-prompt.js');
 
 const { buildBatchPrompt, parseBatchResponse, JUDGE_SYSTEM_PROMPT } = self.CBD.prompt;
 
-const DEFAULT_MODEL = 'google/gemini-2.5-flash';
+const DEFAULT_MODEL = 'google/gemini-3.8-flash';
+// Parametry per model. 3.8 Flash z ograniczonym myśleniem: jakość jak Gemini 2.5 Pro
+// przy czasie ~9 s na batch (pomiar 2026-10-19, ../clickbait-audit-tool/eval/README.md).
+const MODEL_OPTIONS = {
+  'google/gemini-3.8-flash': { reasoning: { effort: 'low' } },
+};
 // Modele wycofane z OpenRoutera — zapisany wybór użytkownika przechodzi na domyślny.
 const RETIRED_MODELS = new Set(['google/gemini-2.0-flash-001', 'anthropic/claude-3.5-haiku']);
 const BATCH_SIZE = 15;
@@ -115,7 +120,7 @@ async function callLLM(prompt, { key, model, systemPrompt, maxTokens = 4000, tem
       'HTTP-Referer': 'https://github.com/martinmajsawicki/clickbait-dekoder',
       'X-Title': 'Clickbait Dekoder',
     },
-    body: JSON.stringify({ model, messages, temperature, max_tokens: maxTokens }),
+    body: JSON.stringify({ model, messages, temperature, max_tokens: maxTokens, ...(MODEL_OPTIONS[model] || {}) }),
   });
 
   if (!res.ok) {

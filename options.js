@@ -62,7 +62,9 @@ $('test').addEventListener('click', () => {
       setStatus('Błąd komunikacji z service workerem: ' + chrome.runtime.lastError.message, 'err');
       return;
     }
-    if (resp && resp.ok) setStatus('Klucz działa ✓ (odpowiedź: ' + resp.sample + ')', 'ok');
+    // Modele z myśleniem potrafią zużyć krótki limit na rozumowanie i zwrócić pustą treść —
+    // odpowiedź bez błędu i tak oznacza, że klucz i model działają.
+    if (resp && resp.ok) setStatus('Klucz działa ✓' + (resp.sample ? ' (odpowiedź: ' + resp.sample + ')' : ''), 'ok');
     else setStatus('Klucz nie działa: ' + (resp ? resp.error : 'brak odpowiedzi'), 'err');
   });
 });
