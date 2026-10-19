@@ -284,10 +284,17 @@ const SITE_SELECTORS = {
 // title: element z samym tytułem (bez działu, licznika komentarzy, etykiety reklamy).
 // kicker: nadtytuł, który zostaje, oddzielony dwukropkiem — na se.pl bywa haczykiem
 // ("WSZYSTKO SIĘ NAGRAŁO"), więc nie wolno go wyciąć razem z nazwami działów.
+// skip: nadtytuły promocyjne, które nic nie mówią o treści.
+// keep: zostaw nadtytuł tylko, gdy pasuje (etykiety gatunku zmieniają ocenę: w liście
+// do redakcji cytat ma mówcę — autora listu); techniczne ("W SKRÓCIE", "PILNE",
+// "WIDEO", liczniki komentarzy, czas czytania, podpis autora) wypadają.
+const GENRE_LABEL = /^(LIST DO REDAKCJI|OPINIA|KOMENTARZ|FELIETON|WYWIAD|ANALIZA|REPORTAŻ|LIST)$/i;
 const TITLE_PARTS = {
   'pudelek.pl': { title: '.wp-teaser-title' },
   'pomponik.pl': { title: 'h3' },
-  'se.pl': { title: 'h3', kicker: ':scope > p, p' },
+  'se.pl': { title: 'h3', kicker: ':scope > p, p', skip: /^(TYLKO U NAS|WIDEO|ZDJĘCIA|PILNE|MATERIAŁ SPONSOROWANY)$/i },
+  'wp.pl': { title: 'h3', kicker: '.wp-teaser-badge', keep: GENRE_LABEL },
+  'onet.pl': { title: 'h3', kicker: '[class*="Label_"]', keep: GENRE_LABEL },
 };
 
 function titleFromParts(el) {
@@ -297,7 +304,9 @@ function titleFromParts(el) {
   const clean = (node) => (node ? (node.innerText || node.textContent || '').trim().replace(/\s+/g, ' ') : '');
   const title = clean(el.querySelector(cfg.title));
   if (title.length < 20) return null;
-  const kicker = cfg.kicker ? clean(el.querySelector(cfg.kicker)) : '';
+  const kicker = cfg.kicker
+    ? [...el.querySelectorAll(cfg.kicker)].map(clean).find((k) => k && (!cfg.keep || cfg.keep.test(k)) && !(cfg.skip && cfg.skip.test(k))) || ''
+    : '';
   if (!kicker || kicker === title || kicker.length > 60) return title;
   const k = kicker.replace(/[:.\s]+$/, '');
   return /[!?]$/.test(k) ? `${k} ${title}` : `${k}: ${title}`;
@@ -495,7 +504,11 @@ function processPage() {
     text = titleFromParts(el) || text;
 
     // Strip leading labels (PREMIUM, PILNE, timestamps, category tags, author names)
-    text = text.replace(/^(PREMIUM|PILNE|NOWE|NA ŻYWO|TYLKO U NAS|TYLKO NA PUDELKU:?|WASZ GŁOS|OPINIA|WYWIAD|KOMENTARZ|WYBORCZA\.PL|WIDEO)\s*/i, '');
+    // Etykiety na początku bywają po kilka naraz ("TYLKO W WP WIDEO 168 …") — odcinamy do skutku.
+    // "LIST DO REDAKCJI" zostaje jako nadtytuł: mówi, kto jest autorem cytatów w tytule.
+    const LEAD_LABEL = /^(PREMIUM|PILNE|NOWE|NA ŻYWO|TYLKO U NAS|TYLKO NA PUDELKU:?|TYLKO W ONECIE|TYLKO W WP|W SKRÓCIE|WASZ GŁOS|OPINIA|WYWIAD|KOMENTARZ|WYBORCZA\.PL|WIDEO)\s+/i;
+    while (LEAD_LABEL.test(text)) text = text.replace(LEAD_LABEL, '');
+    text = text.replace(/^LIST DO REDAKCJI:?\s+/i, 'LIST DO REDAKCJI: ');
     text = text.replace(/^\d{1,2}:\d{2}\s+/, ''); // Strip timestamps (19:14 ...)
     text = text.replace(/^(Pon|Wt|Śr|Czw|Pt|Sob|Nie|pn|wt|śr|czw|pt|sb|nd)\s+\d{1,2}:\d{2}\s+/i, ''); // naTemat day+time
     text = text.replace(/^\d{1,4}\s+/, ''); // Strip SE.pl numeric prefixes (96 Relacja..., 40 Psychologia...)
