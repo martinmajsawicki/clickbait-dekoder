@@ -34,12 +34,16 @@
   }
 
   // Czy tytuł zasługuje na dosądzenie przez model?
-  // Regex ma ~0% FP, ale niski recall — do API trafia strefa niepewności.
+  // Regex myli się w obie strony, więc do modelu idzie wszystko poza pewniakami bez cytatu.
   function qualifiesForApi(title, regexResult, ctx = {}) {
     const t = (title || '').trim();
     if (t.length < 20) return false;
 
     const raw = regexResult.rawScore;
+
+    // Każdy tytuł z cytatem idzie do modelu, także pewny dla regexu: regex myli cytat
+    // z nazwą programu czy tytułem utworu ("Tańcu z gwiazdami") — decyzja redakcyjna 2026-10-19.
+    if (/["„“”«»]/.test(t)) return true;
 
     // Regex pewny (≥3) — werdykt finalny, oszczędzamy koszt.
     if (raw >= 3) return false;

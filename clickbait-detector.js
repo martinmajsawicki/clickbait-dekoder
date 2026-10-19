@@ -346,6 +346,16 @@ function sectionLabelFor(el) {
     .slice(0, 40);
 }
 
+// Linki usługowe i etykiety, które nie są tytułami artykułów.
+const SERVICE_LINK = /^(pobierz aplikację|polityka prywatności|regulamin|kontakt|newsletter|zaloguj|zarejestruj|subskrybuj|przelicznik|kalkulator|program tv|horoskop)|\s-\s(ios|android)$/i;
+function looksLikeHeadline(text) {
+  if (!/[a-ząćęłńóśźż]/.test(text)) return false; // same wielkie litery: etykieta ("NAJNOWSZE QUIZY DZISIAJ DODANE")
+  if (SERVICE_LINK.test(text)) return false;
+  // Najwyżej trzy słowa bez interpunkcji i cyfr: nazwa działu albo tematu ("Transformacja energetyczna Polski").
+  if (text.split(/\s+/).length <= 3 && !/[.,!?:;"„“”«»0-9]/.test(text)) return false;
+  return true;
+}
+
 // Adres artykułu, do którego prowadzi element tytułu (link sam w sobie, przodek albo potomek).
 function articleHref(el) {
   return el.closest('a[href]')?.href || el.querySelector('a[href]')?.href || '';
@@ -526,7 +536,9 @@ function processPage() {
     text = text.replace(/\s*\[(ANALIZA|OPINIA|KOMENTARZ|WYWIAD|RAPORT|DEBATA)\]\s*$/i, '');
 
     if ((processed.get(text) || []).some((prev) => prev.contains(el) || el.contains(prev))) continue;
-    if (el.closest('nav, footer, .menu, .sidebar-nav')) continue;
+    // Menu, stopka, tagi (gazeta.pl: ukryte menu .main-menu z linkami SEO; plotek.pl: tagi rel="tag").
+    if (el.closest('nav, footer, [role="navigation"], .menu, .sidebar-nav, [class*="main-menu"], .tags, a[rel~="tag"]')) continue;
+    if (!looksLikeHeadline(text)) continue;
     if (text.length < 30 && !/[.!?""]/.test(text)) continue;
     // Skip subscription/promo banners — not articles
     if (/oferta\s+prenumerat|prenumerata\s+cyfrowa|sprawdź\s+ofertę|kup\s+teraz|ogłoszenia\s+(mieszkań|nieruchomości)|SPRAWDŹ$/i.test(text)) continue;
