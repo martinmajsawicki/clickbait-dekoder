@@ -337,6 +337,17 @@ function sectionLabelFor(el) {
     .slice(0, 40);
 }
 
+// Adres artykułu, do którego prowadzi element tytułu (link sam w sobie, przodek albo potomek).
+function articleHref(el) {
+  return el.closest('a[href]')?.href || el.querySelector('a[href]')?.href || '';
+}
+
+// Czy blok zawiera linki tylko do jednego artykułu (tego z tytułem)?
+function singleArticle(block, titleHref) {
+  const hrefs = new Set([...block.querySelectorAll('a[href]')].map((a) => a.href));
+  return hrefs.size === 0 || (hrefs.size === 1 && (!titleHref || hrefs.has(titleHref)));
+}
+
 // Wstawia badge + tooltip przy elemencie tytułu. Zwraca uchwyt do późniejszej aktualizacji.
 function attachBadge(el, verdict, badgeId) {
   const badge = createBadge(verdict);
@@ -393,14 +404,19 @@ function attachBadge(el, verdict, badgeId) {
   // Append tooltip to body so it escapes overflow:hidden parents
   document.body.appendChild(tooltip);
 
-  // Try to place badge on associated image instead of text
-  // Search up to 3 levels up for an img element
+  // Badge na obrazku artykułu zamiast w tekście — ale tylko na obrazku TEGO artykułu.
+  // Szukamy do 4 poziomów w górę; obrazek bierzemy, gdy prowadzi do tego samego adresu
+  // co tytuł albo gdy w przeszukiwanym bloku jest tylko ten jeden artykuł. Na gęstych
+  // stronach (gazeta.pl) blok zawiera wiele kafelków i pierwszy obrazek bywa cudzy.
+  const titleHref = articleHref(el);
   let imgTarget = null;
   let searchEl = el;
   for (let i = 0; i < 4 && searchEl; i++) {
     const img = searchEl.querySelector('img, picture, [style*="background-image"]');
     if (img && img.offsetHeight > 50) {
-      imgTarget = img.closest('a, div, figure, picture') || img.parentElement;
+      const imgHref = img.closest('a[href]')?.href || '';
+      const ownImage = imgHref ? imgHref === titleHref : singleArticle(searchEl, titleHref);
+      if (ownImage) imgTarget = img.closest('a, div, figure, picture') || img.parentElement;
       break;
     }
     searchEl = searchEl.parentElement;
@@ -488,7 +504,7 @@ function processPage() {
     text = text.replace(/\s+(Obserwuj|Obserwuj autorów).*$/i, '');
     text = stripAuthorSuffix(el, text);
     text = text.replace(
-      /\s+(BIZNES|SPORT|KOBIETA|NEXT|MOTO|FILM|TENIS|PRENUMERATA|MATERIAŁ PROMOCYJNY|MOTO NEWS|OFERTY AVANTI24|OFERTY CZTERY KĄTY|LEKKOATLETYKA|SKOKI NARCIARSKIE|PIŁKA NOŻNA)$/i,
+      /\s+(BIZNES|SPORT|KOBIETA|NEXT|MOTO|FILM|TENIS|PRENUMERATA|SUBSKRYPCJA|WIADOMOŚCI|MATERIAŁ PROMOCYJNY|MOTO NEWS|OFERTY AVANTI24|OFERTY CZTERY KĄTY|LEKKOATLETYKA|SKOKI NARCIARSKIE|PIŁKA NOŻNA)$/i,
       ''
     );
 

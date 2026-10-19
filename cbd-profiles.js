@@ -22,7 +22,7 @@
     'o2.pl':            { type: 'portal', baseline: 55, note: 'Portal ogólny. Mieszanka informacji i lifestyle. Średni baseline.' },
     'noizz.pl':         { type: 'lifestyle', baseline: 50, note: 'Lifestyle/kultura. Kreatywne tytuły bywają clickbaitowe, ale gatunek to toleruje.' },
     'dziendobry.tvn.pl':{ type: 'lifestyle', baseline: 50, note: 'Morning show + lifestyle. Lekki ton, ale sensacja na poziomie tabloidowym.' },
-    'gazeta.pl':        { type: 'portal', baseline: 45, note: 'Portal ogólny Agory. Mieszanka informacji, opinii i lifestyle. Sekcja główna umiarkowana, lifestyle clickbaitowy.' },
+    'gazeta.pl':        { type: 'tabloid', baseline: 55, note: 'Tabloid umiarkowany (Agora): mniej drapieżny niż Fakt czy SE, ale tytuły często ukrywają sedno i grają na emocjach, także w wiadomościach i sporcie. Oceniaj każdy tytuł po treści.' },
     'wp.pl':            { type: 'portal', baseline: 45, note: 'Wirtualna Polska. Duży portal ogólny. Sekcja główna OK, podstrony lifestyle bywają CB.' },
     'onet.pl':          { type: 'portal', baseline: 45, note: 'Portal ogólny. Podobny do WP — sekcja główna umiarkowana, lifestyle wyższy CB.' },
     'interia.pl':       { type: 'portal', baseline: 45, note: 'Portal ogólny. Zbliżony do Onet/WP pod względem CB.' },

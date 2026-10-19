@@ -16,16 +16,6 @@
   const CBD = (root.CBD = root.CBD || {});
   const { analyzeHeadlineCore } = CBD.patterns;
 
-  // Miękkie sygnały dla tytułów, których regex nie złapał (kandydaci na FN).
-  const SOFT_QUOTE = /["„“”].+["„“”]/;
-  const SOFT_SUPERLATIVE = /\b(naj\w+|rekordow\w*|szokując\w*|niewiarygodn\w*|absolutn\w*)/i;
-  const SOFT_QUESTION = /\?\s*$/;
-
-  // Typ portalu z profili (cbd-profiles.js ładowany wcześniej w content_scripts).
-  function isTabloid(host) {
-    return !!CBD.profiles && CBD.profiles.getProfile(host).type === 'tabloid';
-  }
-
   // Regexowy werdykt wstępny → Verdict.
   function judgeRegex(title, ctx = {}) {
     const r = analyzeHeadlineCore(title, { isAnalytical: ctx.isAnalytical, host: ctx.host });
@@ -54,27 +44,15 @@
     // Regex pewny (≥3) — werdykt finalny, oszczędzamy koszt.
     if (raw >= 3) return false;
 
-    // Pure native ad — nie marnujemy wywołania (gatunek, nie clickbait do oceny).
-    if (
-      regexResult.matches.length > 0 &&
-      regexResult.matches.every((m) => m.id === 'native_ad')
-    ) {
-      return false;
-    }
+    // Materiał promocyjny idzie do modelu jak każdy tytuł (decyzja redakcyjna 2026-10-18).
 
     // Graniczne CB 1–2 — model kalibruje w górę/dół.
     if (raw === 1 || raw === 2) return true;
 
-    // Tabloidy: regex łapie mało ich stylu ("Robią to s…", "przerywa milczenie"),
-    // więc każdy niepewny tytuł idzie do modelu, także bez miękkiego sygnału.
-    if (raw === 0 && isTabloid(ctx.host)) return true;
-
-    // Regex = 0, ale są miękkie sygnały → kandydat na false-negative.
-    if (raw === 0) {
-      if (SOFT_QUOTE.test(t)) return true;
-      if (SOFT_SUPERLATIVE.test(t)) return true;
-      if (!ctx.isAnalytical && SOFT_QUESTION.test(t)) return true;
-    }
+    // Regex = 0 → model ocenia każdy tytuł na każdym portalu (od 0.6.1). Wcześniej tylko
+    // tabloidy i tytuły z miękkim sygnałem; na gazeta.pl ok. połowa tytułów nie dostawała
+    // żadnej oceny, a obecny model rzadko daje fałszywe alarmy.
+    if (raw === 0) return true;
 
     return false;
   }

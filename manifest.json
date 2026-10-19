@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Clickbait Dekoder",
-  "version": "0.6.0",
+  "version": "0.6.1",
   "description": "Dekoduje clickbaitowe tytuły na 26 polskich portalach. Regex + opcjonalna ocena AI (BYO-key). Kontekstowe komentarze w stylu New Yorkera.",
   "permissions": ["storage"],
   "host_permissions": ["https://openrouter.ai/*"],
@@ -37,7 +37,7 @@
         "*://*.nczas.com/*",
         "*://*.dorzeczy.pl/*"
       ],
-      "js": ["cbd-patterns.js", "cbd-profiles.js", "cbd-judge.js", "clickbait-detector.js"],
+      "js": ["cbd-patterns.js", "cbd-judge.js", "clickbait-detector.js"],
       "css": ["styles.css"],
       "run_at": "document_idle"
     }
