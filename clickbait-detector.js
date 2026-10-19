@@ -441,22 +441,22 @@ function attachBadge(el, verdict, badgeId) {
     searchEl = searchEl.parentElement;
   }
 
-  const targetEl = imgTarget || el;
-  const targetPosition = window.getComputedStyle(targetEl).position;
-  if (targetPosition === 'static') {
-    targetEl.style.position = 'relative';
-  }
-  wrapper.style.position = 'absolute';
-  wrapper.style.top = '8px';
-  wrapper.style.left = '8px';
-  wrapper.style.display = 'inline-block';
-  wrapper.style.zIndex = '10000';
-
   if (imgTarget) {
-    // Place on image — more visible, doesn't obscure text
+    // Na zdjęciu: badge w lewym górnym rogu obrazka — widoczny i nie zasłania tekstu.
+    if (window.getComputedStyle(imgTarget).position === 'static') imgTarget.style.position = 'relative';
+    wrapper.style.position = 'absolute';
+    wrapper.style.top = '8px';
+    wrapper.style.left = '8px';
+    wrapper.style.display = 'inline-block';
+    wrapper.style.zIndex = '10000';
     imgTarget.appendChild(wrapper);
   } else {
-    // Fallback: place inside text element
+    // Bez zdjęcia (listy tekstowe): badge w linii przed tytułem — absolutnie zasłaniał pierwsze słowa.
+    wrapper.style.position = 'relative';
+    wrapper.style.display = 'inline-block';
+    wrapper.style.marginRight = '6px';
+    wrapper.style.verticalAlign = 'middle';
+    wrapper.style.zIndex = '10000';
     el.insertBefore(wrapper, el.firstChild);
   }
   // Mark the original link so re-runs skip it
