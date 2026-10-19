@@ -1,0 +1,1246 @@
+{
+  "date": "2026-10-19",
+  "model": "google/gemini-3.8-flash",
+  "badgeMin": 40,
+  "titles": [
+    {
+      "portal": "fakt.pl",
+      "host": "www.fakt.pl",
+      "title": "Wypadł z 13. piętra. Tragiczna śmierć 20-latka w Warszawie",
+      "regex": {
+        "cb": 0,
+        "techniques": [],
+        "snark": ""
+      },
+      "model": {
+        "cb100": 10,
+        "filary": [],
+        "powod": "Tytuł uczciwie informuje o tragedii, podając co się stało, wiek ofiary oraz miasto.",
+        "snark": null
+      },
+      "final": {
+        "badge": 0,
+        "source": "AI",
+        "comment": "",
+        "reason": "Tytuł uczciwie informuje o tragedii, podając co się stało, wiek ofiary oraz miasto."
+      }
+    },
+    {
+      "portal": "fakt.pl",
+      "host": "www.fakt.pl",
+      "title": "SOR odesłał rodzącą. \"Proszę wziąć kąpiel\". W łazience noworodek uderzył główką w posadzkę",
+      "regex": {
+        "cb": 0,
+        "techniques": [
+          "Wyrwany cytat"
+        ],
+        "snark": "\"Proszę wziąć kąpiel\" — brzmi dramatycznie wyrwane z kontekstu. W pełnej rozmowie to zdanie pewnie było o niczym."
+      },
+      "model": {
+        "cb100": 15,
+        "filary": [],
+        "powod": "Nagłówek podaje kluczowe i konkretne fakty dotyczące bulwersującego incydentu medycznego, cytat służy jedynie jako zwięzła relacja.",
+        "snark": null
+      },
+      "final": {
+        "badge": 0,
+        "source": "AI",
+        "comment": "",
+        "reason": "Nagłówek podaje kluczowe i konkretne fakty dotyczące bulwersującego incydentu medycznego, cytat służy jedynie jako zwięzła relacja."
+      }
+    },
+    {
+      "portal": "fakt.pl",
+      "host": "www.fakt.pl",
+      "title": "Co dalej z Mają Chwalińską? Menedżer zdradził szczegóły. \"Wszystko na pewno boli\"",
+      "regex": {
+        "cb": 0,
+        "techniques": [
+          "Wyrwany cytat"
+        ],
+        "snark": "\"Wszystko na pewno boli\" — brzmi dramatycznie wyrwane z kontekstu. W pełnej rozmowie to zdanie pewnie było o niczym."
+      },
+      "model": {
+        "cb100": 75,
+        "filary": [
+          1,
+          4
+        ],
+        "powod": "Tytuł stawia otwarte pytanie i obiecuje szczegóły, ale ich nie podaje, zasłaniając się wyrwanym z kontekstu dramatycznym cytatem.",
+        "snark": "Menedżer zdradza szczegóły, ale redakcja woli zachować je w tajemnicy handlowej aż do kliknięcia."
+      },
+      "final": {
+        "badge": 6,
+        "source": "AI",
+        "comment": "Menedżer zdradza szczegóły, ale redakcja woli zachować je w tajemnicy handlowej aż do kliknięcia.",
+        "reason": "Tytuł stawia otwarte pytanie i obiecuje szczegóły, ale ich nie podaje, zasłaniając się wyrwanym z kontekstu dramatycznym cytatem."
+      }
+    },
+    {
+      "portal": "fakt.pl",
+      "host": "www.fakt.pl",
+      "title": "Nie żyje ojciec Edyty Bartosiewicz. Jej słowa chwytają za serce",
+      "regex": {
+        "cb": 0,
+        "techniques": [],
+        "snark": ""
+      },
+      "model": {
+        "cb100": 40,
+        "filary": [
+          3
+        ],
+        "powod": "Główny fakt o śmierci ojca artystki został podany, jednak dopisek instruuje czytelnika, jak ma emocjonalnie zareagować na jej wypowiedź.",
+        "snark": "Współczesne dziennikarstwo dba o to, by czytelnik przypadkiem nie musiał samodzielnie decydować, które słowa poruszają jego serce."
+      },
+      "final": {
+        "badge": 1,
+        "source": "AI",
+        "comment": "Współczesne dziennikarstwo dba o to, by czytelnik przypadkiem nie musiał samodzielnie decydować, które słowa poruszają jego serce.",
+        "reason": "Główny fakt o śmierci ojca artystki został podany, jednak dopisek instruuje czytelnika, jak ma emocjonalnie zareagować na jej wypowiedź."
+      }
+    },
+    {
+      "portal": "fakt.pl",
+      "host": "www.fakt.pl",
+      "title": "Napił się z butelki brata, nie żyje. Wiadomo, co w niej było",
+      "regex": {
+        "cb": 2,
+        "techniques": [
+          "Ukryta odpowiedź"
+        ],
+        "snark": "\"Wiadomo\" — jeśli byłoby naprawdę ważne, napisaliby CO wiadomo."
+      },
+      "model": {
+        "cb100": 85,
+        "filary": [
+          1
+        ],
+        "powod": "Tytuł wprost przyznaje, że odpowiedź jest znana, ale celowo zataja zawartość butelki, by zmusić do wejścia w artykuł.",
+        "snark": "Wiadomo, co było w butelce, ale wiedza ta jest towarem luksusowym dostępnym wyłącznie po uiszczeniu opłaty w postaci odsłony."
+      },
+      "final": {
+        "badge": 8,
+        "source": "AI",
+        "comment": "Wiadomo, co było w butelce, ale wiedza ta jest towarem luksusowym dostępnym wyłącznie po uiszczeniu opłaty w postaci odsłony.",
+        "reason": "Tytuł wprost przyznaje, że odpowiedź jest znana, ale celowo zataja zawartość butelki, by zmusić do wejścia w artykuł."
+      }
+    },
+    {
+      "portal": "se.pl",
+      "host": "www.se.pl",
+      "title": "Wojna na Ukrainie: PILNE. Jest porozumienie w sprawie wojny na Ukrainie? Nagłe oświadczenie Trumpa",
+      "regex": {
+        "cb": 2,
+        "techniques": [
+          "Pytajnik w tytule (prawo Betteridge'a)",
+          "Dramaturgia serialu"
+        ],
+        "snark": "\"?\" — Pytanie w nagłówku to technika: albo odpowiedź brzmi „nie\", albo pytanie jest retoryczne i ma wzbudzić emocje zamiast informować."
+      },
+      "model": {
+        "cb100": 78,
+        "filary": [
+          1,
+          2,
+          4
+        ],
+        "powod": "Pytajnik przy rzekomym porozumieniu maskuje brak twardych faktów, a treść oświadczenia została zatajona za etykietą PILNE.",
+        "snark": "Klasyczne prawo Betteridge'a ubrane w kamizelkę kuloodporną ze słowa 'PILNE'."
+      },
+      "final": {
+        "badge": 7,
+        "source": "AI",
+        "comment": "Klasyczne prawo Betteridge'a ubrane w kamizelkę kuloodporną ze słowa 'PILNE'.",
+        "reason": "Pytajnik przy rzekomym porozumieniu maskuje brak twardych faktów, a treść oświadczenia została zatajona za etykietą PILNE."
+      }
+    },
+    {
+      "portal": "se.pl",
+      "host": "www.se.pl",
+      "title": "AKTUALIZACJA: Rosyjski atak powietrzny. Poderwano myśliwce, alert RCB dla dwóch województw",
+      "regex": {
+        "cb": 1,
+        "techniques": [
+          "KRZYK w tytule"
+        ],
+        "snark": "CAPS LOCK w tytule — krzyk zastępuje treść. Im głośniej tytuł krzyczy, tym ciszej jest w artykule."
+      },
+      "model": {
+        "cb100": 10,
+        "filary": [],
+        "powod": "Tytuł precyzyjnie informuje o przyczynie i podjętych działaniach obronnych oraz ostrzeżeniach dla ludności.",
+        "snark": null
+      },
+      "final": {
+        "badge": 0,
+        "source": "AI",
+        "comment": "",
+        "reason": "Tytuł precyzyjnie informuje o przyczynie i podjętych działaniach obronnych oraz ostrzeżeniach dla ludności."
+      }
+    },
+    {
+      "portal": "se.pl",
+      "host": "www.se.pl",
+      "title": "Jest jak nowy! Niezwykłe odkrycie podczas remontu. Historyczny napis znów zdobi wejście do kamienicy",
+      "regex": {
+        "cb": 3,
+        "techniques": [
+          "Ukryta odpowiedź",
+          "Superlativ / przesada"
+        ],
+        "snark": "\"Niezwykłe odkrycie\" — mogli opisać jaki, ale nie zrobili. Bo opis nie klika się tak dobrze."
+      },
+      "final": {
+        "badge": 3,
+        "source": "regex",
+        "comment": "\"Niezwykłe odkrycie\" — mogli opisać jaki, ale nie zrobili. Bo opis nie klika się tak dobrze."
+      }
+    },
+    {
+      "portal": "se.pl",
+      "host": "www.se.pl",
+      "title": "M jak miłość: Werner ruszy za Sylwią aż do Niemiec! Zrobi wszystko, by ją odzyskać",
+      "regex": {
+        "cb": 0,
+        "techniques": [],
+        "snark": ""
+      },
+      "model": {
+        "cb100": 15,
+        "filary": [],
+        "powod": "Standardowa zapowiedź wątku serialowego podająca konkretnych bohaterów i planowane wydarzenia fabularne.",
+        "snark": null
+      },
+      "final": {
+        "badge": 0,
+        "source": "AI",
+        "comment": "",
+        "reason": "Standardowa zapowiedź wątku serialowego podająca konkretnych bohaterów i planowane wydarzenia fabularne."
+      }
+    },
+    {
+      "portal": "se.pl",
+      "host": "www.se.pl",
+      "title": "Jest wideo: Nastolatka obudziła się w trumnie na oczach rodziców! Usiadła podczas ceremonii",
+      "regex": {
+        "cb": 2,
+        "techniques": [
+          "Ukryta odpowiedź"
+        ],
+        "snark": "\"Jest wideo\" — nagranie istnieje. Sensacja? Zwykle nie."
+      },
+      "model": {
+        "cb100": 86,
+        "filary": [
+          1,
+          2,
+          3
+        ],
+        "powod": "Sensacyjny opis makabrycznego zdarzenia celowo przemilcza tożsamość i lokalizację, handlując tanią grozą.",
+        "snark": "Nekromancja klików w pełnej krasie: brak kraju i nazwiska sugeruje, że cud zdarzył się w Radomiu, a nie na drugim końcu świata."
+      },
+      "final": {
+        "badge": 8,
+        "source": "AI",
+        "comment": "Nekromancja klików w pełnej krasie: brak kraju i nazwiska sugeruje, że cud zdarzył się w Radomiu, a nie na drugim końcu świata.",
+        "reason": "Sensacyjny opis makabrycznego zdarzenia celowo przemilcza tożsamość i lokalizację, handlując tanią grozą."
+      }
+    },
+    {
+      "portal": "pudelek.pl",
+      "host": "www.pudelek.pl",
+      "title": "Hanna Turnau nie ma ostatnio łatwo. Najpierw rozstanie z \"M jak miłość\", a teraz ŻALI SIĘ, że wycięli ją z \"Lalki\". \"To chyba jeszcze gorzej\"",
+      "regex": {
+        "cb": 0,
+        "techniques": [
+          "Wyrwany cytat"
+        ],
+        "snark": "\"M jak miłość\", a teraz ŻALI SIĘ, że wycięli ją z \"Lalki\". \" — brzmi dramatycznie wyrwane z kontekstu. W pełnej rozmowie to zdanie pewnie było o niczym."
+      },
+      "model": {
+        "cb100": 10,
+        "filary": [],
+        "powod": "Tytuł precyzyjnie wyjaśnia, o jakie problemy chodzi: odejście z serialu i wycięcie scen z ekranizacji.",
+        "snark": null
+      },
+      "final": {
+        "badge": 0,
+        "source": "AI",
+        "comment": "",
+        "reason": "Tytuł precyzyjnie wyjaśnia, o jakie problemy chodzi: odejście z serialu i wycięcie scen z ekranizacji."
+      }
+    },
+    {
+      "portal": "pudelek.pl",
+      "host": "www.pudelek.pl",
+      "title": "Sandra Kubicka grzmi po zarzutach, że musi mieć bogatego faceta. \"Dla mnie pieniądze są w ogóle nieważne\"",
+      "regex": {
+        "cb": 0,
+        "techniques": [
+          "Wyrwany cytat"
+        ],
+        "snark": "\"Dla mnie pieniądze są w ogóle nieważne\" — brzmi dramatycznie wyrwane z kontekstu. W pełnej rozmowie to zdanie pewnie było o niczym."
+      },
+      "model": {
+        "cb100": 15,
+        "filary": [],
+        "powod": "Tytuł w pełni informuje o zarzutach i zawiera dosłowną odpowiedź celebrytki.",
+        "snark": null
+      },
+      "final": {
+        "badge": 0,
+        "source": "AI",
+        "comment": "",
+        "reason": "Tytuł w pełni informuje o zarzutach i zawiera dosłowną odpowiedź celebrytki."
+      }
+    },
+    {
+      "portal": "pudelek.pl",
+      "host": "www.pudelek.pl",
+      "title": "Kurzajewski PRZEMAWIA po złożeniu zeznań: \"To KŁAMSTWO, iż Katarzyna Cichopek przyczyniła się do rozpadu mojego małżeństwa\" (WIDEO)",
+      "regex": {
+        "cb": 0,
+        "techniques": [],
+        "snark": ""
+      },
+      "model": {
+        "cb100": 10,
+        "filary": [],
+        "powod": "Nagłówek wprost cytuje kluczowe oświadczenie bez ukrywania sedna wypowiedzi.",
+        "snark": null
+      },
+      "final": {
+        "badge": 0,
+        "source": "AI",
+        "comment": "",
+        "reason": "Nagłówek wprost cytuje kluczowe oświadczenie bez ukrywania sedna wypowiedzi."
+      }
+    },
+    {
+      "portal": "pudelek.pl",
+      "host": "www.pudelek.pl",
+      "title": "Świeżo upieczona mama Izabela Janachowska spaceruje z maluchem i 7-letnim Christopherem (ZDJĘCIA)",
+      "regex": {
+        "cb": 0,
+        "techniques": [],
+        "snark": ""
+      },
+      "model": {
+        "cb100": 0,
+        "filary": [],
+        "powod": "Prosty opis sytuacji ze zdjęć paparazzi, podający tożsamość i czynność bez żadnych niedomówień.",
+        "snark": null
+      },
+      "final": {
+        "badge": 0,
+        "source": "AI",
+        "comment": "",
+        "reason": "Prosty opis sytuacji ze zdjęć paparazzi, podający tożsamość i czynność bez żadnych niedomówień."
+      }
+    },
+    {
+      "portal": "pudelek.pl",
+      "host": "www.pudelek.pl",
+      "title": "Barbara Palvin olśniewa na wybiegu Victoria's Secret SZEŚĆ TYGODNI po porodzie! Zdradziła sekret ekspresowego powrotu do formy (ZDJĘCIA)",
+      "regex": {
+        "cb": 0,
+        "techniques": [],
+        "snark": ""
+      },
+      "model": {
+        "cb100": 60,
+        "filary": [
+          1
+        ],
+        "powod": "Tytuł zapowiada zdradzenie sekretu formy, ukrywając samą metodę i zmuszając do kliknięcia.",
+        "snark": "Klasyczny mechanizm magicznej pigułki, która zmieściłaby się w tytule, gdyby nie konieczność nabicia odsłon."
+      },
+      "final": {
+        "badge": 4,
+        "source": "AI",
+        "comment": "Klasyczny mechanizm magicznej pigułki, która zmieściłaby się w tytule, gdyby nie konieczność nabicia odsłon.",
+        "reason": "Tytuł zapowiada zdradzenie sekretu formy, ukrywając samą metodę i zmuszając do kliknięcia."
+      }
+    },
+    {
+      "portal": "pomponik.pl",
+      "host": "www.pomponik.pl",
+      "title": "Radosne doniesienia i zaraz potem to. Żona Stocha nie mogła milczeć",
+      "regex": {
+        "cb": 0,
+        "techniques": [],
+        "snark": ""
+      },
+      "model": {
+        "cb100": 95,
+        "filary": [
+          1,
+          3,
+          4
+        ],
+        "powod": "Tytuł całkowicie ukrywa zarówno radosne wieści, jak i to, co nastąpiło po nich oraz na jaki temat zareagowała Ewa Bilan-Stoch.",
+        "snark": "Klasyczne 'zaraz potem to' – podręcznikowa składnia dla czytelnika, który ma kliknąć ze strachu przed zaimkiem wskazującym."
+      },
+      "final": {
+        "badge": 9,
+        "source": "AI",
+        "comment": "Klasyczne 'zaraz potem to' – podręcznikowa składnia dla czytelnika, który ma kliknąć ze strachu przed zaimkiem wskazującym.",
+        "reason": "Tytuł całkowicie ukrywa zarówno radosne wieści, jak i to, co nastąpiło po nich oraz na jaki temat zareagowała Ewa Bilan-Stoch."
+      }
+    },
+    {
+      "portal": "pomponik.pl",
+      "host": "www.pomponik.pl",
+      "title": "Smaszcz nie milknie po sporach z Kurzajewskimi. Wygadała się ws. związku",
+      "regex": {
+        "cb": 1,
+        "techniques": [
+          "Dramaturgia serialu"
+        ],
+        "snark": "\"Wygadała się\" — wygadał się, czyli powiedział coś normalnego. Gdyby było szokujące, cytat byłby w tytule."
+      },
+      "model": {
+        "cb100": 75,
+        "filary": [
+          1,
+          2,
+          4
+        ],
+        "powod": "Nagłówek nie ujawnia, co Paulina Smaszcz faktycznie powiedziała na temat związku, używając sensacyjnego czasownika 'wygadała się'.",
+        "snark": "Kolejny odcinek telenoweli, w którym bohaterka 'się wygaduje', ale scenarzysta zapomniał dopisać do zwiastuna choćby jednego słowa wyjaśnienia."
+      },
+      "final": {
+        "badge": 6,
+        "source": "AI",
+        "comment": "Kolejny odcinek telenoweli, w którym bohaterka 'się wygaduje', ale scenarzysta zapomniał dopisać do zwiastuna choćby jednego słowa wyjaśnienia.",
+        "reason": "Nagłówek nie ujawnia, co Paulina Smaszcz faktycznie powiedziała na temat związku, używając sensacyjnego czasownika 'wygadała się'."
+      }
+    },
+    {
+      "portal": "pomponik.pl",
+      "host": "www.pomponik.pl",
+      "title": "Wygoda wytypował finalistów \"TzG\". Nie miał wątpliwości",
+      "regex": {
+        "cb": 0,
+        "techniques": [],
+        "snark": ""
+      },
+      "model": {
+        "cb100": 80,
+        "filary": [
+          1
+        ],
+        "powod": "Tytuł zapowiada typy jurora dotyczące finalistów programu, ale celowo nie podaje ani jednego nazwiska.",
+        "snark": "Juror nie miał wątpliwości, za to redakcja miała pełną świadomość, że zdradzenie nazwisk zabiłoby ruch na stronie."
+      },
+      "final": {
+        "badge": 7,
+        "source": "AI",
+        "comment": "Juror nie miał wątpliwości, za to redakcja miała pełną świadomość, że zdradzenie nazwisk zabiłoby ruch na stronie.",
+        "reason": "Tytuł zapowiada typy jurora dotyczące finalistów programu, ale celowo nie podaje ani jednego nazwiska."
+      }
+    },
+    {
+      "portal": "pomponik.pl",
+      "host": "www.pomponik.pl",
+      "title": "Sceny na występie Gumulca w \"Tańcu z gwiazdami\". Najpierw łzy, a potem całe jury wstało",
+      "regex": {
+        "cb": 3,
+        "techniques": [
+          "Wyrwany cytat",
+          "Dramaturgia serialu",
+          "Emocjonalny szantaż"
+        ],
+        "snark": "\"Tańcu z gwiazdami\" — brzmi dramatycznie wyrwane z kontekstu. W pełnej rozmowie to zdanie pewnie było o niczym."
+      },
+      "model": {
+        "cb100": 65,
+        "filary": [
+          2,
+          3,
+          4
+        ],
+        "powod": "Nagłówek buduje tanią dramaturgię za pomocą 'scen' i 'łez', opisując typową dla formatu reakcję jury zamiast podać faktyczny kontekst czy oceny.",
+        "snark": "Telewizyjny program rozrywkowy zamieniony w dramat antyczny, w którym stojąca owacja urasta do rangi wstrząsającego incydentu."
+      },
+      "final": {
+        "badge": 5,
+        "source": "AI",
+        "comment": "Telewizyjny program rozrywkowy zamieniony w dramat antyczny, w którym stojąca owacja urasta do rangi wstrząsającego incydentu.",
+        "reason": "Nagłówek buduje tanią dramaturgię za pomocą 'scen' i 'łez', opisując typową dla formatu reakcję jury zamiast podać faktyczny kontekst czy oceny."
+      }
+    },
+    {
+      "portal": "pomponik.pl",
+      "host": "www.pomponik.pl",
+      "title": "Kukulska sensacją \"Tańca z gwiazdami\". Po jej występie zapanowało poruszenie",
+      "regex": {
+        "cb": 0,
+        "techniques": [
+          "Wyrwany cytat"
+        ],
+        "snark": "\"Tańca z gwiazdami\" — brzmi dramatycznie wyrwane z kontekstu. W pełnej rozmowie to zdanie pewnie było o niczym."
+      },
+      "model": {
+        "cb100": 70,
+        "filary": [
+          1,
+          2
+        ],
+        "powod": "Tytuł operuje wyłącznie napompowanymi ogólnikami o 'sensacji' i 'poruszeniu', nie precyzując, co dokładnie wydarzyło się podczas występu.",
+        "snark": "Gdy występ to za mało, redakcja ogłasza 'poruszenie' i liczy na to, że nikt nie zauważy braku jakiejkolwiek treści."
+      },
+      "final": {
+        "badge": 6,
+        "source": "AI",
+        "comment": "Gdy występ to za mało, redakcja ogłasza 'poruszenie' i liczy na to, że nikt nie zauważy braku jakiejkolwiek treści.",
+        "reason": "Tytuł operuje wyłącznie napompowanymi ogólnikami o 'sensacji' i 'poruszeniu', nie precyzując, co dokładnie wydarzyło się podczas występu."
+      }
+    },
+    {
+      "portal": "plotek.pl",
+      "host": "www.plotek.pl",
+      "title": "Widzowie \"Rolnik szuka żony\" rozjuszeni. Są wściekli na słowa kandydatki",
+      "regex": {
+        "cb": 2,
+        "techniques": [
+          "\"Polacy oszaleli\""
+        ],
+        "snark": "\"wściekli\" — zirytowani. Niekoniecznie wściekli."
+      },
+      "model": {
+        "cb100": 82,
+        "filary": [
+          1,
+          2,
+          3
+        ],
+        "powod": "Tytuł pompuje emocje widowni i zataja, o którą kandydatkę chodzi oraz co dokładnie powiedziała.",
+        "snark": "Trzy synonimy oburzenia na krzyż, byle tylko nie zdradzić, o czym właściwie jest ten narodowy dramat."
+      },
+      "final": {
+        "badge": 7,
+        "source": "AI",
+        "comment": "Trzy synonimy oburzenia na krzyż, byle tylko nie zdradzić, o czym właściwie jest ten narodowy dramat.",
+        "reason": "Tytuł pompuje emocje widowni i zataja, o którą kandydatkę chodzi oraz co dokładnie powiedziała."
+      }
+    },
+    {
+      "portal": "plotek.pl",
+      "host": "www.plotek.pl",
+      "title": "Holland i Łepkowska pokłóciły się na wizji. Padły słowa o głupcach",
+      "regex": {
+        "cb": 0,
+        "techniques": [],
+        "snark": ""
+      },
+      "model": {
+        "cb100": 22,
+        "filary": [],
+        "powod": "Tytuł podaje nazwiska uczestniczek i sedno ostrej wymiany zdań, choć lekko podbija temperaturę sporu.",
+        "snark": null
+      },
+      "final": {
+        "badge": 0,
+        "source": "AI",
+        "comment": "",
+        "reason": "Tytuł podaje nazwiska uczestniczek i sedno ostrej wymiany zdań, choć lekko podbija temperaturę sporu."
+      }
+    },
+    {
+      "portal": "plotek.pl",
+      "host": "www.plotek.pl",
+      "title": "Bianka Chajzer chwyciła za mikrofon. Zaskakujące sceny na koncercie Ich Troje",
+      "regex": {
+        "cb": 1,
+        "techniques": [
+          "Dramaturgia serialu"
+        ],
+        "snark": "\"sceny na \" — \"sceny\" = ktoś zareagował emocjonalnie. W sporcie to codzienność."
+      },
+      "model": {
+        "cb100": 68,
+        "filary": [
+          1,
+          2,
+          4
+        ],
+        "powod": "Obiecuje «zaskakujące sceny», nie wyjaśniając, co właściwie wydarzyło się na scenie po wzięciu mikrofonu.",
+        "snark": "Wystarczy, że ktoś zaśpiewa na koncercie, a redakcja już widzi w tym co najmniej trzęsienie ziemi."
+      },
+      "final": {
+        "badge": 5,
+        "source": "AI",
+        "comment": "Wystarczy, że ktoś zaśpiewa na koncercie, a redakcja już widzi w tym co najmniej trzęsienie ziemi.",
+        "reason": "Obiecuje «zaskakujące sceny», nie wyjaśniając, co właściwie wydarzyło się na scenie po wzięciu mikrofonu."
+      }
+    },
+    {
+      "portal": "plotek.pl",
+      "host": "www.plotek.pl",
+      "title": "Kłótnia o \"Lalkę\". Holland i Łepkowska nie gryzły się w języki",
+      "regex": {
+        "cb": 1,
+        "techniques": [
+          "Wyrwany cytat",
+          "Ekspresyjne czasowniki"
+        ],
+        "snark": "\"Lalkę\" — brzmi dramatycznie wyrwane z kontekstu. W pełnej rozmowie to zdanie pewnie było o niczym."
+      },
+      "model": {
+        "cb100": 18,
+        "filary": [],
+        "powod": "Informuje o przedmiocie debaty («Lalka») oraz obu rozmówczyniach, stosując jedynie żywą publicystykę.",
+        "snark": null
+      },
+      "final": {
+        "badge": 0,
+        "source": "AI",
+        "comment": "",
+        "reason": "Informuje o przedmiocie debaty («Lalka») oraz obu rozmówczyniach, stosując jedynie żywą publicystykę."
+      }
+    },
+    {
+      "portal": "plotek.pl",
+      "host": "www.plotek.pl",
+      "title": "Taniec Englert podzielił internautów. W komentarzach wrze. \"Jury ewidentnie zawyżyło oceny\"",
+      "regex": {
+        "cb": 0,
+        "techniques": [
+          "Wyrwany cytat"
+        ],
+        "snark": "\"Jury ewidentnie zawyżyło oceny\" — brzmi dramatycznie wyrwane z kontekstu. W pełnej rozmowie to zdanie pewnie było o niczym."
+      },
+      "model": {
+        "cb100": 38,
+        "filary": [
+          2,
+          3
+        ],
+        "powod": "Podaje osobę i konkretny zarzut w cytacie, lecz pompuje reakcję internautów zgranym frazesem o «wrzeniu».",
+        "snark": "Termodynamika internetowych komentarzy niezmiennie fascynuje redaktorów, gdy brakuje prawdziwego skandalu."
+      },
+      "final": {
+        "badge": 0,
+        "source": "AI",
+        "comment": "Termodynamika internetowych komentarzy niezmiennie fascynuje redaktorów, gdy brakuje prawdziwego skandalu.",
+        "reason": "Podaje osobę i konkretny zarzut w cytacie, lecz pompuje reakcję internautów zgranym frazesem o «wrzeniu»."
+      }
+    },
+    {
+      "portal": "gazeta.pl",
+      "host": "www.gazeta.pl",
+      "title": "Na Wszystkich Świętych robię przepyszną galaretę. Używam tylko tych mięs",
+      "regex": {
+        "cb": 0,
+        "techniques": [],
+        "snark": ""
+      },
+      "model": {
+        "cb100": 82,
+        "filary": [
+          1
+        ],
+        "powod": "Tytuł celowo ukrywa kluczową informację za zaimkiem wskazującym «tych mięs», zmuszając do kliknięcia po przepis.",
+        "snark": "Klasyczny zabieg kulinarny: zamiast podać składniki na tacy, redakcja chowa wieprzowinę za zaimkiem wskazującym."
+      },
+      "final": {
+        "badge": 7,
+        "source": "AI",
+        "comment": "Klasyczny zabieg kulinarny: zamiast podać składniki na tacy, redakcja chowa wieprzowinę za zaimkiem wskazującym.",
+        "reason": "Tytuł celowo ukrywa kluczową informację za zaimkiem wskazującym «tych mięs», zmuszając do kliknięcia po przepis."
+      }
+    },
+    {
+      "portal": "gazeta.pl",
+      "host": "www.gazeta.pl",
+      "title": "Trump zwolnił ją po pięciu dniach. Wrona wskazał coś gorszego niż wpadki",
+      "regex": {
+        "cb": 0,
+        "techniques": [],
+        "snark": ""
+      },
+      "model": {
+        "cb100": 88,
+        "filary": [
+          1,
+          4
+        ],
+        "powod": "Nagłówek nie podaje nazwiska zwolnionej osoby ani tego, czym jest owo «coś gorszego», żerując na luce informacyjnej.",
+        "snark": "Podręcznikowe budowanie suspensu zaimkiem nieokreślonym, jakby polityka zagraniczna była odcinkiem telenoweli."
+      },
+      "final": {
+        "badge": 8,
+        "source": "AI",
+        "comment": "Podręcznikowe budowanie suspensu zaimkiem nieokreślonym, jakby polityka zagraniczna była odcinkiem telenoweli.",
+        "reason": "Nagłówek nie podaje nazwiska zwolnionej osoby ani tego, czym jest owo «coś gorszego», żerując na luce informacyjnej."
+      }
+    },
+    {
+      "portal": "gazeta.pl",
+      "host": "www.gazeta.pl",
+      "title": "Z pieluszkami Bella Baby Happy, komfort dziecka to jedna z rzeczy mniej na głowie",
+      "regex": {
+        "cb": 0,
+        "techniques": [],
+        "snark": ""
+      },
+      "model": {
+        "cb100": 0,
+        "filary": [],
+        "powod": "Jawne hasło reklamowe marki, które wprost informuje o promowanym produkcie bez stosowania technik manipulacji.",
+        "snark": null
+      },
+      "final": {
+        "badge": 0,
+        "source": "AI",
+        "comment": "",
+        "reason": "Jawne hasło reklamowe marki, które wprost informuje o promowanym produkcie bez stosowania technik manipulacji."
+      }
+    },
+    {
+      "portal": "gazeta.pl",
+      "host": "www.gazeta.pl",
+      "title": "Emerytura rolnicza w 2026 roku. Kto dostanie świadczenie z KRUS?",
+      "regex": {
+        "cb": 0,
+        "techniques": [],
+        "snark": ""
+      },
+      "model": {
+        "cb100": 15,
+        "filary": [],
+        "powod": "Tytuł poradnikowy zapowiada omówienie kryteriów przyznawania świadczeń, których jako złożonych przepisów nie da się streścić w nagłówku.",
+        "snark": null
+      },
+      "final": {
+        "badge": 0,
+        "source": "AI",
+        "comment": "",
+        "reason": "Tytuł poradnikowy zapowiada omówienie kryteriów przyznawania świadczeń, których jako złożonych przepisów nie da się streścić w nagłówku."
+      }
+    },
+    {
+      "portal": "gazeta.pl",
+      "host": "www.gazeta.pl",
+      "title": "Rossmann ma promocję na mgiełki Victoria?s Secret. Te zapachy zna każda dziewczyna z lat 2000.",
+      "regex": {
+        "cb": 1,
+        "techniques": [
+          "Pytajnik w tytule (prawo Betteridge'a)"
+        ],
+        "snark": "\"?\" — Pytanie w nagłówku to technika: albo odpowiedź brzmi „nie\", albo pytanie jest retoryczne i ma wzbudzić emocje zamiast informować."
+      },
+      "model": {
+        "cb100": 48,
+        "filary": [
+          1
+        ],
+        "powod": "Znak zapytania to błąd kodowania apostrofu, jednak tytuł ukrywa konkretne warianty zapachowe i cenę za zaimkiem «te zapachy».",
+        "snark": "Algorytm wziął błąd kodowania za głębię filozoficzną, a redakcja ukryła zapachy za nostalgią milenialsów."
+      },
+      "final": {
+        "badge": 2,
+        "source": "AI",
+        "comment": "Algorytm wziął błąd kodowania za głębię filozoficzną, a redakcja ukryła zapachy za nostalgią milenialsów.",
+        "reason": "Znak zapytania to błąd kodowania apostrofu, jednak tytuł ukrywa konkretne warianty zapachowe i cenę za zaimkiem «te zapachy»."
+      }
+    },
+    {
+      "portal": "onet.pl",
+      "host": "www.onet.pl",
+      "title": "Nie odłączasz elektroniki z gniazdek w trakcie burzy? To cię czeka",
+      "regex": {
+        "cb": 1,
+        "techniques": [
+          "Pytajnik w tytule (prawo Betteridge'a)"
+        ],
+        "snark": "\"?\" — Pytanie w nagłówku to technika: albo odpowiedź brzmi „nie\", albo pytanie jest retoryczne i ma wzbudzić emocje zamiast informować."
+      },
+      "model": {
+        "cb100": 85,
+        "filary": [
+          1,
+          3
+        ],
+        "powod": "Tytuł celowo ukrywa konsekwencje nieodłączenia sprzętu za zaimkiem 'to', budując tanią groźbę zamiast podać fakt.",
+        "snark": "Klasyczna szkoła straszenia spalonym routerem, w której zaimek wskazujący wykonuje całą redakcyjną robotę."
+      },
+      "final": {
+        "badge": 8,
+        "source": "AI",
+        "comment": "Klasyczna szkoła straszenia spalonym routerem, w której zaimek wskazujący wykonuje całą redakcyjną robotę.",
+        "reason": "Tytuł celowo ukrywa konsekwencje nieodłączenia sprzętu za zaimkiem 'to', budując tanią groźbę zamiast podać fakt."
+      }
+    },
+    {
+      "portal": "onet.pl",
+      "host": "www.onet.pl",
+      "title": "List komendanta głównego policji do podwładnych. W tle wydarzenia z TK",
+      "regex": {
+        "cb": 0,
+        "techniques": [],
+        "snark": ""
+      },
+      "model": {
+        "cb100": 15,
+        "filary": [],
+        "powod": "Tytuł uczciwie informuje o wystosowaniu listu przez szefa policji oraz wskazuje bezpośredni kontekst wydarzeń wokół Trybunału Konstytucyjnego.",
+        "snark": null
+      },
+      "final": {
+        "badge": 0,
+        "source": "AI",
+        "comment": "",
+        "reason": "Tytuł uczciwie informuje o wystosowaniu listu przez szefa policji oraz wskazuje bezpośredni kontekst wydarzeń wokół Trybunału Konstytucyjnego."
+      }
+    },
+    {
+      "portal": "onet.pl",
+      "host": "www.onet.pl",
+      "title": "Tyle Maja Chwalińska będzie musiała oddać po wygranej w Wuhan",
+      "regex": {
+        "cb": 0,
+        "techniques": [],
+        "snark": ""
+      },
+      "model": {
+        "cb100": 80,
+        "filary": [
+          1
+        ],
+        "powod": "Nagłówek ukrywa kwotę podatku lub kosztów za słowem 'tyle', wymuszając kliknięcie w celu poznania prostej liczby.",
+        "snark": "Słowo 'tyle' w tytule to niezawodny znak, że zamiast liczby dostaniemy trzy akapity o chińskim prawie podatkowym."
+      },
+      "final": {
+        "badge": 7,
+        "source": "AI",
+        "comment": "Słowo 'tyle' w tytule to niezawodny znak, że zamiast liczby dostaniemy trzy akapity o chińskim prawie podatkowym.",
+        "reason": "Nagłówek ukrywa kwotę podatku lub kosztów za słowem 'tyle', wymuszając kliknięcie w celu poznania prostej liczby."
+      }
+    },
+    {
+      "portal": "onet.pl",
+      "host": "www.onet.pl",
+      "title": "\"Wszyscy was nienawidzą!\", \"Policja kaleczy dzieci\". Paryż w chaosie",
+      "regex": {
+        "cb": 0,
+        "techniques": [
+          "Wyrwany cytat"
+        ],
+        "snark": "\"Wszyscy was nienawidzą!\", \"Policja kaleczy dzieci\" — brzmi dramatycznie wyrwane z kontekstu. W pełnej rozmowie to zdanie pewnie było o niczym."
+      },
+      "model": {
+        "cb100": 60,
+        "filary": [
+          2,
+          3
+        ],
+        "powod": "Zestawienie skrajnie emocjonalnych, wyrwanych z kontekstu okrzyków z hiperbolą 'Paryż w chaosie' zastępuje rzeczowy opis zamieszek.",
+        "snark": "Dwa krzyki z ulicy wystarczą, by w redakcyjnym komputerze podpalić całą stolicę Francji."
+      },
+      "final": {
+        "badge": 4,
+        "source": "AI",
+        "comment": "Dwa krzyki z ulicy wystarczą, by w redakcyjnym komputerze podpalić całą stolicę Francji.",
+        "reason": "Zestawienie skrajnie emocjonalnych, wyrwanych z kontekstu okrzyków z hiperbolą 'Paryż w chaosie' zastępuje rzeczowy opis zamieszek."
+      }
+    },
+    {
+      "portal": "onet.pl",
+      "host": "www.onet.pl",
+      "title": "Opowiadała przyjaciółce o każdej kłótni z mężem. Potem zrozumiała",
+      "regex": {
+        "cb": 0,
+        "techniques": [],
+        "snark": ""
+      },
+      "model": {
+        "cb100": 90,
+        "filary": [
+          1,
+          4
+        ],
+        "powod": "Konstrukcja oparta na zawieszeniu narracji ('potem zrozumiała'), która całkowicie przemilcza puentę i treść rzekomego olśnienia.",
+        "snark": "Podręcznikowy cliffhanger z telenoweli, w którym czytelnik ma kliknąć tylko po to, by poznać morał cudzego małżeństwa."
+      },
+      "final": {
+        "badge": 9,
+        "source": "AI",
+        "comment": "Podręcznikowy cliffhanger z telenoweli, w którym czytelnik ma kliknąć tylko po to, by poznać morał cudzego małżeństwa.",
+        "reason": "Konstrukcja oparta na zawieszeniu narracji ('potem zrozumiała'), która całkowicie przemilcza puentę i treść rzekomego olśnienia."
+      }
+    },
+    {
+      "portal": "wp.pl",
+      "host": "www.wp.pl",
+      "title": "Poszli na bal w Miami. Spójrzcie, jak wystroiła się Rubik",
+      "regex": {
+        "cb": 2,
+        "techniques": [
+          "Ukryta odpowiedź"
+        ],
+        "snark": "\"Spójrzcie, jak\" — spójrzcie: wygląda normalnie. Ale \"wygląda normalnie\" to nie nagłówek."
+      },
+      "model": {
+        "cb100": 78,
+        "filary": [
+          1
+        ],
+        "powod": "Tytuł celowo ukrywa wygląd kreacji, stosując bezpośredni imperatyw zmuszający do wejścia w galerię.",
+        "snark": "Rozkazujący tryb w nagłówku, bo przecież nikt z własnej woli nie kliknąłby w cudzą sukienkę."
+      },
+      "final": {
+        "badge": 7,
+        "source": "AI",
+        "comment": "Rozkazujący tryb w nagłówku, bo przecież nikt z własnej woli nie kliknąłby w cudzą sukienkę.",
+        "reason": "Tytuł celowo ukrywa wygląd kreacji, stosując bezpośredni imperatyw zmuszający do wejścia w galerię."
+      }
+    },
+    {
+      "portal": "wp.pl",
+      "host": "www.wp.pl",
+      "title": "To dostałem w samolocie. Takie jedzenie podają największe linie świata",
+      "regex": {
+        "cb": 1,
+        "techniques": [
+          "Superlativ / przesada"
+        ],
+        "snark": "\"największe\" — największy do następnego największego."
+      },
+      "model": {
+        "cb100": 85,
+        "filary": [
+          1,
+          2
+        ],
+        "powod": "Zaimki wskazujące zastępują konkretną nazwę posiłku oraz linii lotniczych, sztucznie budując lukę informacyjną.",
+        "snark": "Podwójne użycie zaimka wskazującego jako szczytowe osiągnięcie w sztuce niepowiedzenia niczego."
+      },
+      "final": {
+        "badge": 8,
+        "source": "AI",
+        "comment": "Podwójne użycie zaimka wskazującego jako szczytowe osiągnięcie w sztuce niepowiedzenia niczego.",
+        "reason": "Zaimki wskazujące zastępują konkretną nazwę posiłku oraz linii lotniczych, sztucznie budując lukę informacyjną."
+      }
+    },
+    {
+      "portal": "wp.pl",
+      "host": "www.wp.pl",
+      "title": "Zostawił dla niej znaną żonę. Z gwiazdą \"MjM\" jest do dziś",
+      "regex": {
+        "cb": 0,
+        "techniques": [
+          "Wyrwany cytat"
+        ],
+        "snark": "\"MjM\" — brzmi dramatycznie wyrwane z kontekstu. W pełnej rozmowie to zdanie pewnie było o niczym."
+      },
+      "model": {
+        "cb100": 88,
+        "filary": [
+          1
+        ],
+        "powod": "Zastosowano technikę 'znany bez nazwiska', ukrywając tożsamość wszystkich trzech opisywanych osób.",
+        "snark": "Zagadka personalna zredukowana do anonimowych zaimków i skrótu telenoweli."
+      },
+      "final": {
+        "badge": 8,
+        "source": "AI",
+        "comment": "Zagadka personalna zredukowana do anonimowych zaimków i skrótu telenoweli.",
+        "reason": "Zastosowano technikę 'znany bez nazwiska', ukrywając tożsamość wszystkich trzech opisywanych osób."
+      }
+    },
+    {
+      "portal": "wp.pl",
+      "host": "www.wp.pl",
+      "title": "Koniec kompromisów? Czarzasty: nie będziemy się certolić",
+      "regex": {
+        "cb": 1,
+        "techniques": [
+          "Pytajnik w tytule (prawo Betteridge'a)"
+        ],
+        "snark": "\"?\" — Pytanie w nagłówku to technika: albo odpowiedź brzmi „nie\", albo pytanie jest retoryczne i ma wzbudzić emocje zamiast informować."
+      },
+      "model": {
+        "cb100": 22,
+        "filary": [],
+        "powod": "Podano nazwisko polityka i jego dosadny cytat zapowiadający zaostrzenie kursu, a retoryczne pytanie nie unieważnia sedna wypowiedzi.",
+        "snark": null
+      },
+      "final": {
+        "badge": 0,
+        "source": "AI",
+        "comment": "",
+        "reason": "Podano nazwisko polityka i jego dosadny cytat zapowiadający zaostrzenie kursu, a retoryczne pytanie nie unieważnia sedna wypowiedzi."
+      }
+    },
+    {
+      "portal": "wp.pl",
+      "host": "www.wp.pl",
+      "title": "Gwałtowne ulewy w turystycznym kraju. Wydano nakaz pozostania w domach",
+      "regex": {
+        "cb": 0,
+        "techniques": [],
+        "snark": ""
+      },
+      "model": {
+        "cb100": 82,
+        "filary": [
+          1
+        ],
+        "powod": "Tytuł zataja nazwę państwa dotkniętego kataklizmem, zastępując ją ogólnikowym zwrotem o 'turystycznym kraju'.",
+        "snark": "Geografia według tabloidu: każde państwo na południe od Bałtyku staje się po prostu 'turystycznym krajem'."
+      },
+      "final": {
+        "badge": 7,
+        "source": "AI",
+        "comment": "Geografia według tabloidu: każde państwo na południe od Bałtyku staje się po prostu 'turystycznym krajem'.",
+        "reason": "Tytuł zataja nazwę państwa dotkniętego kataklizmem, zastępując ją ogólnikowym zwrotem o 'turystycznym kraju'."
+      }
+    },
+    {
+      "portal": "tvn24.pl",
+      "host": "www.tvn24.pl",
+      "title": "Test obnażył poważny problem. Co właściwie wiemy o antykoncepcji?",
+      "regex": {
+        "cb": 0,
+        "techniques": [],
+        "snark": ""
+      },
+      "model": {
+        "cb100": 78,
+        "filary": [
+          1,
+          3
+        ],
+        "powod": "Tytuł nie precyzuje, jaki to test ani jaki problem obnażył, stawiając ogólne pytanie otwarte zmuszające do kliknięcia.",
+        "snark": "Klasyczny dydaktyczny szantaż, w którym redakcja najpierw diagnozuje u czytelnika ignorancję, by za chwilę łaskawie sprzedać mu na nią lekarstwo."
+      },
+      "final": {
+        "badge": 7,
+        "source": "AI",
+        "comment": "Klasyczny dydaktyczny szantaż, w którym redakcja najpierw diagnozuje u czytelnika ignorancję, by za chwilę łaskawie sprzedać mu na nią lekarstwo.",
+        "reason": "Tytuł nie precyzuje, jaki to test ani jaki problem obnażył, stawiając ogólne pytanie otwarte zmuszające do kliknięcia."
+      }
+    },
+    {
+      "portal": "tvn24.pl",
+      "host": "www.tvn24.pl",
+      "title": "Fragmenty polskiego drona na plaży w Karwi. Kilka tygodni po ćwiczeniach",
+      "regex": {
+        "cb": 0,
+        "techniques": [],
+        "snark": ""
+      },
+      "model": {
+        "cb100": 0,
+        "filary": [],
+        "powod": "Tytuł podaje pełny zestaw twardych faktów: co znaleziono, gdzie i w jakim kontekście czasowym.",
+        "snark": null
+      },
+      "final": {
+        "badge": 0,
+        "source": "AI",
+        "comment": "",
+        "reason": "Tytuł podaje pełny zestaw twardych faktów: co znaleziono, gdzie i w jakim kontekście czasowym."
+      }
+    },
+    {
+      "portal": "tvn24.pl",
+      "host": "www.tvn24.pl",
+      "title": "USA nie wykluczają odwetu wobec UE. Chodzi o Starlinka",
+      "regex": {
+        "cb": 2,
+        "techniques": [
+          "Ukryta odpowiedź"
+        ],
+        "snark": "\"nie wyklucza\" — \"nie wyklucza\" = nie potwierdził, nie zaprzeczył, nie powiedział nic konkretnego."
+      },
+      "model": {
+        "cb100": 15,
+        "filary": [],
+        "powod": "Tytuł rzetelnie informuje o groźbie odwetu ze strony USA wobec UE i od razu podaje przyczynę sporu.",
+        "snark": null
+      },
+      "final": {
+        "badge": 0,
+        "source": "AI",
+        "comment": "",
+        "reason": "Tytuł rzetelnie informuje o groźbie odwetu ze strony USA wobec UE i od razu podaje przyczynę sporu."
+      }
+    },
+    {
+      "portal": "tvn24.pl",
+      "host": "www.tvn24.pl",
+      "title": "PREMIERA \"Tego tronu w PiS-ie już nie ma\". Morawiecki dla władzy zrobi wszystko?",
+      "regex": {
+        "cb": 2,
+        "techniques": [
+          "Pytajnik w tytule (prawo Betteridge'a)",
+          "Wyrwany cytat",
+          "KRZYK w tytule"
+        ],
+        "snark": "\"?\" — Pytanie w nagłówku to technika: albo odpowiedź brzmi „nie\", albo pytanie jest retoryczne i ma wzbudzić emocje zamiast informować."
+      },
+      "model": {
+        "cb100": 82,
+        "filary": [
+          1,
+          2,
+          4
+        ],
+        "powod": "Zapowiedź materiału operuje cytatem bez autora, krzykliwym etykietowaniem i insynuacyjnym pytaniem o intencje polityka.",
+        "snark": "Znak zapytania wstawiony na końcu zdania zwalnia autora z konieczności posiadania jakichkolwiek dowodów na stawianą tezę."
+      },
+      "final": {
+        "badge": 7,
+        "source": "AI",
+        "comment": "Znak zapytania wstawiony na końcu zdania zwalnia autora z konieczności posiadania jakichkolwiek dowodów na stawianą tezę.",
+        "reason": "Zapowiedź materiału operuje cytatem bez autora, krzykliwym etykietowaniem i insynuacyjnym pytaniem o intencje polityka."
+      }
+    },
+    {
+      "portal": "tvn24.pl",
+      "host": "www.tvn24.pl",
+      "title": "Polityczka potrącona przed biurem. Policja ustala, czy kierowca działał celowo",
+      "regex": {
+        "cb": 0,
+        "techniques": [],
+        "snark": ""
+      },
+      "model": {
+        "cb100": 72,
+        "filary": [
+          1
+        ],
+        "powod": "Tytuł zataja tożsamość potrąconej osoby publicznej oraz miejsce zdarzenia, redukując podmiot do anonimowej 'polityczki'.",
+        "snark": "Wystarczy odebrać poszkodowanej nazwisko i miasto, by lokalny wypadek drogowy awansował do rangi ogólnokrajowego zamachu stanu."
+      },
+      "final": {
+        "badge": 6,
+        "source": "AI",
+        "comment": "Wystarczy odebrać poszkodowanej nazwisko i miasto, by lokalny wypadek drogowy awansował do rangi ogólnokrajowego zamachu stanu.",
+        "reason": "Tytuł zataja tożsamość potrąconej osoby publicznej oraz miejsce zdarzenia, redukując podmiot do anonimowej 'polityczki'."
+      }
+    },
+    {
+      "portal": "rmf24.pl",
+      "host": "www.rmf24.pl",
+      "title": "„Nie ma mojej zgody”. Szef policji napisał list do mundurowych",
+      "regex": {
+        "cb": 0,
+        "techniques": [],
+        "snark": ""
+      },
+      "model": {
+        "cb100": 65,
+        "filary": [
+          1
+        ],
+        "powod": "Tytuł operuje wyrwanym, kategorycznym cytatem, ukrywając kluczową informację o tym, na co konkretnie nie zgadza się szef policji.",
+        "snark": "Klasyczne budowanie napięcia urzędowym gniewem, w którym brakuje jedynie drobnego szczegółu: przedmiotu sprawy."
+      },
+      "final": {
+        "badge": 5,
+        "source": "AI",
+        "comment": "Klasyczne budowanie napięcia urzędowym gniewem, w którym brakuje jedynie drobnego szczegółu: przedmiotu sprawy.",
+        "reason": "Tytuł operuje wyrwanym, kategorycznym cytatem, ukrywając kluczową informację o tym, na co konkretnie nie zgadza się szef policji."
+      }
+    },
+    {
+      "portal": "rmf24.pl",
+      "host": "www.rmf24.pl",
+      "title": "Trzyletnie dziecko potrącone przez karetkę. Wypadek podczas pokazów ratownictwa medycznego",
+      "regex": {
+        "cb": 0,
+        "techniques": [],
+        "snark": ""
+      },
+      "model": {
+        "cb100": 0,
+        "filary": [],
+        "powod": "Tytuł rzetelnie i precyzyjnie informuje o dramatycznym zdarzeniu, podając wiek poszkodowanego, okoliczności oraz miejsce wypadku.",
+        "snark": null
+      },
+      "final": {
+        "badge": 0,
+        "source": "AI",
+        "comment": "",
+        "reason": "Tytuł rzetelnie i precyzyjnie informuje o dramatycznym zdarzeniu, podając wiek poszkodowanego, okoliczności oraz miejsce wypadku."
+      }
+    },
+    {
+      "portal": "rmf24.pl",
+      "host": "www.rmf24.pl",
+      "title": "W tunelach na obwodnicy Krakowa pojedziemy szybciej. O ile podniesiono limit prędkości?",
+      "regex": {
+        "cb": 0,
+        "techniques": [],
+        "snark": ""
+      },
+      "model": {
+        "cb100": 60,
+        "filary": [
+          1
+        ],
+        "powod": "Choć tytuł podaje fakt podniesienia limitu, to kończy się pytaniem zatajającym konkretną wartość liczbową, która bez trudu zmieściłaby się w nagłówku.",
+        "snark": "Zatajenie prostej liczby dwucyfrowej tylko po to, by zmusić kierowcę do kliknięcia przed wciśnięciem gazu."
+      },
+      "final": {
+        "badge": 4,
+        "source": "AI",
+        "comment": "Zatajenie prostej liczby dwucyfrowej tylko po to, by zmusić kierowcę do kliknięcia przed wciśnięciem gazu.",
+        "reason": "Choć tytuł podaje fakt podniesienia limitu, to kończy się pytaniem zatajającym konkretną wartość liczbową, która bez trudu zmieściłaby się w nagłówku."
+      }
+    },
+    {
+      "portal": "rmf24.pl",
+      "host": "www.rmf24.pl",
+      "title": "Humor, ruch i brudne ręce. Jak znaleźć wspólny język z dzieckiem?",
+      "regex": {
+        "cb": 0,
+        "techniques": [],
+        "snark": ""
+      },
+      "model": {
+        "cb100": 20,
+        "filary": [],
+        "powod": "Tytuł materiału poradnikowo-lifestylowego zapowiada ogólny temat relacji rodzicielskich i z natury nie da się go zamknąć w pojedynczym fakcie.",
+        "snark": null
+      },
+      "final": {
+        "badge": 0,
+        "source": "AI",
+        "comment": "",
+        "reason": "Tytuł materiału poradnikowo-lifestylowego zapowiada ogólny temat relacji rodzicielskich i z natury nie da się go zamknąć w pojedynczym fakcie."
+      }
+    },
+    {
+      "portal": "rmf24.pl",
+      "host": "www.rmf24.pl",
+      "title": "Fragmenty szkła w wodzie mineralnej? Nowe ostrzeżenia GIS",
+      "regex": {
+        "cb": 1,
+        "techniques": [
+          "Pytajnik w tytule (prawo Betteridge'a)"
+        ],
+        "snark": "\"?\" — Pytanie w nagłówku to technika: albo odpowiedź brzmi „nie\", albo pytanie jest retoryczne i ma wzbudzić emocje zamiast informować."
+      },
+      "model": {
+        "cb100": 30,
+        "filary": [
+          1
+        ],
+        "powod": "Tytuł podaje ostrzeżenie GIS o potencjalnym szkle w wodzie, lecz znak zapytania niepotrzebnie wprowadza element sensacyjnej niepewności w komunikacie urzędowym.",
+        "snark": "Użycie pytajnika przy oficjalnym komunikacie sanitarnym to sprytny sposób, by z procedury wycofania partii zrobić dramat z nutą tajemnicy."
+      },
+      "final": {
+        "badge": 0,
+        "source": "AI",
+        "comment": "Użycie pytajnika przy oficjalnym komunikacie sanitarnym to sprytny sposób, by z procedury wycofania partii zrobić dramat z nutą tajemnicy.",
+        "reason": "Tytuł podaje ostrzeżenie GIS o potencjalnym szkle w wodzie, lecz znak zapytania niepotrzebnie wprowadza element sensacyjnej niepewności w komunikacie urzędowym."
+      }
+    }
+  ]
+}
