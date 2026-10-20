@@ -50,8 +50,12 @@
   <div class="status" id="ai-status"></div>
 
   <div class="note">
-    <strong>Prywatność:</strong> przy włączonym AI do OpenRouter wysyłany jest wyłącznie
-    <em>tekst tytułu</em>, domena portalu i nazwy wykrytych technik — nigdy adres (URL) artykułu.
+    <strong>Prywatność:</strong> wtyczka działa tylko na portalach z listy. Bez klucza AI nic nie wychodzi
+    z komputera. Przy włączonym AI do OpenRouter wysyłany jest wyłącznie <em>tekst tytułu</em>, domena portalu,
+    nagłówek działu i nazwy wykrytych technik. Nigdy adres (URL) artykułu, treść strony ani historia przeglądania.
+    OpenRouter przekazuje te dane dostawcy modelu (przy Gemini to Google); w
+    <a href="https://openrouter.ai/settings/privacy" target="_blank" rel="noopener">ustawieniach prywatności OpenRouter</a>
+    możesz wyłączyć dostawców, którzy mogą trenować modele na przesyłanych danych.
     Klucz API przechowywany jest lokalnie w przeglądarce (nieszyfrowany) i nie opuszcza Twojego komputera
     poza wywołaniami do OpenRouter. Klucz wygenerujesz na
     <a href="https://openrouter.ai/keys" target="_blank" rel="noopener">openrouter.ai/keys</a>.

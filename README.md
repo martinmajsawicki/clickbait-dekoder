@@ -82,7 +82,13 @@ Przy włączonym AI regex przestaje być tylko detektorem, a staje się **materi
 
 ## Prywatność i koszt
 
-Przy włączonym AI do OpenRouter wysyłane są wyłącznie: tekst tytułu, domena portalu, nagłówek działu strony, w którym stoi tytuł, nazwy wykrytych technik i fragmenty tytułu, które je uruchomiły. Nigdy adres (URL) artykułu.
+Przy włączonym AI do OpenRouter wysyłane są wyłącznie: tekst tytułu, domena portalu, nagłówek działu strony, w którym stoi tytuł, nazwy wykrytych technik i fragmenty tytułu, które je uruchomiły. Nigdy adres (URL) artykułu, treść strony, ciasteczka ani historia przeglądania.
+
+Wtyczka działa tylko na portalach z listy w `manifest.json`. Bez klucza AI nic nie wychodzi z komputera: plakietki daje wtedy sam regex.
+
+OpenRouter przekazuje te dane dostawcy wybranego modelu (przy domyślnym Gemini 3.8 Flash to Google) i obowiązują zasady obu firm. W [ustawieniach prywatności konta OpenRouter](https://openrouter.ai/settings/privacy) możesz wyłączyć kierowanie zapytań do dostawców, którzy mogą trenować modele na przesyłanych danych.
+
+Same tytuły nie zdradzają, które artykuły czytasz, ale ich zestaw pokazuje, na których portalach i kiedy byłeś.
 
 Klucz API przechowywany jest lokalnie w przeglądarce (nieszyfrowany) i nie opuszcza Twojego komputera poza wywołaniami do OpenRouter.
 
@@ -374,7 +380,13 @@ The conscious trade-off: with AI on, uncertain headlines lose "offline" and "<10
 
 ### Privacy and cost
 
-With AI on, only the following is sent to OpenRouter: the headline text, the site's domain, the heading of the page section the headline sits in, the names of the detected techniques and the headline fragments that triggered them. Never the article's address (URL).
+With AI on, only the following is sent to OpenRouter: the headline text, the site's domain, the heading of the page section the headline sits in, the names of the detected techniques and the headline fragments that triggered them. Never the article's address (URL), the page content, cookies or your browsing history.
+
+The extension runs only on the sites listed in `manifest.json`. Without an AI key nothing leaves your computer: the badges then come from the regex alone.
+
+OpenRouter passes this data on to the provider of the chosen model (Google for the default Gemini 3.8 Flash), and both companies' policies apply. In your [OpenRouter account privacy settings](https://openrouter.ai/settings/privacy) you can turn off routing to providers that may train models on the data you send.
+
+The headlines alone don't reveal which articles you read, but taken together they show which sites you visited and when.
 
 The API key is stored locally in the browser (unencrypted) and doesn't leave your computer except in calls to OpenRouter.
 
