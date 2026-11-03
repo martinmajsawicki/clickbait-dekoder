@@ -37,16 +37,16 @@ Przyklad: tytul zawiera "Polacy odkryli" → tooltip pokazuje:
 
 ## Metodologia detekcji
 
-Wtyczka nie uzywa AI — opiera sie na wzorcach regexowych (pattern matching). To swiadomy wybor:
+Wtyczka ma dwie warstwy. Bazowa nie uzywa AI — opiera sie na wzorcach regexowych (pattern matching) i dziala zawsze, bez klucza. Druga to model jezykowy, wlaczony domyslnie, ktory rusza po wklejeniu klucza OpenRouter (opis nizej, aktualizacja v0.5). Regex jako baza to swiadomy wybor:
 
 1. **Dziala offline** — zero latencji, zero kosztow API, zero problemow z prywatnosciq
 2. **Deterministyczna** — ten sam tytul zawsze dostaje ten sam wynik
 3. **Transparentna** — kazdy wzorzec mozna przeczytac i zrozumiec
 4. **Szybka** — skanowanie calej strony trwa <10ms
 
-> **Aktualizacja v0.5 — hybryda regex + AI (opcjonalna).** Powyzsze opisuje
-> warstwe bazowa, ktora dziala zawsze i bez klucza. Od v0.5 doszla OPCJONALNA
-> warstwa AI (opt-in, BYO-key OpenRouter): regex przestaje byc tylko detektorem,
+> **Aktualizacja v0.5 — hybryda regex + AI.** Powyzsze opisuje
+> warstwe bazowa, ktora dziala zawsze i bez klucza. Od v0.5 doszla warstwa AI
+> (od 0.6.5 wlaczona domyslnie, BYO-key OpenRouter): regex przestaje byc tylko detektorem,
 > a staje sie **materialem dowodowym** dla taniego modelu — przekazuje mu, ktora
 > technika trafila i w ktory fragment, a model kalibruje wynik z uwzglednieniem
 > profilu portalu. Powod: definicja clickbaitu jest kontekstowa (to, co jest CB
@@ -107,6 +107,8 @@ Kazda kategoria ma wage (weight), ktora wplywa na score:
 
 7. **Hatespeech != clickbait** — porownanie malzenstwa gejow do malzenstwa z koza to hatespeech, nie clickbait. Inny problem.
 
+8. **"Jest wyrok" bez kary = clickbait** (decyzja z 2026-11-03) — czytelnik zszokowany czynem oczekuje zemsty i chce znac kare, a tytul mowi, ze skazali, ale nie mowi jak. "Pedofil gwalcil pasierbice, matka patrzyla. Jest wyrok" to clickbait (regex: "jest wyrok" w kategorii Ukryta odpowiedz; model z ta regula: CB 7, bez niej CB 4). Z podana kara ("12 lat wiezienia") to informacja. Wczesniej README podawal ten tytul jako "szok trescia, nie forma", ktorego nie da sie odroznic od clickbaitu; to bylo bledne juz wtedy, bo wzorzec "jest wyrok" istnial.
+
 ### Scoring
 
 - **CB 1** (zolty) — lekki clickbait, jedna technika o wadze 1
@@ -123,7 +125,7 @@ Clickbait **strukturalny** — manipulacja jest w strukturze zdan, nie w slowach
 - "6 szt. na klienta. Limit konieczny. Kupuja kartonami"
 - Brak podmiotu w zdaniu (regexem nie sprawdzisz, czy zdanie ma podmiot)
 
-Na to potrzebne AI (planowane jako opcjonalny tryb on-hover).
+Na to potrzebne AI (od v0.5 druga warstwa wtyczki, patrz wyzej).
 
 ## Psychologia — dlaczego clickbait dziala
 

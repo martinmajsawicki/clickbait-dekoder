@@ -57,6 +57,7 @@ Jeśli tytuł składa się z więcej niż jednego zdania, ocenia się go w cało
 - **„Znany bez nazwiska” = zawsze CB**: gdyby był znany, podaliby nazwisko.
 - **Niedopowiedzenie udające ważniejszy temat to clickbait.**
 - **Szczucie chorobą to clickbait.**
+- **„Jest wyrok” bez kary to clickbait.** Czytelnik zszokowany czynem oczekuje zemsty i chce znać karę, a tytuł mówi, że skazali, ale nie mówi jak. „Pedofil gwałcił pasierbicę, matka patrzyła. Jest wyrok” to clickbait; z podaną karą byłby informacją.
 - **Ogólne słowo-zdarzenie bez opisu to clickbait**: gdyby było coś więcej, zbudowaliby na tym tytuł.
 - **Brak kraju lub podmiotu w sensacyjnej wiadomości to clickbait.**
 - **Mglisty opis zdarzenia, który sugeruje sensację, to clickbait.**
@@ -124,11 +125,10 @@ Bez AI wtyczka nie łapie clickbaitu narracyjnego: manipulacja jest w strukturze
 | „Miał rodziców obcokrajowców. Do niedawna nazywał się inaczej” | Suspens narracyjny: ukrywa pointę | Brak słowa-klucza, cała manipulacja w strukturze zdań |
 | „6 szt. na klienta. Limit konieczny. Kupują kartonami. 2 dni i koniec” | Urgency: krótkie zdania budują panikę | Żaden pojedynczy fragment nie jest clickbaitowy |
 | „Lokal dawał klientkom do zrozumienia: Za tania torebka, u nas nie jesz” | Clickbait klasowy/społeczny: budzi oburzenie | Manipulacja jest w treści, nie w słowie |
-| „Pedofil gwałcił pasierbicę, matka patrzyła. Jest wyrok” | Szok treścią, nie formą | Treść jest faktycznie szokująca: nie da się odróżnić od clickbaitu |
 
 ## Obsługiwane portale (26)
 
-Procent clickbaitu pochodzi z audytów samego regexu (marzec 2026).
+Procent clickbaitu pochodzi z audytów samego regexu (marzec 2026). Pięć portali na dole listy (radiozet.pl, tokfm.pl, rmf24.pl, polskieradio24.pl, xyz.pl) dodałem 23 marca 2026 razem z selektorami i profilem dla modelu, ale nigdy ich nie audytowałem, stąd brak procentu i opisu chwytów. Przy tvrepublika.pl audyt był jakościowy, bez liczenia tytułów, stąd opis bez procentu.
 
 | Portal | % clickbaitu | Profil |
 |---|---|---|
@@ -149,15 +149,15 @@ Procent clickbaitu pochodzi z audytów samego regexu (marzec 2026).
 | sport.pl | ~33% | Narracja sportowa (po dodaniu wzorców sportowych) |
 | money.pl | niski CB | Portal analityczny: false positive na nagłówkach CAPS naprawiony |
 | noizz.pl | niski CB | Lifestyle/wywiady: mało clickbaitu |
-| tvrepublika.pl | — | CB polityczny/geopolityczny, superlativy, ukryte tożsamości, DOM H2-bez-linków |
+| tvrepublika.pl | bez liczenia | CB polityczny/geopolityczny, superlativy, ukryte tożsamości, DOM H2-bez-linków |
 | wyborcza.pl | ~14% | Jakościowe dziennikarstwo: niski clickbait, poprawka „kogo” w Betteridge |
 | nczas.com | ~6% | Portal prawicowy: niski CB, głównie cliffhangery, WordPress layout |
 | dorzeczy.pl | ~44% | Portal konserwatywny: ciężki quote bait (13x cytat jako przynęta) |
-| radiozet.pl | — | Portal radiowy |
-| tokfm.pl | — | Portal radiowy |
-| rmf24.pl | — | Portal informacyjny/radiowy |
-| polskieradio24.pl | — | Portal radiowy publiczny |
-| xyz.pl | — | Portal informacyjny |
+| radiozet.pl | brak audytu | Portal radiowy |
+| tokfm.pl | brak audytu | Portal radiowy |
+| rmf24.pl | brak audytu | Portal informacyjny/radiowy |
+| polskieradio24.pl | brak audytu | Portal radiowy publiczny |
+| xyz.pl | brak audytu | Portal informacyjny |
 
 Portale z dedykowanymi selektorami DOM: **gazeta.pl**, **onet.pl**, **wp.pl**, **tvn24.pl**, **interia.pl**, **fakt.pl**, **pomponik.pl**, **natemat.pl**, **money.pl**, **noizz.pl**, **tvrepublika.pl**, **dziendobry.tvn.pl** i inne. Każdy portal ma zestaw selektorów specyficznych + domyślne (`h1-h4 a`, `article a`, `a[data-ga-action]`).
 
@@ -359,6 +359,7 @@ A headline made of more than one sentence is judged as a whole. The first senten
 - **"A well-known person" with no name = always clickbait**: if they were well known, they'd have given the name.
 - **Understatement posing as a bigger story is clickbait.**
 - **Using someone's illness as bait is clickbait.**
+- **"There's a verdict" with no sentence is clickbait.** A reader shocked by the crime expects revenge and wants to know the punishment, and the headline says they were convicted but not how. „Pedofil gwałcił pasierbicę, matka patrzyła. Jest wyrok” (Paedophile raped his stepdaughter while her mother watched. There's a verdict) is clickbait; with the sentence given it would be information.
 - **A vague event-word with no description is clickbait**: if there were more to it, they'd have built the headline on it.
 - **A sensational story with no country or subject is clickbait.**
 - **A foggy description of an event that suggests a sensation is clickbait.**
@@ -428,11 +429,10 @@ Without AI the extension misses narrative clickbait: the manipulation is in the 
 | „Miał rodziców obcokrajowców. Do niedawna nazywał się inaczej” (His parents were foreigners. Until recently he had a different name) | Narrative suspense: hides the punchline | No keyword, all the manipulation is in the sentence structure |
 | „6 szt. na klienta. Limit konieczny. Kupują kartonami. 2 dni i koniec” (6 per customer. Limit needed. They're buying by the box. 2 days and it's over) | Urgency: short sentences build panic | No single fragment is clickbait |
 | „Lokal dawał klientkom do zrozumienia: Za tania torebka, u nas nie jesz” (The restaurant made it clear to customers: bag too cheap, you don't eat here) | Class/social clickbait: stirs outrage | The manipulation is in the content, not in a word |
-| „Pedofil gwałcił pasierbicę, matka patrzyła. Jest wyrok” (Paedophile raped his stepdaughter while her mother watched. There's a verdict) | Shock through content, not form | The content really is shocking: impossible to tell apart from clickbait |
 
 ### Supported sites (26)
 
-Clickbait percentages come from audits of the regex alone (March 2026).
+Clickbait percentages come from audits of the regex alone (March 2026). The five sites at the bottom of the list (radiozet.pl, tokfm.pl, rmf24.pl, polskieradio24.pl, xyz.pl) were added on 23 March 2026 together with their selectors and a profile for the model, but I never audited them, hence no percentage and no description of their techniques. For tvrepublika.pl the audit was qualitative, with no headline count, hence a description without a percentage.
 
 | Site | % clickbait | Profile |
 |---|---|---|
@@ -453,15 +453,15 @@ Clickbait percentages come from audits of the regex alone (March 2026).
 | sport.pl | ~33% | Sports narrative (after adding sports patterns) |
 | money.pl | low | Analytical portal: false positive on CAPS headings fixed |
 | noizz.pl | low | Lifestyle/interviews: little clickbait |
-| tvrepublika.pl | — | Political/geopolitical clickbait, superlatives, hidden identities, DOM with H2s without links |
+| tvrepublika.pl | not counted | Political/geopolitical clickbait, superlatives, hidden identities, DOM with H2s without links |
 | wyborcza.pl | ~14% | Quality journalism: low clickbait, "kogo" (whom) fix in Betteridge |
 | nczas.com | ~6% | Right-wing portal: low clickbait, mostly cliffhangers, WordPress layout |
 | dorzeczy.pl | ~44% | Conservative portal: heavy quote bait (13x quote as bait) |
-| radiozet.pl | — | Radio portal |
-| tokfm.pl | — | Radio portal |
-| rmf24.pl | — | News/radio portal |
-| polskieradio24.pl | — | Public radio portal |
-| xyz.pl | — | News portal |
+| radiozet.pl | not audited | Radio portal |
+| tokfm.pl | not audited | Radio portal |
+| rmf24.pl | not audited | News/radio portal |
+| polskieradio24.pl | not audited | Public radio portal |
+| xyz.pl | not audited | News portal |
 
 Sites with dedicated DOM selectors: **gazeta.pl**, **onet.pl**, **wp.pl**, **tvn24.pl**, **interia.pl**, **fakt.pl**, **pomponik.pl**, **natemat.pl**, **money.pl**, **noizz.pl**, **tvrepublika.pl**, **dziendobry.tvn.pl** and others. Each site has its own set of selectors plus the defaults (`h1-h4 a`, `article a`, `a[data-ga-action]`).
 

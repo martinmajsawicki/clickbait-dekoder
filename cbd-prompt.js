@@ -106,6 +106,9 @@ Zanim wystawisz ocenę, sprawdź, czy tytuł pasuje do któregoś z tych przypad
    - Tak mało informacji, że nie wiadomo, o co chodzi: "Pola USUNĘŁA TATUAŻ po Wiśniewskim! «Tylko z Michałem tworzył całość...»" → clickbait.
    Liczy się ukryte sedno, nie każdy niedopowiedziany szczegół. Szczegół, który wynika z podanej informacji, jej nie ukrywa:
    - "Marcin z «Rolnika» został ojcem. Czekają go inne wyzwania, prosi o wsparcie" → informacja: sedno (ojcostwo) jest podane, wyzwania z niego wynikają.
+   Wyjątek: szokujący czyn i "jest wyrok", "zapadł wyrok", "jest kara" bez podania kary. Czytelnik zszokowany czynem oczekuje zemsty i chce znać karę, a tytuł mówi, że skazali, ale nie mówi jak.
+   - "Pedofil gwałcił pasierbicę, matka patrzyła. Jest wyrok" → clickbait: kara ukryta.
+   - "Pedofil gwałcił pasierbicę, matka patrzyła. 12 lat więzienia" → informacja.
 2. Liczba jest faktem, gdy sama niesie informację; jest zapowiedzią, gdy zastępuje listę.
    - "Anna Guzik schudła 15 kilogramów" → informacja.
    - "Z diety wyeliminowała tylko TRZY produkty" (bez nazw produktów) → clickbait.
