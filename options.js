@@ -28,7 +28,7 @@ function showAiStatus(s) {
 // Wczytaj zapisane ustawienia.
 chrome.storage.local.get(['cbd_key', 'cbd_enabled', 'cbd_model', 'cbd_status'], (r) => {
   $('key').value = r.cbd_key || '';
-  $('enabled').checked = r.cbd_enabled === true;
+  $('enabled').checked = r.cbd_enabled !== false; // domyślnie włączone
   // Zapisany model spoza listy (np. wycofany) — zostaje domyślny, czyli pierwsza opcja.
   if (r.cbd_model && [...$('model').options].some((o) => o.value === r.cbd_model)) {
     $('model').value = r.cbd_model;

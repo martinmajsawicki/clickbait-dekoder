@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
   "name": "Clickbait Dekoder",
-  "version": "0.6.4",
-  "description": "Dekoduje clickbaitowe tytuły na 26 polskich portalach. Regex + opcjonalna ocena AI (BYO-key). Kontekstowe komentarze w stylu New Yorkera.",
+  "version": "0.6.5",
+  "description": "Dekoduje clickbaitowe tytuły na 26 polskich portalach. Regex + ocena AI na własnym kluczu OpenRouter. Kontekstowe komentarze w stylu New Yorkera.",
   "permissions": ["storage"],
   "host_permissions": ["https://openrouter.ai/*"],
   "background": { "service_worker": "background.js" },

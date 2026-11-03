@@ -34,7 +34,7 @@ async function getSettings() {
   const r = await chrome.storage.local.get(['cbd_key', 'cbd_enabled', 'cbd_model']);
   return {
     key: r.cbd_key || '',
-    enabled: r.cbd_enabled === true,
+    enabled: r.cbd_enabled !== false, // warstwa AI włączona domyślnie; działa, gdy jest klucz
     model: r.cbd_model && !RETIRED_MODELS.has(r.cbd_model) ? r.cbd_model : DEFAULT_MODEL,
   };
 }
@@ -163,7 +163,7 @@ function toVerdict(modelResult, item) {
 // === Główna obsługa batcha ===
 async function handleBatch(items, tabId) {
   const settings = await getSettings();
-  if (!settings.enabled || !settings.key) return; // opt-in / brak klucza → nic
+  if (!settings.enabled || !settings.key) return; // wyłączona ręcznie albo brak klucza → sam regex
   if (!Array.isArray(items) || items.length === 0) return;
 
   const host = items[0].host || '';
